@@ -1,0 +1,21 @@
+@charset "UTF-8";
+/* CSS Document */
+*{padding:0; margin:0;}
+html{}
+.main{position: absolute;top: 100px;left: 1020px;width: 850px;height: 750px;}
+
+.photo_wall{width: 810px;height: 720px;position:relative;}	
+.photo{background-size:188px;float:left;transition: 1s;-moz-transition: 1s;-webkit-transition: 1s;-o-transition: 1s;}
+.photo img{width:95%;height:95%}
+.tittle{text-align:center;margin-top:45px;}
+
+.photo_roll{height:300px;width:780px;position:absolute;top:415px;left:0;display:none;overflow: hidden;}
+.roll_line{position: absolute;width:1620px;top:0;left:0}
+.roll_l{float:left;width:780px;}
+.roll_l div{float:left;padding:10px;margin:20px;background:#fff}
+
+.prize{width:500px;height:400px;position:absolute;top:-250px;margin-top:20%;left:-250px;margin-left:50%;background:#fff;z-index:20;display:none;}
+.prize #prizeTittle{font-size: 60px;text-align: center;line-height: 100px;}
+.prize #prizeImg{height:200px;text-align: center;}
+.prize #prizeImg img{width:200px;height:200px;}
+.prize #prizeName{font-size: 30px;text-align: center;line-height: 80px;}

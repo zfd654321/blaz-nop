@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:property-placeholder location="classpath:config/config.properties" />
+	<!-- 用户接口 -->
+	<bean id="userService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/userService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.UserService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="menuService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/menuService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.MenuService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="roleService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/roleService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.RoleService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="versionService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/versionService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.VersionService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="downloaderService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/downloaderService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.DownloaderService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="AlarmService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/alarmService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.AlarmService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="SwitchService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/switchService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.SwitchService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	<bean id="AdvertService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/advertService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.AdvertService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="ResourceService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/resourceService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.ResourceService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="LogService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/logService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.LogService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="StandardService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/standardService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.StandardService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="BatchService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/batchService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.BatchService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="FileService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/fileService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.FileService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="OmsGameService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsGameService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsGameService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="OmsDeviceService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsDeviceService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsDeviceService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="LanguageService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/languageService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.LanguageService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="PcService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/pcService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.PcService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="AreaService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/areaService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.AreaService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="OmsMaintenanceService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsMaintenanceService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsMaintenanceService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="OmsRequesturlService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsRequesturlService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsRequesturlService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="OmsPortService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsPortService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsPortService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="OmsRankService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsRankService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsRankService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="OmsAlarmService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsAlarmService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsAlarmService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="OmsPayService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsPayService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsPayService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="StatisticService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/statisticService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.StatisticService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="MistakeService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/mistakeService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.MistakeService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="SigninService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/signinService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.SigninService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="TurntableService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/turntableService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.TurntableService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="IntegralService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/integralService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.IntegralService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="PrecontractService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/precontractService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.PrecontractService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<bean id="OthService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/othService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OthService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="OmsDeapalarmService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsDeapalarmService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsDeapalarmService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+		<bean id="OmsGamemenuService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/omsGamemenuService" />
+		<property name="serviceInterface" value="com.bl.nop.bis.api.OmsGamemenuService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+</beans>
+        

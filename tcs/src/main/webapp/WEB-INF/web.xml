@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" 
+	version="3.0">
+    <display-name>tcs</display-name>
+    <context-param>
+	   <param-name>webAppRootKey</param-name>
+	   <param-value>tcs</param-value>
+	</context-param>
+	<!-- 日志配置文件 -->
+    <context-param>
+	    <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j2.xml</param-value>
+	</context-param>
+	<!-- 日志配置每隔多久扫描一次 微秒 -->
+	<context-param>
+	   <param-name>log4jRefreshInterval</param-name>
+	   <param-value>60000</param-value>
+	</context-param>
+	<!-- 加载Spring框架中的log4j监听器Log4jConfigListener -->
+    <!-- log4j2-begin -->
+    <listener>
+        <listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
+    </listener>
+    <filter>
+        <filter-name>log4jServletFilter</filter-name>
+        <filter-class>org.apache.logging.log4j.web.Log4jServletFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>log4jServletFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    <!-- log4j2-end -->
+	<!-- Spring容器和mybatis的配置文件 -->  
+    <context-param>  
+        <param-name>contextConfigLocation</param-name>  
+        <param-value>classpath:spring/spring-hessian.xml</param-value>  
+    </context-param>    
+    
+    <!-- Spring监听器 -->  
+    <listener>  
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>  
+    </listener>  
+    <!-- 防止Spring内存溢出监听器 -->  
+    <!-- <listener>  
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>  
+    </listener>   -->
+  
+   
+    <!-- 编码过滤器 -->  
+    <filter>  
+        <filter-name>encodingFilter</filter-name>  
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+        <async-supported>true</async-supported>  
+        <init-param>  
+            <param-name>encoding</param-name>  
+            <param-value>UTF-8</param-value>  
+        </init-param>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>encodingFilter</filter-name>  
+        <url-pattern>/*</url-pattern>  
+    </filter-mapping> 
+    
+    <!-- 加载springMVC容器 -->  
+    <servlet>  
+        <servlet-name>SpringMVC</servlet-name>  
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>  
+        <init-param>  
+           <param-name>contextConfigLocation</param-name>
+           <param-value>classpath:spring/spring-mvc.xml</param-value>  
+        </init-param>  
+        <load-on-startup>1</load-on-startup>  
+        <async-supported>true</async-supported>  
+    </servlet>  
+    <servlet-mapping>  
+        <servlet-name>SpringMVC</servlet-name>  
+        <!-- 此处可以可以配置成*.do，对应struts的后缀习惯 -->  
+        <url-pattern>/</url-pattern>  
+    </servlet-mapping>
+   
+      
+    <!--如果某个会话在一定时间未被访问，则服务器可以扔掉以节约内存-->
+    <session-config>  
+        <session-timeout>120</session-timeout>  
+    </session-config>  
+    <mime-mapping><!--设定某种扩展名的文件用一种应用程序来打开的方式类型，当该扩展名文件被访问的时候，浏览器会自动使用指定应用程序来打开-->  
+        <extension>*.ppt</extension>            <!--扩展名名称-->  
+        <mime-type>application/mspowerpoint</mime-type>         <!--MIME格式-->  
+    </mime-mapping>  
+    <welcome-file-list><!--定义首页列单.-->  
+        <welcome-file>/index.jsp</welcome-file> <!--用来指定首页文件名称.我们可以用<welcome-file>指定几个首页,而服务器会依照设定的顺序来找首页.-->  
+        <welcome-file>/index.html</welcome-file>  
+    </welcome-file-list>  
+    
+    <error-page>
+	    <error-code>404</error-code>
+	    <location>/error/404.html</location>
+	</error-page>
+	
+	<error-page>
+	    <error-code>500</error-code>
+	    <location>/error/500.html</location>
+	</error-page>
+</web-app>

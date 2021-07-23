@@ -1,0 +1,8 @@
+@charset "UTF-8";
+/* CSS Document */
+*{padding:0; margin:0;}
+html{width:1600px;margin:0 auto;}
+.main{position: absolute;top: 0px;left: 400px;width: 1600px;height: 900px;overflow: hidden;transform:scale(0.5)}
+
+.photo_wall{width:1600px;position:relative;margin-top:200px;transition: 1s;-moz-transition: 1s;-webkit-transition: 1s;-o-transition: 1s;}	
+.photo{background:url(../img/photo_back.png)no-repeat;width:166px;height:300px;background-size:188px;padding:37px 11px 27px 11px;float:left;transition: 1s;-moz-transition: 1s;-webkit-transition: 1s;-o-transition: 1s;margin:0 30px;position:absolute;top:20px;left:600px;transform:scale(2.0)}

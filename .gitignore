@@ -1,0 +1,6 @@
+/.project
+/.settings
+/.vscode
+/log
+/*/target/
+/*/log/

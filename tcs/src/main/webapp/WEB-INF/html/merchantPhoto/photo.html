@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=750,user-scalable=no" />
+<link href="css/photo.css" rel="stylesheet" type="text/css" />
+<script src="../../js/jquery-3.1.0.min.js"></script>
+<script src="../../js/httpService.js"></script>
+<title>AR互动相册</title>
+</head>
+<body>
+	<div id="top">
+		<img src="" id="topImg" width="750"/>
+	</div>
+	<div class="header">
+		<img id="headerImg" src="img/header.png" />
+	</div>
+
+	<div id="box"></div>
+
+	<div>
+		<img src="" id="er" />
+	</div>
+	<img src="img/robot1.png" class="left_bottom" />
+	<img src="img/robot3.png" class="left_bottom" />
+	<img src="img/robot5.png" class="left_bottom" />
+	<script>
+		var merchant_id = getURLParams("merchant_id");
+		$(function() {
+			$("#er").attr("src", "img/er_" + merchant_id + ".png");
+			$("#topImg").attr("src", "img/top_" + merchant_id + ".png");
+			$("#headerImg").attr("src", "img/header_" + merchant_id + ".png");
+			comma();
+			random();
+		})
+		function random() {
+			var random_n = parseInt(Math.random() * 3);
+			var robot = document.getElementsByClassName("left_bottom");
+			robot[random_n].style.display = "inline";
+		}
+
+		var str = getURLParams("images");
+		var arr=[];
+		function comma() {
+			for (;;) {
+				if (str.indexOf(",") != -1) {
+					var index = str.indexOf(",");
+					arr.push(str.substr(0, index));
+					str = str.substr(index + 1, str.length);
+				} else {
+					arr.push(str);
+					break;
+				}
+			}
+			for (var i = 0; i < arr.length; i++)
+				($('#box')
+						.append("<div class='box'><img src="+arr[i]+"></div>"));
+		}
+		
+	</script>
+</body>
+</html>

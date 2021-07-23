@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<!-- saved from url=(0086)http://vip9.wall.49109.com/v1/app/index.php?i=2&c=entry&rid=9&do=dpm_3dqd&m=haoman_dpm -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>微信墙演示</title>
+<link href="css/index.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/3d.css">
+<link rel="stylesheet" href="css/style.css" media="screen"
+	type="text/css">
+<link rel="stylesheet" href="css/normalize.css">
+<script src="js/jquery-3.1.0.min.js" type="text/javascript"></script>
+<script src="../../js/httpService.js"></script>
+<script type="text/javascript">
+	//判断浏览器类型
+	var Sys = {};
+	var ua = navigator.userAgent.toLowerCase();
+	var s;
+	(s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] : (s = ua
+			.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] : (s = ua
+			.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] : (s = ua
+			.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] : (s = ua
+			.match(/micromessenger.([\d.]+)/)) ? Sys.micromessenger = s[1]
+			: (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1]
+					: 0;
+	if (!(Sys.chrome || Sys.firefox || Sys.safari || Sys.micromessenger)) { //Js判断为谷歌chrome、火狐firefox浏览器、苹果safari
+		document
+				.write('</br><font size="1" color="white">查看3D效果请使用：谷歌chrome、火狐firefox，苹果safari或微信</font>');
+	}
+</script>
+<style type="text/css">
+#kploading {
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+}
+
+body {
+	background: url(img/back.png) no-repeat;
+	width: 100%;
+	background-size: 100%;
+}
+</style>
+</head>
+
+<body>
+	<div class="tittle">
+		<img src="img/tittle.png">
+	</div>
+	<div style="height: 800px;">
+		<div class="mark-loading" style="display: none;"></div>
+		<div id="kploading" style="display: none;">
+			<div class="ball-big">
+				<div class="plane plane-1"></div>
+				<div class="plane plane-2"></div>
+				<div class="plane plane-3"></div>
+				<div class="plane plane-4"></div>
+				<div class="plane plane-5"></div>
+				<div class="plane plane-6"></div>
+			</div>
+		</div>
+		<div class="container" style="position: absolute; z-index: 99">
+		</div>
+		<div id="container" style="display: block;"></div>
+		<canvas class="canvas" height="977" width="1920"
+			style="display: inline-block;"></canvas>
+
+
+	</div>
+
+	<div class="prize">
+		<div id="prizeTittle">恭喜中奖！</div>
+		<div id="prizeImg">
+			<img />
+		</div>
+		<div id="prizeName">ENDY</div>
+	</div>
+	<script type="text/javascript">
+		var is_show_info = 1;
+		var hFont;
+		var gap = 12;
+		(function(doc, win) {
+			var docEl = doc.documentElement, resizeEvt = 'orientationchange' in window ? 'orientationchange'
+					: 'resize', recalc = function() {
+				var clientWidth = docEl.clientWidth;
+				if (!clientWidth)
+					return;
+				hFont = 60;
+				docEl.style.fontSize = hFont + 'px';
+			};
+
+			if (!doc.addEventListener)
+				return;
+			win.addEventListener(resizeEvt, recalc, false);
+			doc.addEventListener('DOMContentLoaded', recalc, false);
+		})(document, window);
+	</script>
+
+	<script src="js/2d.js"></script>
+	<script type="text/javascript">
+		var personArray = new Array;
+		var photoArray = new Array;
+		var MaxheadPortrait_key = 0;
+		var MaxShowImage_key = 0;
+		$(function() {
+			getFristPage();
+			QD.init();
+			QD.UI.simulate(signwall_show_str);
+			setInterval(get_new_sign_list, 5000);
+			getArrayItems(personArray, 50);
+			setTimeout("secondStep()", 2000);
+		});
+		function getFristPage() {
+			sendRequest(
+					pageContextPath+'/sign/getFirstOpenHtmlInfo.do',
+					{
+						"merchant_id" : merchant_id
+					},
+					function(jsonData) {
+						$.each(jsonData.data_content.headPortraitLists,
+								function(key, row) {
+									var headimgurl_64 = row.headimgurl
+											.substring(0, row.headimgurl
+													.lastIndexOf("/"))
+											+ "/64";
+									var headimgurl_46 = row.headimgurl
+											.substring(0, row.headimgurl
+													.lastIndexOf("/"))
+											+ "/46";
+									var tmp = {
+										id : row.open_id,
+										image : row.headimgurl,
+										thumb_image : headimgurl_64,
+										thumb_image_46 : headimgurl_46,
+										name : row.nickname,
+										qdword : row.qdword
+									};
+									var person_info = eval(tmp);
+									newPic.push(person_info);
+								});
+
+						$.each(jsonData.data_content.showImageLists, function(
+								key, row) {
+							var photo_src = row.photo;
+							if (photo_src != undefined) {
+
+								photoArray.push(photo_src);
+							}
+						});
+						MaxheadPortrait_key = jsonData.data_content.MaxheadPortrait_key;
+						MaxShowImage_key = jsonData.data_content.MaxShowImage_key;
+					});
+			var stop = false
+
+		}
+
+		function get_new_sign_list() {
+
+			var data = {};
+			data.max_id = $('#max_id').val();
+			sendRequest(
+					pageContextPath+'/sign/getSignCacheMapInfo.do',
+					{
+						"merchant_id" : merchant_id,
+						"headPortrait_key" : MaxheadPortrait_key,
+						"showImage_key" : MaxShowImage_key
+					},
+					function(jsonData) {
+						$.each(jsonData.data_content.headPortraitLists,
+								function(key, row) {
+									var headimgurl_64 = row.headimgurl
+											.substring(0, row.headimgurl
+													.lastIndexOf("/"))
+											+ "/64";
+									var headimgurl_46 = row.headimgurl
+											.substring(0, row.headimgurl
+													.lastIndexOf("/"))
+											+ "/46";
+									var tmp = {
+										id : row.open_id,
+										image : headimgurl_64,
+										thumb_image : headimgurl_64,
+										thumb_image_46 : headimgurl_46,
+										name : row.nickname,
+										qdword : row.qdword
+									};
+									var person_info = eval(tmp);
+									newPic.push(person_info);
+								});
+
+						$.each(jsonData.data_content.showImageLists, function(
+								key, row) {
+							var photo_src = row.photo;
+							if (photo_src != undefined) {
+								photoArray.push(photo_src);
+							}
+						});
+						MaxheadPortrait_key = jsonData.data_content.MaxheadPortrait_key;
+						MaxShowImage_key = jsonData.data_content.MaxShowImage_key;
+					});
+		}
+		var defalt_count = 0;
+	</script>
+
+	<script src="js/arrfiles.js"></script>
+
+	<script type="text/javascript">
+		var edit_personArray = new Array;
+		var table = new Array;
+		var start_count = 25;
+		loadTable();
+		function loadTable() {
+			for (var i = 0; i < start_count; i++) {
+				table[i] = new Object();
+				if (i < personArray.length) {
+					table[i] = personArray[i];
+					table[i].name = personArray[i].name;
+					table[i].src = personArray[i].thumb_image;
+				}
+				table[i].p_x = i % 20 + 1;
+				table[i].p_y = Math.floor(i / 20) + 1;
+			}
+
+		}
+
+		var signwall_show_str = "#torus|#sphere|#grid|#helix";
+		//var signwall_show_str = "#torus|#sphere|#grid|#helix";
+		var return_array = new Array();
+
+		function getArrayItems(arr, num) {
+			var temp_array = new Array();
+			for ( var index in arr) {
+				temp_array.push(arr[index]);
+			}
+
+			for (var i = 0; i < num; i++) {
+				if (temp_array.length > 0) {
+					//var arrIndex = Math
+					//		.floor(Math.random() * temp_array.length);
+					var arrIndex = temp_array.length - i - 1;
+					return_array[i] = temp_array[arrIndex];
+					temp_array.splice(arrIndex, 1);
+				} else {
+					return false;
+				}
+			}
+			return return_array;
+		}
+
+		var newPic = new Array(), signNo = 0, name, qdword;
+		var s_count = 0;
+		setInterval(function() {
+			if (newPic.length > 0) {
+
+				var firstInfo = newPic.shift();
+				// console.log(newPic.length);
+				var showImg = firstInfo.image;
+				name = firstInfo.name;
+				qdword = firstInfo.qdword;
+
+				personArray.unshift(firstInfo);
+				if (defalt_count > 0) {
+					defalt_count -= 1;
+					personArray.splice(200, 1);
+				}
+				$('.element').eq(s_count).find('img').attr('src', showImg);
+				$('.element').eq(s_count).find('span').html(name);
+				if (s_count == 199) {
+					s_count = 0;
+				} else {
+					s_count += 1;
+				}
+				if (s_count % 25 == 1 && start_count < s_count) {
+					start_count += 25;
+					loadTable();
+					$("#container").html("");
+					oss = [];
+					targets = {
+						table : [],
+						torus : [],
+						sphere : [],
+						helix : [],
+						grid : []
+					};
+					init();
+					QD.init();
+					QD.UI.simulate(signwall_show_str);
+				}
+				$("#qdimg").attr('src', showImg);
+				$("#qdimg").attr('name', name);
+				$('#qdname').html(name);
+				$(".mark-ewm").show();
+				$('#url_code').show()
+						.css('top', ($(window).height() - 550) / 2);
+				setTimeout(function() {
+					$(".mark-ewm").hide();
+					$('#url_code').hide();
+				}, 400);
+
+			}
+
+			getArrayItems(personArray, 50);
+
+		}, 800);
+
+		document.onkeydown = function(event) {
+			var e = event || window.event
+					|| arguments.callee.caller.arguments[0];
+			if (e && e.keyCode == 27) { // 按 Esc 
+				$(".prize").hide();
+				clearTimeout(rp);
+				clearTimeout(t);
+			}
+			if (e && e.keyCode == 113) { // 按 F2 
+				//要做的事情
+			}
+			if (e && e.keyCode == 13) { // enter 键
+				prize();
+			}
+			if (e && e.keyCode == 32) { // space 键
+				ranPrize();
+			}
+		};
+		var t;
+		function prize() {
+			var random_count = Math.floor(Math.random() * s_count);
+			var person = personArray[random_count]
+			$("#prizeImg img").attr("src", person.image);
+			$("#prizeName").html(person.name);
+			$(".prize").show();
+			clearTimeout(t);
+			t = setTimeout(function() {
+				$(".prize").hide();
+			}, 7000);
+		}
+		var ran = false;
+		var rp;
+		function ranPrize() {
+			if (ran) {
+				clearTimeout(rp);
+				t = setTimeout(function() {
+					$(".prize").hide();
+				}, 7000);
+				ran = false;
+			} else {
+				clearTimeout(t);
+				$(".prize").show();
+				rp = setTimeout("rollPrize()", 100);
+				ran = true;
+			}
+		}
+
+		function rollPrize() {
+			var random_count = Math.floor(Math.random() * s_count);
+			var person = personArray[random_count]
+			$("#prizeImg img").attr("src", person.image);
+			$("#prizeName").html(person.name);
+			rp = setTimeout("rollPrize()", 100);
+		}
+	</script>
+	<script src="js/three.min.js"></script>
+	<script src="js/tween.min.js"></script>
+	<script src="js/CSS3DRenderer.js"></script>
+	<script src="js/3d.js"></script>
+	<script type="text/javascript">
+		init();
+		animate();
+	</script>
+	<script type="text/javascript">
+		
+	</script>
+
+
+	<div class="main">
+		<div class="photo_wall" id="photo_wall"></div>
+
+		<div class="photo_roll" id="photo_roll">
+			<div class="roll_line" id="roll_line">
+				<div class="roll_l" id="photo_roll_left"></div>
+				<div class="roll_l" id="photo_roll_right"></div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var merchant_id = getURLParams("merchantId");
+
+		var i = 0;
+		var s_ip = 2;
+		var s_width = 405;
+		var s_height = 720;
+		function secondStep() {
+			if (i < photoArray.length) {
+				i += 1;
+				var photosrc = photoArray[i - 1];
+
+				leadTran(i, photosrc);
+
+			}
+			setTimeout("secondStep()", 2000);
+		}
+
+		var random_list = [ 0, 1, 2, 3, 4, 5, 6, 7 ];
+		var random_count = 8;
+
+		function leadTran(_i, photosrc) {
+
+			var max_count = 2 * 2 * s_ip
+			if (max_count < _i && _i < 16) {
+				s_ip += 1
+				$(".photo").css("width", s_width / s_ip + 'px');
+				$(".photo").css("height", s_height / s_ip + 'px');
+				setTimeout("leadTran('" + _i + "','" + photosrc + "')", 1000);
+			} else {
+				var str = "";
+				str += '<div class="photo" id="photo'+i+'" style=""><img src="'+photosrc+'"></div>'
+				$("#photo_wall").append(str);
+				$("#photo" + _i).css("width", s_width / s_ip + 'px');
+				$("#photo" + _i).css("height", s_height / s_ip + 'px');
+			}
+
+			if (_i == 16) {
+				$("#photo_roll").show();
+			}
+
+			if (_i > 16) {
+				var src = $("#photo" + (_i - 16) + " img").attr("src");
+				var str = "";
+				str += "<div><img src='"+src+"' width='135' height='240'></div>"
+				$("#photo" + (_i - 16)).remove();
+				$("#photo_roll_left").append(str);
+
+				if (_i > 20) {
+					$("#roll_line").css("width", (_i - 12) * 195);
+					$("#photo_roll_left").css("width", (_i - 16) * 195);
+				} else {
+					$("#photo_roll_right").append(str);
+				}
+				if (_i == 20) {
+					setTimeout("goRoll()", 20);
+				}
+			}
+		}
+		function goRoll() {
+			var left = -parseInt($("#roll_line").css("left"));
+			var width = parseInt($("#photo_roll_left").css("width"));
+			if (left < width) {
+				$("#roll_line").css("left", -left - 4 + "px");
+			} else {
+				$("#roll_line").css("left", 0);
+			}
+			setTimeout("goRoll()", 20);
+		}
+	</script>
+
+
+</body>
+</html>

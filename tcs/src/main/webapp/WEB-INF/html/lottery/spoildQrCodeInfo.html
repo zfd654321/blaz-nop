@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="apple-itunes-app" content="app-id=429849944" />
+<meta name="viewport" content="width=750,user-scalable=no" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+* {
+	padding: 0;
+	margin: 0;
+}
+
+html {
+	width: 750px;
+	margin: 0 auto
+}
+
+.main {
+	position: fixed;
+	overflow: scroll;
+}
+
+.top {
+	width: 750px;
+}
+
+.text {
+	color: #FFF;
+	font-size: 40px;
+}
+
+.qrcode {
+	width: 280px;
+	margin: 0 auto;
+}
+
+.cardlist {
+	position: relative;
+	border: solid 1px #666666;
+	height: 280px;
+}
+
+.cardlist img {
+	width: 240px;
+	height: 240px;
+	padding: 20px;
+}
+
+.cardtitle {
+	position: absolute;
+	left: 300px;
+	top: 20px;
+	width: 400px;
+	font-size: 35px;
+	font-weight: 900;
+}
+
+.cardtext {
+	position: absolute;
+	left: 300px;
+	top: 70px;
+	width: 400px;
+	font-size: 28px;
+	text-align: justify;
+}
+
+.cardsub {
+	position: absolute;
+	left: 300px;
+	bottom: 20px;
+	width: 180px;
+	height: 50px;
+	font-size: 30px;
+	line-height: 50px;
+	text-align: center;
+	border: solid 1px #333333;
+	background: #f2571d;
+	border-radius: 10px;
+	color: #fff;
+}
+
+.done {
+	background: #808080;
+}
+
+.cardlest {
+	position: absolute;
+	left: 500px;
+	bottom: 20px;
+	height: 40px;
+	font-size: 20px;
+	line-height: 40px;
+	text-align: center;
+}
+
+.qrText {
+	width: 750px;
+	text-align: center;
+	font-size: 35px;
+	margin: 30px 0;
+}
+
+.qrText input {
+	width: 300px;
+	height: 50px;
+	padding-left: 20px;
+	font-size: 35px;
+}
+
+.qrSub {
+	width: 300px;
+	height: 80px;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 50px;
+	line-height: 80px;
+	border: solid 2px;
+	border-radius: 20px;
+}
+</style>
+<script type="text/javascript"
+	src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="/BLWXV3.0/javascript/jquery-3.1.0.min.js"></script>
+<script src="/BLWXV3.0/javascript/httpService.js"></script>
+</head>
+<body>
+	<div class="main">
+		<div class="top">
+			<img src="/BLWXV3.0/html/lottery/img/banner.jpg" width="750"
+				height="200">
+		</div>
+		<div class="cardlist">
+			<img id="spoil_image" src="">
+			<div class="cardtitle" id="spoil_name"></div>
+			<div class="cardtext" id="spoil_desc"></div>
+			<div class="cardlest" id="spoil_repertory">(库存剩余：)</div>
+		</div>
+		<div class="qrText">
+			核销码：<input type=text />
+		</div>
+		<div id="qrSub" class="qrSub" onclick="verification()">确认核销</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var height = document.documentElement.clientHeight;
+	var width = document.documentElement.clientWidth;
+	$(".main").attr("style", "min-height:" + height + "px");
+	var device_id=getURLParams("device_id");
+	var open_id=getURLParams("open_id");
+	var spoil_id=getURLParams("spoil_id");
+	var lottery_merchant_id=getURLParams("lottery_merchant_id");
+	var awards_id=getURLParams("awards_id");
+	$(function() {
+		$.get('/BLWXV3.0/Lottery/getSpoildLottery.do', 'spoil_id='+spoil_id, function(data) {
+			$("#spoil_image").attr("src",data.vo.spoil_image);
+			$("#spoil_name").html(data.vo.spoil_name);
+			$("#spoil_desc").html(data.vo.spoil_desc);
+			$("#spoil_repertory").html("(库存剩余："+data.vo.spoil_repertory+")");
+		}, 'json')
+	});
+	
+	function verification(){
+		var verification_code=$(".qrText input").val();
+
+		$.get('/BLWXV3.0/Lottery/getSpoildLotteryQrCodeVerification.do', 
+				'spoil_id='+spoil_id
+				+'&device_id='+device_id
+				+'&open_id='+open_id
+				+'&lottery_merchant_id='+lottery_merchant_id
+				+'&awards_id='+awards_id
+				+'&verification_code='+verification_code
+				,
+				function(data) {
+			if(data.return_code=="1"){
+				alert("核销成功！");
+				$("#qrSub").html("已核销");
+				$("#qrSub").removeAttr("onclick");
+				WeixinJSBridge.call('closeWindow');
+			}else{
+				alert(data.return_msg);
+			}
+		}, 'json')
+	}
+	
+	
+</script>
+</html>

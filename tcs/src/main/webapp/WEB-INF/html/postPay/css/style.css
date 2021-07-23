@@ -1,0 +1,19 @@
+.rotate_wrap{
+	height:600px;
+	position:absolute;
+	top:290px;
+	width:600px;
+	left:75px;
+}
+.bg_img{
+	width:580px;;
+	position:absolute;
+	top:10px;
+	left:10px;
+}
+.cont_img{
+	width: 115px;
+	position: absolute;
+	top: 220px;
+	left:240px;
+}

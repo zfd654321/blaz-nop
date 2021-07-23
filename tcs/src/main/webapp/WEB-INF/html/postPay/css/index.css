@@ -1,0 +1,42 @@
+*{padding:0; margin:0;}
+html{width:750px;margin:0 auto;}
+body{position:relative;overflow: hidden} 
+.main{width:750px;min-height:1300px;background:url(../redpacket/img/back.png);position:relative;background-size:750px;overflow: hidden;}
+.main1{width:750px;min-height:1300px;position:fixed;background:url(../redpacket/img/back1.png) repeat-y;background-size:750px;}
+.t1{width:750px;height:300px;}
+.t1 img{width:620px;margin:65px;}
+.t2{color:#FFFFFF;font-size:30px;width:750px;height:40px;position:relative;margin-top:-50px;}
+.t21{position:absolute;left:55px;}
+.t22{position:absolute;left:125px;}
+.t23{position:absolute;left:270px;}
+.t3{width:750px;text-align:center;font-size:15px;color:#FFFFFF;margin-top:615px;}
+.t4{position:fixed;bottom:27px;right:55px;width:160px;height:46px;background:url(../redpacket/img/sub.png);background-size:160px 53px;text-align: center; padding-top: 7px;}
+.rotate_wrap{height:600px;position:absolute;top:290px;width:600px;left:75px;}
+.bg_img{width:580px;height:580px;position:absolute;top:10px;left:10px;background:url(../redpacket/img/rollpan2.png);background-size:580px;}
+.cont_img{width: 115px;position: absolute;top: 220px;left:240px;}
+.mask{position:fixed;background:#000;opacity:0.7;width:750px;height:100%;display:none;z-index:15}
+.listpic{width:580px;height:580px;position:absolute;}
+.listinfo{width:160px;height:100px;position:absolute;top:80px;left:210px;text-align: center;font-size: 30px;line-height: 50px;}
+.s1{position:absolute;display:none;z-index: 20;top: 265px;left: 175px;}
+.s2{position:absolute;display:none;z-index: 20;top: 265px;left: 175px;color:#fff;font-size:30px;width:400px;text-align:center}
+.s2 #spoild_name{font-size:40px;}
+.s1sub{position: absolute;top: 420px;left: 93px;width:200px;background:#fff;height:50px;text-align:center;font-size:45px;color:#ff0303;font-weight:900;border-radius: 10px;}
+
+
+.search a{margin-left:70px;}
+
+.infobox{width:710px;height:1270px;margin:15px 20px;overflow:scroll;}
+.infoboxdi{width:710px;background:#FFF;opacity:0.7;position:fixed;z-index:-1;}
+.search{width:710px;height:90px;font-size:30px;line-height:46px;padding:20px 0 0 20px;position:relative;}
+.search input{width:167px;height:44px;margin-right:30px;height:40px;border:solid 1px #777777;font-size:23px;line-height:30px;padding:0px 10px;background-color: #FFFFFF;color:#333333;border-radius:4px;}
+.searchsub{width:56px;height:49px;background:url(../redpacket/img/search.jpg) no-repeat #4489ca;border-radius: 4px;position:absolute;top:16px;right:16px;background-position: 4px;}
+.banner{width:660px;height:300px;margin:0 auto;overflow:hidden;position:relative;}
+.bannerlist{width:1320px;height:300px;position:absolute;left:0;transition: 1s;}
+.balist{width:660px;height:300px;position:relative;float:left;}
+.bannerbox{height:55px;width:660px;position:absolute;bottom:0;background:#000;opacity:0.7;z-index: 1}
+.bannertext{height:55px;position:absolute;bottom:0;z-index: 2;color:#FFF;font-size:25px;line-height:55px;padding-left:20px;}
+.inflist{width:710px;margin-top:60px;}
+.infc{height:280px;width:630px;margin:0px auto 50px auto;position:relative;border-bottom: 2px #000 solid;}
+.icte{font-size:37px;font-weight:900;line-height:44px;text-align: justify;}
+.icad{margin-top:15px;font-size:25px;color:#89898b;line-height:32px;text-align: justify;}
+.icri{position:absolute;left:300px;top:0}

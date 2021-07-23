@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=1080,user-scalable=no" />
+<link href="css/index.css" rel="stylesheet" type="text/css" />
+<script src="/BLWXV3.0/javascript/jquery-3.1.0.min.js"></script>
+<script src="/BLWXV3.0/javascript/httpService.js"></script>
+<script type="text/javascript"
+	src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<title>扫码检验</title>
+</head>
+
+<body>
+
+	<script type="text/javascript">
+	var open_id
+	$(function() {
+		var code = getURLParams('code');
+		var game_id = getURLParams("game_id");
+		sendRequest('/BLWXV3.0/WXPay/getWXUserOpenId.do', {
+			"code" : code
+		}, function(jsonData) {
+			if (jsonData.data == '1') {
+				open_id = jsonData.open_id;
+				alert(open_id)
+			} else {
+				alert('得到微信用户信息Error!');
+			}
+		});
+
+	});
+	</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=750,user-scalable=no" />
+<link href="css/index.css" rel="stylesheet" type="text/css" />
+<script src="../../js/httpService.js"></script>
+<script src="../../js/jquery-3.1.0.min.js"></script>
+<title>设备报警</title>
+</head>
+
+<body>
+
+	<div class="main">
+
+	<div class="text" id="text"></div>
+		<div class="tittle" id="text">该设备最近报警记录：</div>
+		<table id="list"></table>
+
+
+	</div>
+
+
+	<script>
+		$(function() {
+			var device_id = getQueryString('device_id');
+			
+			sendRequest(pageContextPath+'/Alarm/queryAlarm.do', {
+				"device_id" : device_id
+			}, function(jsonData) {
+				var str = "<p>编号：" + jsonData.device.device_id + "</p><p>名称："
+						+ jsonData.device.device_name + "的设备</p><p>("
+						+ jsonData.device.device_desc
+						+ ")</p><p>已经离线超过30分钟了。请工作人员进行查看</p>";
+				$("#text").html(str);
+				if (jsonData.data == '1') {
+					var str = "";
+					str += "<tr>";
+					str += "<th>设备编号</th>";
+					str += "<th>报警时间</th>";
+					str += "<th>最近心跳时间</th>";
+					str += "</tr>";
+
+					$.each(jsonData.list, function(i, item) {
+						str += "<tr>";
+						str += "<td>" + item.device_id + "</td>";
+						str += "<td>" + item.alarm_time + "</td>";
+						str += "<td>" + item.heartbeat_last_date + "</td>";
+						str += "</tr>";
+					});
+					$("#list").html(str);
+				} else {
+					alert('得到微信用户信息Error!');
+				}
+			});
+
+		})
+
+		function getQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null)
+				return unescape(r[2]);
+			return null;
+		}
+	</script>
+
+
+
+
+</body>
