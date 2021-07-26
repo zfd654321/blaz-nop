@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.bis.dao.SystemDao">
+
+	<!-- 查询用户列表 -->
+	<select id="findVersionByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.device.Version">
+		select *
+		from bl_version where 1=1
+		<if test="versionId!=null and versionId!=''">
+			AND version_id like
+			concat('%',#{versionId},'%')
+		</if>
+		<if test="versionScreenType!=null and versionScreenType!=''">
+			AND version_screen_type =#{versionScreenType}
+		</if>
+		<if test="cameraType!=null and cameraType!=''">
+			AND camera_type =#{cameraType}
+		</if>
+		<if test="status!=null and status!=''">
+			AND `status` =#{status}
+		</if>
+		order by version_time desc
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findVersionCount" parameterType="java.util.Map" resultType="int">
+		select count(*)
+		from bl_version where 1=1
+		<if test="versionId!=null and versionId!=''">
+			AND version_id like
+			concat('%',#{versionId},'%')
+		</if>
+		<if test="versionScreenType!=null and versionScreenType!=''">
+			AND version_screen_type like
+			concat('%',#{versionScreenType},'%')
+		</if>
+		<if test="status!=null and status!=''">
+			AND `status` =#{status}
+		</if>
+	</select>
+
+	<update id="updateVersionStatus" parameterType="java.lang.String">
+		update bl_version
+		set
+		`status`=#{status, jdbcType=VARCHAR} where version_id =
+		#{versionId,jdbcType=VARCHAR} AND `status`='Y'
+	</update>
+
+	<!-- 查询用户列表 -->
+	<select id="findDownloaderByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.device.Downloader">
+		select *
+		from bl_downloader
+		<where>
+			<if test="screen_type!=null and screen_type!=''">
+				screen_type	=#{screen_type}			
+			</if>
+		</where>
+		order by up_date desc
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findDownloaderCount" parameterType="java.util.Map" resultType="int">
+		select count(*)
+		from bl_downloader
+		<where>
+			<if test="screen_type!=null and screen_type!=''">
+				screen_type	=#{screen_type}			
+			</if>
+		</where>
+	</select>
+
+	<update id="updateDownloaderStatus" parameterType="java.lang.String">
+		update
+		bl_downloader set
+		`status`=#{status, jdbcType=VARCHAR} where
+		downloader_id =
+		#{downloaderId,jdbcType=VARCHAR} AND `status`='Y'
+	</update>
+
+	<select id="findAlarmByPage" parameterType="java.util.Map" resultType="com.bl.nop.bis.dto.AlarmDto">
+		SELECT d.`device_id`,
+		d.`device_name`,
+		d.`device_desc`,
+		p.`s_id` deviceSId,
+		IFNULL(a.`alaram_status`,'N') alaram_status,
+		a.`to_mail`,
+		a.`multiperiod_date`,
+		a.`delayed_time`
+		FROM bl_online_device d
+		LEFT JOIN bl_device_alarm a
+		ON
+		d.`device_id`=a.`device_id`
+		LEFT JOIN bl_pc_repertory p
+		ON
+		d.`pc_id`=p.`pc_id`
+		WHERE 1=1
+		<if test="deviceId!=null and deviceId!=''">
+			AND d.device_id like concat('%',#{deviceId},'%')
+		</if>
+		<if test="deviceName!=null and deviceName!=''">
+			AND d.device_name like concat('%',#{deviceName},'%')
+		</if>
+		<if test="sId!=null and sId!=''">
+			AND p.s_id like concat('%',#{sId},'%')
+		</if>
+		<if test="alaramStatus!=null and alaramStatus!=''">
+			AND IFNULL(a.`alaram_status`,'N')=#{alaramStatus}
+		</if>
+		ORDER BY a.`alaram_status` DESC 
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findAlarmCount" parameterType="java.util.Map" resultType="int">
+		select count(*)
+		FROM bl_online_device d
+		LEFT JOIN bl_device_alarm a
+		ON
+		d.`device_id`=a.`device_id`
+		LEFT JOIN bl_pc_repertory p
+		ON
+		d.`pc_id`=p.`pc_id`
+		WHERE 1=1
+		<if test="deviceId!=null and deviceId!=''">
+			AND d.device_id like concat('%',#{deviceId},'%')
+		</if>
+		<if test="deviceName!=null and deviceName!=''">
+			AND d.device_name like concat('%',#{deviceName},'%')
+		</if>
+		<if test="sId!=null and sId!=''">
+			AND p.s_id like concat('%',#{sId},'%')
+		</if>
+		<if test="alaramStatus!=null and alaramStatus!=''">
+			AND IFNULL(a.`alaram_status`,'N')=#{alaramStatus}
+		</if>
+	</select>
+
+	<select id="findSwitchByPage" parameterType="java.util.Map" resultType="com.bl.nop.bis.dto.SwitchDto">
+		SELECT s.*,d.`device_name`,d.`device_desc`,d.`s_id`,d.`screen_type` FROM
+		 bl_online_device d LEFT JOIN `bl_online_device_update_switch` s ON
+		s.`device_id`=d.`device_id`
+		WHERE 1=1
+		<if test="deviceId!=null and deviceId!=''">
+			AND s.device_id like concat('%',#{deviceId},'%')
+		</if>
+		<if test="Sid!=null and Sid!=''">
+			AND d.s_id like concat('%',#{Sid},'%')
+		</if>
+		<if test="screen_type!=null and screen_type!=''">
+			AND d.screen_type =#{screen_type}
+		</if>
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findSwitchCount" parameterType="java.util.Map" resultType="int">
+		select count(*) FROM
+		 bl_online_device d LEFT JOIN `bl_online_device_update_switch` s ON
+		s.`device_id`=d.`device_id`
+		WHERE 1=1
+		<if test="deviceId!=null and deviceId!=''">
+			AND s.device_id like concat('%',#{deviceId},'%')
+		</if>
+		<if test="Sid!=null and Sid!=''">
+			AND d.s_id like concat('%',#{Sid},'%')
+		</if>
+		<if test="screen_type!=null and screen_type!=''">
+			AND d.screen_type =#{screen_type}
+		</if>
+	</select>
+
+	<!-- 查询用户列表 -->
+	<select id="getRunVersion" parameterType="java.util.Map" resultType="com.bl.nop.entity.device.Version">
+		SELECT * FROM bl_version WHERE version_time IN (SELECT MAX(version_time) FROM bl_version GROUP BY version_screen_type,camera_type)
+
+	</select>
+
+	<!-- 查询用户列表 -->
+	<select id="findLanguageByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.device.DeviceLanguage">
+		SELECT language_id languageId,
+		language_CN_name languageCnName,
+		language_EN_name languageEnName 
+		FROM bl_device_language
+		WHERE language_status='Y'
+	</select>
+
+	<select id="queryAreaByParent" parameterType="java.lang.String" resultType="com.bl.nop.entity.system.SaleArea">
+		SELECT *FROM bl_sale_area WHERE parent_area_id=#{parentAreaId, jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryAddressByAreaId" parameterType="java.util.Map" resultType="com.bl.nop.entity.system.SaleAreaAddress">
+		SELECT *FROM bl_sale_area_address WHERE area_id=#{areaId}
+		<if test="userId!=null and userId!=''">
+			AND (created_by =
+			#{userId}
+			OR created_by=(SELECT
+			parent_merchant_id FROM
+			`bl_merchant_user` WHERE
+			merchant_id=#{userId})
+			OR created_by IN
+			(SELECT merchant_id FROM
+			`bl_merchant_user` WHERE
+			parent_merchant_id=#{userId}))
+		</if>
+	</select>
+
+	<select id="loadVersionLog" parameterType="java.util.Map" resultType="com.bl.nop.entity.device.VersionLog">
+		SELECT * FROM bl_version_log
+		WHERE 1=1
+		<if test="game_id!=null and game_id!=''">
+			AND game_id like concat('%',#{game_id},'%')
+		</if>
+		<if test="version_id!=null and version_id!=''">
+			AND version_id  =#{version_id}
+		</if>
+	</select>
+
+	<delete id="cleanVersionLog" parameterType="String">
+		DELETE FROM
+		bl_version_log WHERE
+		version_id=#{version_id}
+	</delete>
+
+
+	<select id="queryVersionLog" parameterType="java.util.Map" resultType="com.bl.nop.bis.dto.VersionLogDto">
+		SELECT l.*,g.`game_name`,v.`version_screen_type`,v.`version_time` FROM bl_version_log l
+		LEFT JOIN bl_game g 
+		ON l.`game_id`=g.`game_id`
+		LEFT JOIN bl_version v
+		ON l.`version_id`=v.`version_id`
+		WHERE 1=1
+		<if test="gameId!=null and gameId!=''">
+			AND l.game_id like concat('%',#{gameId},'%')
+		</if>
+		<if test="gameName!=null and gameName!=''">
+			AND g.game_name like concat('%',#{gameName},'%')
+		</if>
+		<if test="screenType!=null and screenType!=''">
+			AND v.version_screen_type  =#{screenType}
+		</if>
+		ORDER BY l.version_id DESC,l.type
+	</select>
+</mapper>

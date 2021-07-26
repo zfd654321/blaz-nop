@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.PermissionDao">
+	<!-- 用户登录 -->
+	<select id="getUserByUserNoAndPass" parameterType="java.lang.String" resultType="com.bl.nop.entity.sys.SysUser">
+		select * from bl_user where status=1 AND
+		user_no=#{userNo} AND
+		user_pass=#{userPass}
+	</select>
+	<!-- 查询用户列表 -->
+	<select id="findUserByPage" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.UserDto">
+		SELECT u.*,r.`role_name` FROM bl_user u LEFT JOIN bl_role r ON
+		u.`user_role_id`=r.`role_id`
+		WHERE 1=1
+		<if test="userId!=null and userId!=''">
+			AND user_id like
+			concat('%',#{userId},'%')
+		</if>
+		<if test="userName!=null and userName!=''">
+			AND user_name like
+			concat('%',#{userName},'%')
+		</if>
+		<if test="status!=null and status!=''">
+			AND u.`status` =#{status}
+		</if>
+		<if test="type!=null and type!=''">
+			AND user_type
+			=#{type}
+		</if>
+		<if test="roleId!=null and roleId!=''">
+			AND u.`user_role_id`
+			=#{roleId}
+		</if>
+		order by updated_time desc
+		LIMIT ${startNum},${pageSize}
+	</select>
+	<!-- 查询用户列表 -->
+	<select id="findUserCount" parameterType="java.util.Map" resultType="int">
+		select count(*)
+		from bl_user where 1=1
+		<if test="userId!=null and userId!=''">
+			AND user_id like
+			concat('%',#{userId},'%')
+		</if>
+		<if test="userName!=null and userName!=''">
+			AND user_name like
+			concat('%',#{userName},'%')
+		</if>
+		<if test="status!=null and status!=''">
+			AND `status` =#{status}
+		</if>
+		<if test="type!=null and type!=''">
+			AND user_type
+			=#{type}
+		</if>
+	</select>
+	<update id="updateUserStatus" parameterType="java.lang.String">
+		update bl_user set
+		`status`=#{status, jdbcType=VARCHAR} where user_id =
+		#{userId,jdbcType=VARCHAR} AND `status`='Y'
+	</update>
+
+	<select id="findMenuByRoleId" parameterType="java.lang.String" resultType="com.bl.nop.dto.MenuTreeDto">
+		SELECT t.menu_id AS id,
+		t.title AS `text`,
+		t.menuurl AS url,
+		t.icon AS icon,
+		t.parmenuid AS parMenuId
+		FROM bl_role_menu m
+		LEFT JOIN
+		bl_menu t
+		ON
+		m.menu_id=t.menu_id
+		WHERE t.status='Y'
+		AND m.role_id =
+		#{roleId}
+		ORDER BY t.parmenuid,t.ordernum
+	</select>
+
+	<select id="findMerchantMenuByRoleId" parameterType="java.util.Map" resultType="com.bl.nop.dto.MenuTreeDto">
+		SELECT m.`menu_id` AS `id`,
+		m.`title` AS `text`,
+		m.`menuurl` AS `url`,
+		m.`icon` AS `icon`,
+		m.`parmenuid` AS `parMenuId`
+		FROM bl_merchant_menu m
+		WHERE status='Y'
+		<if test="userId!=null and userId!=''">
+			AND menu_id IN (SELECT menu_id FROM bl_merchant_user_menu WHERE user_id
+			=
+			#{userId})
+		</if>
+	</select>
+
+	<select id="findMenuByMenuIds" resultType="com.bl.nop.entity.system.Menu" parameterType="java.util.List">
+		select * from bl_menu
+		where t.status='Y' AND menu_id in
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 查询所有的菜单 -->
+	<select id="findAllMenu" resultType="com.bl.nop.entity.system.Menu">
+		SELECT * FROM bl_menu
+		WHERE
+		status='Y'
+		ORDER BY ABS(menu_id)
+	</select>
+	<!-- 查询未完成事项菜单 -->
+	<select id="queryUndoneCount" parameterType="java.lang.String" resultType="com.bl.nop.dto.UndoneCountDto">
+		SELECT
+		(SELECT COUNT(1) FROM
+		`bl_merchant_device_software_licence_info` WHERE
+		apply_statu='1')
+		merchantSoftCount,
+		(SELECT COUNT(1) FROM
+		`bl_file_resources_pool` WHERE
+		file_audit_status='1')
+		resourseCheckCount,
+		(SELECT COUNT(1) FROM
+		`bl_mistake_info`)
+		mistakeCount FROM DUAL
+	</select>
+
+	<select id="findRoleByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.system.Role">
+		SELECT role_id,
+		STATUS,
+		role_desc,
+		role_name,
+		created_by,
+		updated_by,
+		created_time,
+		updated_time
+		FROM bl_role WHERE 1=1
+		<if test="roleId!=null and roleId!=''">
+			AND role_id like
+			concat('%',#{role_id},'%')
+
+		</if>
+		<if test="roleName!=null and roleName!=''">
+			AND role_name like
+			concat('%',#{role_name},'%')
+		</if>
+		<if test="status!=null and status!=''">
+			AND status =
+			#{status}
+		</if>
+		order by role_id
+	</select>
+
+	<select id="findRoleCount" parameterType="java.util.Map" resultType="int">
+		select count(*)
+		from bl_role where 1=1
+		<if test="roleId!=null and roleId!=''">
+			AND role_id like
+			concat('%',#{role_id},'%')
+
+		</if>
+		<if test="roleName!=null and roleName!=''">
+			AND role_name like
+			concat('%',#{role_name},'%')
+		</if>
+		<if test="status!=null and status!=''">
+			AND status =
+			#{status}
+		</if>
+	</select>
+
+	<insert id="updateRoleMenu" parameterType="java.util.Map">
+		INSERT INTO
+		bl_role_menu (menu_id,role_id,STATUS)
+		(SELECT menu_id,#{roleId,
+		jdbcType=VARCHAR},"Y" FROM bl_menu WHERE CONCAT(",",#{menuIdStr,
+		jdbcType=VARCHAR},",")
+		LIKE CONCAT("%,",menu_id,",%"))
+
+
+	</insert>
+
+
+	<delete id="cleanRoleMenu" parameterType="java.util.Map">
+		DELETE FROM
+		bl_role_menu WHERE role_id = #{roleId,jdbcType=VARCHAR}
+	</delete>
+
+
+	<select id="findDeviceUser" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.UserDto">
+		SELECT * FROM bl_user
+		WHERE user_type='1'
+		OR user_role_id =
+		'004'
+
+	</select>
+
+
+	<select id="findMerchantUserList" parameterType="java.util.Map" resultType="com.bl.nop.entity.merchant.MerchantUser">
+		SELECT *FROM `bl_merchant_user` WHERE 1=1
+		<if test="merchantId!=null and merchantId!=''">
+			AND merchant_id like
+			concat('%',#{merchantId},'%')
+		</if>
+		<if test="parentMerchantId!=null and parentMerchantId!=''">
+			AND parent_merchant_id = #{parentMerchantId}
+		</if>
+		<if test="merchantName!=null and merchantName!=''">
+			AND merchant_name like
+			concat('%',#{merchantName},'%')
+		</if>
+		<if test="merchantKeeper!=null and merchantKeeper!=''">
+			AND merchant_keeper like
+			concat('%',#{merchantKeeper},'%')
+		</if>
+		<if test="loginName!=null and loginName!=''">
+			AND login_name like
+			concat('%',#{loginName},'%')
+		</if>
+
+		<if test="status!=null and status!=''">
+			AND status=#{status}
+		</if>
+		<if test="roleId!=null and roleId!=''">
+			AND role_id =#{roleId}
+		</if>
+		order by updated_time desc
+		LIMIT ${startNum},${pageSize}
+	</select>
+	<!-- 查询用户列表 -->
+	<select id="findMerchantUserCount" parameterType="java.util.Map" resultType="int">
+		select count(*)
+		from `bl_merchant_user` WHERE 1=1
+		<if test="merchantId!=null and merchantId!=''">
+			AND merchant_id like
+			concat('%',#{merchantId},'%')
+		</if>
+		<if test="parentMerchantId!=null and parentMerchantId!=''">
+			AND parent_merchant_id = #{parentMerchantId}
+		</if>
+		<if test="merchantName!=null and merchantName!=''">
+			AND merchant_name like
+			concat('%',#{merchantName},'%')
+		</if>
+		<if test="merchantKeeper!=null and merchantKeeper!=''">
+			AND merchant_keeper like
+			concat('%',#{merchantKeeper},'%')
+		</if>
+		<if test="loginName!=null and loginName!=''">
+			AND login_name like
+			concat('%',#{loginName},'%')
+		</if>
+
+		<if test="status!=null and status!=''">
+			AND status=#{status}
+		</if>
+		<if test="roleId!=null and roleId!=''">
+			AND role_id =#{roleId}
+		</if>
+	</select>
+
+	<select id="getMerchantUserByLoginName" parameterType="java.util.Map" resultType="com.bl.nop.entity.merchant.MerchantUser">
+		select * from `bl_merchant_user` WHERE
+		login_name=#{loginName}
+
+	</select>
+
+	<select id="getHomePageData" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.HomePageDataDto">
+		SELECT
+		pu.`game_ids`,
+		pu.`cos_ids`,
+		pu.`advert_type_ids`,
+		COUNT(DISTINCT d.`device_id`)
+		device_count,
+		(SELECT COUNT(1) FROM `bl_device_data_heartbeat_info` WHERE device_id IN 
+		(SELECT device_id FROM bl_merchant_device_allot WHERE
+		<if test="parentMerchantId!=null and parentMerchantId!=''">
+			parent_merchant_id=#{parentMerchantId} 
+		</if>
+		<if test="merchantId!=null and merchantId!=''">
+			concat(",",merchant_id,",") LIKE	concat("%,",#{merchantId},",%")
+		</if>
+		)
+		AND heartbeat_last_date>=DATE_SUB(NOW(),INTERVAL 20 MINUTE)) online_count,
+		IFNULL(AVG(used_rate),0) used_rate,
+		IFNULL(AVG(online_duration)/3600,0) online_duration,
+		IFNULL(SUM(scan_attention_oa_times),0) scan_attention_oa_times,
+		IFNULL(AVG(experience_man_times),0) experience_man_times,
+		IFNULL(AVG(avg_experience_duration),0) used_duration,
+		IFNULL(SUM(o.wx_payed_order),0) wx_payed_order,
+		IFNULL(SUM(o.wx_payed_order_money),0) wx_payed_order_money,
+		0
+		advert_count,
+		0 game_count,
+		0 cos_count,
+		<if test="parentMerchantId!=null and parentMerchantId!=''">
+			(SELECT COUNT(1) FROM bl_file_resources_pool WHERE
+			user_id=#{parentMerchantId} AND file_audit_status=1) resource_count
+		</if>
+		<if test="merchantId!=null and merchantId!=''">
+			(SELECT COUNT(1) FROM bl_file_resources_pool WHERE
+			user_id=#{merchantId} AND file_audit_status=1) resource_count
+		</if>
+		FROM
+		bl_merchant_device_allot d
+		LEFT JOIN `single_device_data_statistical_analysis_summary` s1
+		ON
+		d.`device_id`=s1.`device_id` AND s1.`intraday_date`=#{intraday_date}
+		LEFT JOIN `single_device_rate_analysis_summary` s2
+		ON
+		s1.`device_id`=s2.`device_id` AND
+		s1.`intraday_date`=s2.`intraday_date`
+		LEFT JOIN
+		`single_device_data_pay_order` o
+		ON s1.`device_id`=o.`device_id` AND
+		s1.`intraday_date`=o.`intraday_date`,bl_merchant_user u LEFT JOIN bl_merchant_user pu
+		<if test="parentMerchantId!=null and parentMerchantId!=''">
+			ON u.`merchant_id`=pu.merchant_id
+		</if>
+		<if test="merchantId!=null and merchantId!=''">
+			ON u.`parent_merchant_id`=pu.merchant_id
+		</if>
+		<if test="parentMerchantId!=null and parentMerchantId!=''">
+			WHERE u.`merchant_id`=#{parentMerchantId} AND u.merchant_id = d.`parent_merchant_id` AND
+			d.`status`='Y'
+		</if>
+		<if test="merchantId!=null and merchantId!=''">
+			WHERE u.`merchant_id`=#{merchantId} AND concat(",",d.merchant_id,",") LIKE
+			concat("%,",u.merchant_id,",%")
+		</if>
+
+	</select>
+
+	<select id="queryUserDevice" parameterType="java.util.Map" resultType="com.bl.nop.entity.merchant.MerchantDeviceAllot">
+		SELECT *FROM `bl_merchant_device_allot` WHERE 1=1
+		<if test="merchantId!=null and merchantId!=''">
+			AND CONCAT(",",merchant_id,",") LIKE CONCAT("%,",#{merchantId},",%")
+		</if>
+		<if test="deviceIds!=null and deviceIds!=''">
+			AND CONCAT(",",#{deviceIds},",") LIKE CONCAT("%,",device_id,",%")
+		</if>
+	</select>
+
+	<delete id="cleanUserMenu" parameterType="java.util.Map">
+		DELETE FROM
+		`bl_merchant_user_menu` WHERE user_id = #{userId};
+
+		
+	</delete>
+
+	<insert id="saveUserMenu" parameterType="java.util.Map">
+		INSERT INTO `bl_merchant_user_menu`
+		(`user_id`,
+		`menu_id`)
+		(SELECT #{userId} user_id,menu_id FROM `bl_merchant_menu` WHERE
+		CONCAT(",",#{menuIds},",") LIKE CONCAT("%,",menu_id,",%") );
+	</insert>
+
+	<select id="findMerchantMenuList" parameterType="java.util.Map" resultType="com.bl.nop.entity.merchant.MerchantMenu">
+		SELECT *FROM `bl_merchant_menu` WHERE status='Y'
+		
+	</select>
+</mapper>

@@ -22,6 +22,8 @@ public class GlobalInterceptor implements HandlerInterceptor {
 	private static final String[] URLS = {
 			".html",
 			".xls",
+			".js",
+			".css",
             "/login",
             "/imgcode",
             "/othFile/save",
