@@ -3,21 +3,21 @@ package com.bl.nop.dto;
 import java.io.Serializable;
 import java.util.List;
 
-public class MenuTreeDto implements Serializable{
+public class MenuTreeDto implements Serializable {
 
 	private static final long serialVersionUID = 8072477614709789237L;
-	
+
 	private String text;
-	
+
 	private String id;
-	
+
 	private String url;
-	
+
 	private String parMenuId;
-	
+
 	private String icon;
-	
-	private List<MenuTreeDto> children;
+
+	private String odindex;
 
 	public String getText() {
 		return text;
@@ -33,6 +33,14 @@ public class MenuTreeDto implements Serializable{
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public String getParMenuId() {
@@ -51,6 +59,14 @@ public class MenuTreeDto implements Serializable{
 		this.icon = icon;
 	}
 
+	public String getOdindex() {
+		return odindex;
+	}
+
+	public void setOdindex(String odindex) {
+		this.odindex = odindex;
+	}
+
 	public List<MenuTreeDto> getChildren() {
 		return children;
 	}
@@ -59,11 +75,6 @@ public class MenuTreeDto implements Serializable{
 		this.children = children;
 	}
 
-	public String getUrl() {
-		return url;
-	}
+	private List<MenuTreeDto> children;
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
 }

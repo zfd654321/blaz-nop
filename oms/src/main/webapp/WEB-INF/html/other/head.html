@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="../plugin/css/head.css">
+
+<div id="head">
+    <!--<div class="headtitle">引力透镜[x-mirror] 后台管理系统</div>-->
+    <div class="rightspan">
+        <div class="usermessage">欢迎你，{{headData.userInfo.nickname}}</div>
+        <el-dropdown @command="handleCommand">
+            <el-button size="small" type="primary">
+    用户选项<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="1">修改密码</el-dropdown-item>
+                <el-dropdown-item command="2">登出</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+    </div>
+</div>
+
+<script>
+    var headVue = new Vue({
+        el: '#head',
+        data: {
+            headData: {
+                userInfo: []
+            }
+        },
+        created: function () {
+            this.loadUser();
+        },
+        methods: {
+            handleCommand(command) {
+                if (command == 1) {
+                    $("#mainLoader").load("other/password.html")
+                    
+                } else if (command == 2) {
+                    window.location.href = "login.html"
+                }
+            },
+            loadUser: function () {
+                let _this = this
+                sendRequest("/oms/getUser", null, function (jsonData) {
+                    _this.headData.userInfo = jsonData.data
+                });
+            }
+        }
+    })
+</script>

@@ -1,0 +1,67 @@
+<div id="menu">
+  <div class="menutop">
+    <el-image
+      style="width: 178px; height: 59px;margin:10px"
+      src="../img/head/logo.png"
+      fit="fill"></el-image>
+  </div>
+  <el-menu
+      default-active="2"
+      class="el-menu-vertical-demo"
+      :collapse="isCollapse"
+      :unique-opened="true"
+    >
+    <el-submenu v-for="(menu,index) in menuData.menuList" :index="menu.odindex">
+      <template slot="title">
+        <i :class="menu.icon"></i>
+        <span>{{menu.text}}</span>
+      </template>
+      <el-submenu v-for="(smenu,sindex) in menu.children" :index="smenu.odindex">
+        <template slot="title">
+          <i class="el-icon-arrow-right"></i>
+          <span>{{smenu.text}}</span></template>
+        <el-menu-item v-for="(cmenu,cindex) in smenu.children" :index="cmenu.odindex">
+          <i class="el-icon-d-arrow-right"></i>
+          <span>{{cmenu.text}}</span></el-menu-item>
+      </el-submenu>
+    </el-submenu>
+
+  </el-menu>
+</div>
+<style>
+
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    height: 100%;
+  }
+</style>
+<script>
+  var menuVue = new Vue({
+    el: '#menu',
+    data: {
+      isCollapse: false,
+      menuData: {
+        menuList: []
+      }
+    },
+    created: function () {
+      this.loadMenu();
+    },
+    methods: {
+      loadMenu: function (event) {
+        let _this = this
+        sendRequest("/oms/getMenu", null, function (jsonData) {
+          _this.menuData.menuList = jsonData.data
+
+        });
+      },
+
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      }
+    }
+  })
+</script>

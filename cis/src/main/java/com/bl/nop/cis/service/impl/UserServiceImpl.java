@@ -35,10 +35,10 @@ public class UserServiceImpl implements UserService {
 	private static final String ERROR_CODE = "10101";
 
 	@Override
-	public ResResultBean loginUser(String userNo, String userPass) {
-		log.info("用户登陆>>>>账号：" + userNo + ">>>>>密码：" + userPass);
-		String md5Pass = Md5Util.toMd5(userPass);
-		SysUser user = this.permissionDao.getUserByUserNoAndPass(userNo, md5Pass);
+	public ResResultBean loginUser(String username, String password) {
+		log.info("用户登陆>>>>账号：" + username + ">>>>>密码：" + password);
+		String md5Pass = Md5Util.toMd5(password);
+		SysUser user = this.permissionDao.getUserByUserNoAndPass(username, md5Pass);
 		if (user != null) {
 			return ResResultBean.success(user);
 		} else {

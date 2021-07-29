@@ -4,14 +4,53 @@
     <meta charset="UTF-8">
     <!-- import CSS -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../plugin/css/main.css">
+    <link rel="stylesheet" href="../plugin/css/login.css">
+    <title>x-miror</title>
   </head>
   <body>
     <div id="app">
-      <el-input v-model="username" placeholder="请输入内容"></el-input>
-      <el-input v-model="password" placeholder="请输入密码" show-password></el-input>
-      <el-button @click="login">登陆</el-button>
+      <el-row>
+        <el-col :span="12">
+          <div class="maintitle">
+            <p>引力透镜</p>
+            <p>x-miror</p>
+            <p>后台管理系统</p>
+          </div>
+        </el-col>
+
+        <el-col :span="3">.</el-col>
+        <el-col :span="6">
+          <el-card class="loginbox">
+            <div slot="header" class="clearfix">
+              <span>登陆</span>
+            </div>
+            <div class="cline">
+              <el-input v-model="username" placeholder="请输入用户名" maxlength="20"></el-input>
+            </div>
+            <div class="cline">
+              <el-input v-model="password" placeholder="请输入密码" maxlength="20" show-password></el-input>
+            </div>
+
+            <div class="cline">
+
+              <el-input v-model="rancode" placeholder="请输入验证码" maxlength="20" @keyup.enter.native="login">
+                <template slot="append">
+                  <el-image :src="imgcode" style="width: 65px;" @click="switchImage"></el-image>
+                </template>
+              </el-input>
+            </div>
+            <div class="cline" @keyup.enter="login">
+              <el-button type="primary" @click="login">登陆</el-button>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+
     </div>
   </body>
+  <script src="../plugin/utils/httpService.js"></script>
+  <script src="../plugin/utils/jquery-3.1.0.min.js"></script>
   <!-- import Vue before Element -->
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <!-- import JavaScript -->
@@ -20,8 +59,32 @@
     new Vue({
       el: '#app',
       data: {
-        username:'',
-        password:''
+        username: '',
+        password: '',
+        rancode: '',
+        imgcode: '/oms/imgcode'
+      },
+      methods: {
+        switchImage: function (event) {
+          this.imgcode = '/oms/imgcode?count=' + Date.parse(new Date());
+        },
+        login: function (event) {
+          let _this=this
+          let params = {
+            username: this.username,
+            password: this.password,
+            rancode: this.rancode
+          }
+          sendRequest("/oms/login", params, function (jsonData) {
+            if (jsonData.isSuccess) {
+              window.location.href = "index.html";
+            } else {
+              _this.$message.error(jsonData.message);
+              _this.switchImage();
+            }
+
+          });
+        }
       }
     })
   </script>

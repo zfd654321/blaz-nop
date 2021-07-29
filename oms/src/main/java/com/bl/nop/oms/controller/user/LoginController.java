@@ -37,16 +37,16 @@ public class LoginController extends JsonBaseController {
 	@RequestMapping("login")
 	@ResponseBody
 	public ResResultBean login(HttpServletRequest request, HttpServletResponse response, 
-			@RequestParam("loginName")String loginName, @RequestParam("passWord")String passWord, @RequestParam("textRandomCode")String textRandomCode) {
-		if(StringUtils.isBlank(textRandomCode)) {
+			@RequestParam("username")String username, @RequestParam("password")String password, @RequestParam("rancode")String rancode) {
+		if(StringUtils.isBlank(rancode)) {
 			return ResResultBean.error(ERROR_CODE+"01001", "验证码为空");
 		}
 		
 		String code = (String)request.getSession().getAttribute(CommonConst.RANDOMCODE);
-		if(!textRandomCode.equalsIgnoreCase(code)) {
+		if(!rancode.equalsIgnoreCase(code)) {
 			return ResResultBean.error(ERROR_CODE+"01002","验证码错误");
 		}
-		ResResultBean resResultBean = userService.loginUser(loginName, passWord);
+		ResResultBean resResultBean = userService.loginUser(username, password);
 		if(resResultBean.isSuccess()) {
 			setUser(request, resResultBean.getData());
 		}

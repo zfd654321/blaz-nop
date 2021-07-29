@@ -24,7 +24,7 @@ function sendRequest(url, data, succssFun, asy) {
         success: function(jsonData) {
             //将后台响应的数据转换成json数据
             if (jsonData.code == "login") {
-                top.location.href = pageContextPath + "/login.html";
+                top.location.href = pageContextPath + "/html/login.html";
             } else {
                 succssFun(jsonData);
             }
@@ -51,7 +51,7 @@ function sendRequestByGet(url, data, succssFun) {
             if (!jsonData.result) {
                 if (jsonData.errorCode == -2000) {
                     //没有权限访问时就跳转到登录页面
-                    top.location.href = pageContextPath + "/login.html";
+                    top.location.href = pageContextPath + "/html/login.html";
                 } else if (jsonData.errorCode == 0) {
                     alert("对不起，系统正忙请您稍后重试!");
                 } else {
@@ -103,7 +103,7 @@ function submitForm(formId, url, successFun, errorFun) {
             if (!jsonData.result) {
                 if (jsonData.errorCode == -2000) {
                     //没有权限访问时就跳转到登录页面
-                    top.location.href = pageContextPath + "/login.html";
+                    top.location.href = pageContextPath + "/html/login.html";
                 } else if (jsonData.errorCode == 0) {
                     alert("对不起，系统正忙请您稍后重试!");
                 } else {

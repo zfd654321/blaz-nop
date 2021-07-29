@@ -2,34 +2,36 @@
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-    <script src="../plugin/element/vue.global.js"></script>
     <!-- import CSS -->
-    <link rel="stylesheet" href="../plugin/element/index.css">
-    <!-- import JavaScript -->
-    <script src="../plugin/element/index.full.js"></script>
-    <title>Element Plus demo</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../plugin/css/main.css">
+    <title>x-miror</title>
   </head>
   <body>
     <div id="app">
-      <el-container>
-        <el-aside width="200px">Aside</el-aside>
-        <el-container>
-          <el-header>Header</el-header>
-          <el-main>Main <el-button>{{ message }}</el-button> </el-main>
-          <el-footer>Footer</el-footer>
-        </el-container>
-      </el-container>
-     
+      <div id="headLoader"></div>
+      <div>
+        <div id="menuLoader"></div>
+        <div id="mainLoader"></div>
+      </div>
     </div>
-    <script>
-      const App = {
-        data() {
-          return {message: "Hello Element Plus"};
-        }
-      };
-      const app = Vue.createApp(App);
-      app.use(ElementPlus);
-      app.mount("#app");
-    </script>
+
   </body>
+
+  <script src="../plugin/utils/httpService.js"></script>
+  <script src="../plugin/utils/jquery-3.1.0.min.js"></script>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+  <script>
+    $(function () {
+      $("#menuLoader").load("other/menu.html")
+      $("#headLoader").load("other/head.html")
+      $("#mainLoader").load("other/main.html")
+    })
+  </script>
+
 </html>

@@ -24,10 +24,10 @@ public class GlobalInterceptor implements HandlerInterceptor {
 			".xls",
 			".js",
 			".css",
+			".png",
+			".jpg",
             "/login",
-            "/imgcode",
-            "/othFile/save",
-            "/othFile/deviceAdvertChange"
+            "/imgcode"
     };
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PermissionDao {
 
-	SysUser getUserByUserNoAndPass(@Param("userNo")String userNo, @Param("userPass")String userPass);
+	SysUser getUserByUserNoAndPass(@Param("username")String username, @Param("password")String password);
 	
 	List<UserDto> findUserByPage(Map<String, Object> params);
 	

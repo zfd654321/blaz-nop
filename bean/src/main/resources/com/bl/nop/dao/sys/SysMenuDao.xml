@@ -8,9 +8,10 @@
     <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="href" jdbcType="VARCHAR" property="href" />
     <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="ordernum" jdbcType="INTEGER" property="ordernum" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, parent, icon, href, status
+    id, name, parent, icon, href, status, ordernum
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -24,9 +25,11 @@
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.sys.SysMenu">
     insert into bl_sys_menu (id, name, parent, 
-      icon, href, status)
+      icon, href, status, 
+      ordernum)
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{parent,jdbcType=VARCHAR}, 
-      #{icon,jdbcType=VARCHAR}, #{href,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
+      #{icon,jdbcType=VARCHAR}, #{href,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{ordernum,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.sys.SysMenu">
     insert into bl_sys_menu
@@ -49,6 +52,9 @@
       <if test="status != null">
         status,
       </if>
+      <if test="ordernum != null">
+        ordernum,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -68,6 +74,9 @@
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="ordernum != null">
+        #{ordernum,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -89,6 +98,9 @@
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
+      <if test="ordernum != null">
+        ordernum = #{ordernum,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -98,7 +110,8 @@
       parent = #{parent,jdbcType=VARCHAR},
       icon = #{icon,jdbcType=VARCHAR},
       href = #{href,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER}
+      status = #{status,jdbcType=INTEGER},
+      ordernum = #{ordernum,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

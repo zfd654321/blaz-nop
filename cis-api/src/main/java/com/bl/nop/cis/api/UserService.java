@@ -11,7 +11,7 @@ public interface UserService {
 	 * @param tentinetMail
 	 * @return
 	 */
-	public ResResultBean loginUser(String userNo, String userPass);
+	public ResResultBean loginUser(String username, String password);
 
 	/**
 	 * 保存用户信息
