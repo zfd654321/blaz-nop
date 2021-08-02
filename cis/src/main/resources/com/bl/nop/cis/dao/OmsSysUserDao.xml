@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.OmsSysUserDao">
+    <!-- 查询用户列表 -->
+    <select id="findUserByPage" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.UserDto">
+        SELECT u.*,r.name role_name 
+        FROM bl_sys_user u 
+        LEFT JOIN bl_sys_role r 
+        ON u.role=r.id
+        WHERE 1=1
+        <if test="status!=null and status!=''">
+        AND u.`status` =#{status}
+    </if>
+        <if test="nickname!=null and nickname!=''">
+        AND u.nickname like
+        CONCAT('%',#{nickname},'%')
+    </if>
+        ORDER BY updated_at DESC
+        LIMIT ${startNum},${pageSize}
+    </select>
+    <!-- 查询用户列表 -->
+    <select id="findUserCount" parameterType="java.util.Map" resultType="int">
+        SELECT count(*)
+        FROM bl_sys_user u
+        WHERE 1=1
+        <if test="status!=null and status!=''">
+        AND u.`status` =#{status}
+    </if>
+        <if test="nickname!=null and nickname!=''">
+        AND u.nickname LIKE
+        CONCAT('%',#{nickname},'%')
+    </if>
+    </select>
+
+    <update id="updateUserStatus" parameterType="java.lang.String">
+		UPDATE bl_user SET
+		`status`=#{status, jdbcType=VARCHAR} WHERE user_id =
+		#{userId,jdbcType=VARCHAR} AND `status`='Y'
+	</update>
+
+
+    <select id="loadRoleList" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.UserDto">
+        SELECT * FROM bl_sys_role
+    </select>
+
+</mapper>

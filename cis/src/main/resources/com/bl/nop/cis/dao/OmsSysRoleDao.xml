@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.OmsSysRoleDao">
+
+    <!-- 获取角色列表 -->
+    <select id="findRoleByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.sys.SysRole">
+        SELECT role_id,
+		STATUS,
+		role_desc,
+		role_name,
+		created_by,
+		updated_by,
+		created_time,
+		updated_time
+		FROM bl_role WHERE 1=1
+        <if test="roleId!=null and roleId!=''">
+			AND role_id like
+			concat('%',#{role_id},'%')
+
+		</if>
+        <if test="roleName!=null and roleName!=''">
+			AND role_name like
+			concat('%',#{role_name},'%')
+		</if>
+        <if test="status!=null and status!=''">
+			AND status =
+			#{status}
+		</if>
+        order by role_id
+    </select>
+
+    <select id="findRoleCount" parameterType="java.util.Map" resultType="int">
+        select count(*)
+		from bl_role where 1=1
+        <if test="roleId!=null and roleId!=''">
+			AND role_id like
+			concat('%',#{role_id},'%')
+
+		</if>
+        <if test="roleName!=null and roleName!=''">
+			AND role_name like
+			concat('%',#{role_name},'%')
+		</if>
+        <if test="status!=null and status!=''">
+			AND status =
+			#{status}
+		</if>
+    </select>
+
+    <!-- 更新角色菜单 -->
+    <insert id="updateRoleMenu" parameterType="java.util.Map">
+		INSERT INTO
+		bl_role_menu (menu_id,role_id,STATUS)
+		(SELECT menu_id,#{roleId,
+		jdbcType=VARCHAR},"Y" FROM bl_menu WHERE CONCAT(",",#{menuIdStr,
+		jdbcType=VARCHAR},",")
+		LIKE CONCAT("%,",menu_id,",%"))
+	</insert>
+
+    <!-- 清空角色菜单 -->
+    <delete id="cleanRoleMenu" parameterType="java.util.Map">
+		DELETE FROM
+		bl_role_menu WHERE role_id = #{roleId,jdbcType=VARCHAR}
+	</delete>
+
+    <!-- 查询所有的菜单 -->
+	<select id="findAllMenu" resultType="com.bl.nop.entity.sys.SysMenu">
+		SELECT * FROM bl_menu
+		WHERE
+		status='Y'
+		ORDER BY ABS(menu_id)
+	</select>
+</mapper>

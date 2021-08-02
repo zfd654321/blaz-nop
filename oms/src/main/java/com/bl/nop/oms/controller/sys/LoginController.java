@@ -1,4 +1,4 @@
-package com.bl.nop.oms.controller.user;
+package com.bl.nop.oms.controller.sys;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -9,8 +9,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.bl.nop.cis.api.MenuService;
-import com.bl.nop.cis.api.UserService;
+import com.bl.nop.cis.api.PermissionService;
 import com.bl.nop.common.bean.ResResultBean;
 import com.bl.nop.entity.sys.SysUser;
 import com.bl.nop.oms.controller.common.JsonBaseController;
@@ -29,9 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class LoginController extends JsonBaseController {
 
 	@Autowired
-	private UserService userService;
-	@Autowired
-	private MenuService menuService;
+	private PermissionService permissionService;
 	
 	private static String ERROR_CODE = "201001";
 	@RequestMapping("login")
@@ -46,7 +43,7 @@ public class LoginController extends JsonBaseController {
 		if(!rancode.equalsIgnoreCase(code)) {
 			return ResResultBean.error(ERROR_CODE+"01002","验证码错误");
 		}
-		ResResultBean resResultBean = userService.loginUser(username, password);
+		ResResultBean resResultBean = permissionService.loginUser(username, password);
 		if(resResultBean.isSuccess()) {
 			setUser(request, resResultBean.getData());
 		}
@@ -57,21 +54,14 @@ public class LoginController extends JsonBaseController {
 	@ResponseBody
 	public ResResultBean getMenu(HttpServletRequest request, HttpServletResponse response) {
 		SysUser user = getUser(request);
-		ResResultBean resResultBean =  menuService.getMenuTree(user.getRole());
-		return resResultBean;
-	}
-	
-	@RequestMapping("findAllMenu")
-	@ResponseBody
-	public ResResultBean findAllMenu(HttpServletRequest request, HttpServletResponse response) {
-		ResResultBean resResultBean =  menuService.queryAll();
+		ResResultBean resResultBean =  permissionService.getMenuTree(user.getRole());
 		return resResultBean;
 	}
 	
 	@RequestMapping("findRoleMenu")
 	@ResponseBody
 	public ResResultBean findRoleMenu(HttpServletRequest request, HttpServletResponse response,@RequestParam("roleId")String roleId) {
-		ResResultBean resResultBean =  menuService.getMenuTree(roleId);
+		ResResultBean resResultBean =  permissionService.getMenuTree(roleId);
 		return resResultBean;
 	}
 	
@@ -119,15 +109,7 @@ public class LoginController extends JsonBaseController {
 	@ResponseBody
 	public ResResultBean editPass(HttpServletRequest request, HttpServletResponse response, @RequestParam("newpass")String newpass, @RequestParam("oldpass")String oldpass) {
 		SysUser user = getUser(request);
-		ResResultBean resResultBean = this.userService.updatePass(oldpass,newpass, user.getId());
-		return resResultBean;
-	}
-	
-	@RequestMapping("verifyOldPass")
-	@ResponseBody
-	public ResResultBean verifyOldPass(HttpServletRequest request, HttpServletResponse response, @RequestParam("oldPass")String oldPass) {
-		SysUser user = getUser(request);
-		ResResultBean resResultBean = this.userService.verifyOldPass(oldPass, user.getPassword());
+		ResResultBean resResultBean = this.permissionService.updatePass(oldpass,newpass, user.getId());
 		return resResultBean;
 	}
 }
