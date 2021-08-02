@@ -6,20 +6,27 @@
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<context:property-placeholder location="classpath:config/config.properties" />
-	<!-- 用户接口 -->
+	<!-- 后台权限接口 -->
+	<bean id="permissionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/permissionService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.PermissionService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+	
+	<!-- 系统模块接口 -->
 	<bean id="userService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
 		<property name="serviceUrl" value="${hessian.serviceUrl}/userService" />
-		<property name="serviceInterface" value="com.bl.nop.cis.api.UserService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.SysUserService" />
 		<property name="chunkedPost" value="false" />
 		<property name="overloadEnabled" value="true" />
 	</bean>
-	<bean id="menuService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
-		<property name="serviceUrl" value="${hessian.serviceUrl}/menuService" />
-		<property name="serviceInterface" value="com.bl.nop.cis.api.MenuService" />
+	<bean id="roleService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/roleService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.SysRoleService" />
 		<property name="chunkedPost" value="false" />
 		<property name="overloadEnabled" value="true" />
 	</bean>
-
 
 </beans>
         

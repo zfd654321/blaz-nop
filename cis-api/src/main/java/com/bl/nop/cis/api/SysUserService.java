@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.bl.nop.common.bean.ResResultBean;
 
-public interface UserService {
+public interface SysUserService {
 
 	/**
 	 * 分页查询用户信息
@@ -13,6 +13,7 @@ public interface UserService {
 	 * @return
 	 */
 	public ResResultBean queryByPage(Map<String, Object> param);
+
 	/**
 	 * 保存用户信息
 	 * 

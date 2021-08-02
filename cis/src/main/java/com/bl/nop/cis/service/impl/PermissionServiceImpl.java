@@ -27,7 +27,7 @@ public class PermissionServiceImpl implements PermissionService {
 	@Autowired
 	private SysUserDao SysUserDao;
 
-	private static final String ERROR_CODE = "10102";
+	private static final String ERROR_CODE = "000";
 
 	/* 用户登陆 */
 	@Override

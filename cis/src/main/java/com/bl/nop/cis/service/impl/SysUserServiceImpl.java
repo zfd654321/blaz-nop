@@ -1,10 +1,11 @@
 package com.bl.nop.cis.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.bl.nop.cis.api.UserService;
+import com.bl.nop.cis.api.SysUserService;
 import com.bl.nop.cis.dao.OmsSysUserDao;
 import com.bl.nop.cis.dto.UserDto;
 import com.bl.nop.common.bean.ResResultBean;
@@ -24,9 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("userService")
-public class UserServiceImpl implements UserService {
+public class SysUserServiceImpl implements SysUserService {
 
-	private final static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+	private final static Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
 	@Autowired
 	private SysUserDao SysUserDao;
@@ -65,26 +66,44 @@ public class UserServiceImpl implements UserService {
 		if (null == params || params.isEmpty()) {
 			return ResResultBean.error(ERROR_CODE + "04001", "参数为空");
 		}
-
-		String userId = StringUtil.toStr(params.get("userId"));
+		String id=StringUtil.toStr(params.get("id"));
+		boolean edit=StringUtil.toStr(params.get("edit")).equals("true");
 		String username = StringUtil.toStr(params.get("username"));
+		String password = StringUtil.toStr(params.get("password"));
 		String nickname = StringUtil.toStr(params.get("nickname"));
 		String role = StringUtil.toStr(params.get("role"));
-		String pass = StringUtil.toStr(params.get("pass"));
+		Integer status=NumberUtil.toInt(params.get("status"));
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
-		SysUser user = new SysUser();
 		Date now = new Date();
-		user.setId(userId);
-		user.setNickname(nickname);
-		user.setUsername(username);
-		user.setPassword(Md5Util.toMd5(pass));
-		user.setRole(role);
-		user.setStatus(1);
-		user.setCreatedBy(createdBy);
-		user.setCreatedAt(now);
-		user.setUpdatedBy(createdBy);
-		user.setUpdatedAt(now);
-		this.SysUserDao.insert(user);
+		
+		if(edit){//修改
+			SysUser user=this.SysUserDao.selectByPrimaryKey(id);
+			user.setUsername(username);
+			if(StringUtils.isNotBlank(password)){
+				user.setPassword(Md5Util.toMd5(password));
+			}
+			user.setNickname(nickname);
+			user.setRole(role);
+			user.setStatus(status);
+			user.setUpdatedAt(now);
+			user.setUpdatedBy(createdBy);
+			this.SysUserDao.updateByPrimaryKey(user);
+		}else{//新增
+			SysUser user = new SysUser();
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+			String newUserId = "BL" + format.format(new Date());
+			user.setId(newUserId);
+			user.setUsername(username);
+			user.setPassword(Md5Util.toMd5(password));
+			user.setNickname(nickname);
+			user.setRole(role);
+			user.setStatus(status);
+			user.setCreatedAt(now);
+			user.setCreatedBy(createdBy);
+			user.setUpdatedAt(now);
+			user.setUpdatedBy(createdBy);
+			this.SysUserDao.insert(user);
+		}
 		return ResResultBean.success();
 	}
 

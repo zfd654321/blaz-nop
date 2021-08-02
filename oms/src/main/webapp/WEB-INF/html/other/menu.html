@@ -1,38 +1,37 @@
 <div id="menu">
-  <div class="menutop">
-    <el-image
-      style="width: 178px; height: 59px;margin:10px"
-      src="../img/head/logo.png"
-      fit="fill"></el-image>
-  </div>
-  <el-menu
+  <div class="menuline">
+    <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
+      text-color="#9e9e9e"
+      @select="handleSelect"
       :collapse="isCollapse"
       :unique-opened="true"
     >
-    <el-submenu v-for="(menu,index) in menuData.menuList" :index="menu.odindex">
-      <template slot="title">
-        <i :class="menu.icon"></i>
-        <span>{{menu.text}}</span>
-      </template>
-      <el-submenu v-for="(smenu,sindex) in menu.children" :index="smenu.odindex">
+      <el-submenu v-for="(menu,index) in menuData.menuList" :index="menu.odindex">
         <template slot="title">
-          <i class="el-icon-arrow-right"></i>
-          <span>{{smenu.text}}</span></template>
-        <el-menu-item v-for="(cmenu,cindex) in smenu.children" :index="cmenu.odindex">
-          <i class="el-icon-d-arrow-right"></i>
-          <span>{{cmenu.text}}</span></el-menu-item>
+          <i :class="menu.icon"></i>
+          <span>{{menu.text}}</span>
+        </template>
+        <el-submenu v-for="(smenu,sindex) in menu.children" :index="smenu.odindex">
+          <template slot="title">
+            <i class="el-icon-arrow-right"></i>
+            <span>{{smenu.text}}</span></template>
+          <el-menu-item v-for="(cmenu,cindex) in smenu.children" :index="cmenu.url">
+            <i class="el-icon-d-arrow-right"></i>
+            <span>{{cmenu.text}}</span></el-menu-item>
+        </el-submenu>
       </el-submenu>
-    </el-submenu>
 
-  </el-menu>
+    </el-menu>
+  </div>
 </div>
 <style>
 
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
     height: 100%;
+    background-color: #FFF0;
   }
 </style>
 <script>
@@ -48,12 +47,15 @@
       this.loadMenu();
     },
     methods: {
-      loadMenu: function (event) {
+      loadMenu: function () {
         let _this = this
         sendRequest("/oms/getMenu", null, function (jsonData) {
           _this.menuData.menuList = jsonData.data
 
         });
+      },
+      handleSelect(key, keyPath) {
+        $("#mainLoader").load("main" + key)
       },
 
       handleOpen(key, keyPath) {

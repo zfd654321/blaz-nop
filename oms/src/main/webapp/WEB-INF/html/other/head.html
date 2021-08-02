@@ -1,13 +1,17 @@
 <link rel="stylesheet" href="../plugin/css/head.css">
 
 <div id="head">
+    <div class="menutop">
+        <el-image
+      style="width: 178px; height: 59px;margin:10px"
+      src="../img/head/logo.png"
+      fit="fill"></el-image>
+    </div>
     <!--<div class="headtitle">引力透镜[x-mirror] 后台管理系统</div>-->
     <div class="rightspan">
         <div class="usermessage">欢迎你，{{headData.userInfo.nickname}}</div>
         <el-dropdown @command="handleCommand">
-            <el-button size="small" type="primary">
-    用户选项<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
+            <el-button size="small" type="primary" icon="el-icon-user-solid" circle></el-button>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1">修改密码</el-dropdown-item>
                 <el-dropdown-item command="2">登出</el-dropdown-item>
@@ -31,7 +35,7 @@
             handleCommand(command) {
                 if (command == 1) {
                     $("#mainLoader").load("other/password.html")
-                    
+
                 } else if (command == 2) {
                     window.location.href = "login.html"
                 }

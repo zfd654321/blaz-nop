@@ -6,6 +6,7 @@
 .rightspan {
     position: absolute;
     right: 50px;
+    top: 0;
     line-height: 80px;
     color: #fff;
 }
@@ -13,6 +14,7 @@
 .usermessage {
     display: inline-block;
     margin-right: 30px;
+    color: #aaa;
 }
 
 .el-dropdown+.el-dropdown {
@@ -25,7 +27,7 @@
 
 #head {
     height: 80px;
-    background: #333;
+    background: #fffe;
 }
 
 .headtitle {

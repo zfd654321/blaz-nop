@@ -10,8 +10,12 @@
                 <property name="service" ref="permissionService"></property>
         </bean>
         <bean name="/userService" class="org.springframework.remoting.caucho.HessianServiceExporter">
-                <property name="serviceInterface" value="com.bl.nop.cis.api.UserService" />
+                <property name="serviceInterface" value="com.bl.nop.cis.api.SysUserService" />
                 <property name="service" ref="userService"></property>
+        </bean>
+        <bean name="/roleService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.cis.api.SysRoleService" />
+                <property name="service" ref="roleService"></property>
         </bean>
 
 

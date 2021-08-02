@@ -10,15 +10,16 @@ body {
 }
 
 #app {
-    background: #eee;
+    background: url("../../img/login/login.jpg") no-repeat;
 }
 
 #headLoader {
     box-sizing: border-box;
-    padding-left: 200px;
     width: 100%;
     height: 80px;
     position: absolute;
+    z-index: 30;
+    box-shadow: #0003 5px 5px 50px;
     top: 0;
     left: 0;
 }
@@ -26,7 +27,6 @@ body {
 .menutop {
     height: 80px;
     width: 200px;
-    background: #333;
     z-index: 10;
 }
 
@@ -42,9 +42,16 @@ body {
 
 #menu {
     box-sizing: border-box;
-    padding-top: 80px;
     height: 100%;
-    margin-top: -80px;
+    padding-top: 80px;
+}
+
+.menuline {
+    box-sizing: border-box;
+    height: 100%;
+    padding-top: 20px;
+    background: #fffe;
+    box-shadow: #0003 2px 0 50px;
 }
 
 #mainLoader {
@@ -58,7 +65,13 @@ body {
 #main {
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: #fffb;
     padding: 50px;
     box-sizing: border-box;
+}
+
+.titleline {
+    height: 50px;
+    margin-bottom: 50px;
+    border-bottom: solid 2px #ccc;
 }
