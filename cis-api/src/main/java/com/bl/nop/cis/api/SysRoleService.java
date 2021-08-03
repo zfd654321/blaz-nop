@@ -7,14 +7,15 @@ import com.bl.nop.common.bean.ResResultBean;
 public interface SysRoleService {
 
 	/**
-	 * 分页查询用户信息
+	 * 分页查询角色信息
 	 * 
 	 * @param param
 	 * @return
 	 */
 	public ResResultBean queryByPage(Map<String, Object> param);
+
 	/**
-	 * 保存用户信息
+	 * 保存角色信息
 	 * 
 	 * @param params
 	 * @return
@@ -22,23 +23,23 @@ public interface SysRoleService {
 	public ResResultBean save(Map<String, Object> params);
 
 	/**
-	 * 加载角色列表
+	 * 加载菜单列表
 	 * 
 	 * @param user
 	 * @return
 	 */
-	public ResResultBean loadRole(Map<String, Object> params);
+	public ResResultBean loadMenu();
 
 	/**
-	 * 删除用户
+	 * 加载菜单列表
 	 * 
-	 * @param userId
+	 * @param user
 	 * @return
 	 */
-	public ResResultBean delete(Map<String, Object> param);
+	public ResResultBean loadRoleMenu(String roleId);
 
 	/**
-	 * 根据id获取用户信息
+	 * 根据id获取角色信息
 	 * 
 	 * @param userId
 	 * @return

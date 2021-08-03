@@ -1,22 +1,19 @@
 package com.bl.nop.cis.service.impl;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.bl.nop.cis.api.SysRoleService;
-import com.bl.nop.cis.dao.OmsSysUserDao;
-import com.bl.nop.cis.dto.UserDto;
+import com.bl.nop.cis.dao.OmsSysRoleDao;
 import com.bl.nop.common.bean.ResResultBean;
-import com.bl.nop.common.util.Md5Util;
 import com.bl.nop.common.util.NumberUtil;
 import com.bl.nop.common.util.Page;
 import com.bl.nop.common.util.StringUtil;
-import com.bl.nop.dao.sys.SysUserDao;
+import com.bl.nop.dao.sys.SysRoleDao;
+import com.bl.nop.dto.MenuTreeDto;
 import com.bl.nop.entity.sys.SysRole;
-import com.bl.nop.entity.sys.SysUser;
-import com.bl.nop.util.CommonConst;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -30,9 +27,9 @@ public class SysRoleServiceImpl implements SysRoleService {
 	private final static Logger log = LoggerFactory.getLogger(SysRoleServiceImpl.class);
 
 	@Autowired
-	private SysUserDao SysUserDao;
+	private SysRoleDao sysRoleDao;
 	@Autowired
-	private OmsSysUserDao userDao;
+	private OmsSysRoleDao omsSysRoleDao;
 
 	private static final String ERROR_CODE = "10101";
 
@@ -40,14 +37,14 @@ public class SysRoleServiceImpl implements SysRoleService {
 	public ResResultBean queryByPage(Map<String, Object> param) {
 		int pageNo = NumberUtil.toInt(param.get("pageNo"), 0);
 		int pageSize = NumberUtil.toInt(param.get("pageSize"), Page.DEFAULT_PAGE_SIZE);
-		Page<UserDto> page = new Page<UserDto>(pageNo, pageSize);
+		Page<SysRole> page = new Page<SysRole>(pageNo, pageSize);
 
 		int start = page.getStart();
 		if (start < 0) {
 			return ResResultBean.success(page);
 		}
 
-		int count = this.userDao.findUserCount(param);
+		int count = this.omsSysRoleDao.findRoleCount(param);
 		page.setTotalCount(count);
 		if (page.getTotalPage() < pageNo) {
 			page.setCurrentPage(page.getTotalPage());
@@ -55,7 +52,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 
 		param.put("startNum", start);
 		param.put("pageSize", pageSize);
-		List<UserDto> list = this.userDao.findUserByPage(param);
+		List<SysRole> list = this.omsSysRoleDao.findRoleByPage(param);
 		page.setList(list);
 
 		return ResResultBean.success(page);
@@ -66,67 +63,65 @@ public class SysRoleServiceImpl implements SysRoleService {
 		if (null == params || params.isEmpty()) {
 			return ResResultBean.error(ERROR_CODE + "04001", "参数为空");
 		}
-		String id=StringUtil.toStr(params.get("id"));
-		boolean edit=StringUtil.toStr(params.get("edit")).equals("true");
-		String username = StringUtil.toStr(params.get("username"));
-		String password = StringUtil.toStr(params.get("password"));
-		String nickname = StringUtil.toStr(params.get("nickname"));
-		String role = StringUtil.toStr(params.get("role"));
-		Integer status=NumberUtil.toInt(params.get("status"));
+		String id = StringUtil.toStr(params.get("id"));
+		boolean edit = StringUtil.toStr(params.get("edit")).equals("true");
+		String name = StringUtil.toStr(params.get("name"));
+		String remarks = StringUtil.toStr(params.get("remarks"));
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
+		String menuIdStr=StringUtil.toStr(params.get("menuIdStr"));
 		Date now = new Date();
-		
-		if(edit){//修改
-			SysUser user=this.SysUserDao.selectByPrimaryKey(id);
-			user.setUsername(username);
-			if(StringUtils.isNotBlank(password)){
-				user.setPassword(Md5Util.toMd5(password));
+
+		if (edit) {// 修改
+			SysRole role = this.sysRoleDao.selectByPrimaryKey(id);
+			role.setName(name);
+			role.setRemarks(remarks);
+			role.setUpdatedAt(now);
+			role.setUpdatedBy(createdBy);
+			this.sysRoleDao.updateByPrimaryKey(role);
+			this.omsSysRoleDao.cleanRoleMenu(id);
+			this.omsSysRoleDao.updateRoleMenu(id, menuIdStr);
+
+		} else {// 新增
+			SysRole role = new SysRole();
+			role.setId(id);
+			role.setName(name);
+			role.setRemarks(remarks);
+			role.setCreatedAt(now);
+			role.setCreatedBy(createdBy);
+			role.setUpdatedAt(now);
+			role.setUpdatedBy(createdBy);
+			this.sysRoleDao.insert(role);
+			this.omsSysRoleDao.updateRoleMenu(id, menuIdStr);
+		}
+		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean loadMenu() {
+		List<MenuTreeDto> menuList = this.omsSysRoleDao.findAllMenu();
+		List<MenuTreeDto> showMenus = new ArrayList<MenuTreeDto>();
+		if(null != menuList && !menuList.isEmpty()) {
+			List<MenuTreeDto> childMenus = null;
+			for (MenuTreeDto menu : menuList) {
+				childMenus = new ArrayList<MenuTreeDto>();
+				for (MenuTreeDto childmenu : menuList) {
+					if (menu.getId().equals(childmenu.getParMenuId())) {
+						childMenus.add(childmenu);
+					}
+				}
+				menu.setChildren(childMenus);
+				if ("-1".equals(menu.getParMenuId())) {
+					showMenus.add(menu);
+				}
 			}
-			user.setNickname(nickname);
-			user.setRole(role);
-			user.setStatus(status);
-			user.setUpdatedAt(now);
-			user.setUpdatedBy(createdBy);
-			this.SysUserDao.updateByPrimaryKey(user);
-		}else{//新增
-			SysUser user = new SysUser();
-			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-			String newUserId = "BL" + format.format(new Date());
-			user.setId(newUserId);
-			user.setUsername(username);
-			user.setPassword(Md5Util.toMd5(password));
-			user.setNickname(nickname);
-			user.setRole(role);
-			user.setStatus(status);
-			user.setCreatedAt(now);
-			user.setCreatedBy(createdBy);
-			user.setUpdatedAt(now);
-			user.setUpdatedBy(createdBy);
-			this.SysUserDao.insert(user);
 		}
-		return ResResultBean.success();
+		return ResResultBean.success(showMenus);
 	}
 
 	@Override
-	public ResResultBean loadRole(Map<String, Object> params) {
-		List<SysRole> list = this.userDao.loadRoleList(params);
-		return ResResultBean.success(list);
-	}
-
-
-
-	@Override
-	public ResResultBean delete(Map<String, Object> params) {
-		String userId = StringUtil.toStr(params.get("userId"));
-		log.info("删除用户信息>>>>>userId:" + userId);
-		if (StringUtils.isBlank(userId)) {
-			return ResResultBean.error(ERROR_CODE + "01001", "用户id为空");
-		}
-		int num = this.userDao.updateUserStatus(userId, CommonConst.NO);
-		if (num < 1) {
-			return ResResultBean.error(ERROR_CODE + "01002", "删除用户失败");
-		}
-		return ResResultBean.success();
+	public ResResultBean loadRoleMenu(String roleId) {
+		List<String> roleMenuList = this.omsSysRoleDao.findRoleMenu(roleId);
+		return ResResultBean.success(roleMenuList);
 	}
 
 	@Override
@@ -136,7 +131,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 			return ResResultBean.error(ERROR_CODE + "02001", "用户id为空");
 		}
 
-		SysUser user = this.SysUserDao.selectByPrimaryKey(userId);
+		SysRole user = this.sysRoleDao.selectByPrimaryKey(userId);
 		if (null == user) {
 			return ResResultBean.error(ERROR_CODE + "02002", "用户不存在");
 		}

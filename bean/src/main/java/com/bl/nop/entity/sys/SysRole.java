@@ -8,7 +8,7 @@ public class SysRole implements Serializable {
 
     private String name;
 
-    private String desc;
+    private String remarks;
 
     private Date createdAt;
 
@@ -36,12 +36,12 @@ public class SysRole implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getDesc() {
-        return desc;
+    public String getRemarks() {
+        return remarks;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc == null ? null : desc.trim();
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
     }
 
     public Date getCreatedAt() {

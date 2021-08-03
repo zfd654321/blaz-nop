@@ -30,9 +30,9 @@ public class SysUserServiceImpl implements SysUserService {
 	private final static Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
 	@Autowired
-	private SysUserDao SysUserDao;
+	private SysUserDao sysUserDao;
 	@Autowired
-	private OmsSysUserDao userDao;
+	private OmsSysUserDao omsSysUserDao;
 
 	private static final String ERROR_CODE = "10101";
 
@@ -47,7 +47,7 @@ public class SysUserServiceImpl implements SysUserService {
 			return ResResultBean.success(page);
 		}
 
-		int count = this.userDao.findUserCount(param);
+		int count = this.omsSysUserDao.findUserCount(param);
 		page.setTotalCount(count);
 		if (page.getTotalPage() < pageNo) {
 			page.setCurrentPage(page.getTotalPage());
@@ -55,7 +55,7 @@ public class SysUserServiceImpl implements SysUserService {
 
 		param.put("startNum", start);
 		param.put("pageSize", pageSize);
-		List<UserDto> list = this.userDao.findUserByPage(param);
+		List<UserDto> list = this.omsSysUserDao.findUserByPage(param);
 		page.setList(list);
 
 		return ResResultBean.success(page);
@@ -77,7 +77,7 @@ public class SysUserServiceImpl implements SysUserService {
 		Date now = new Date();
 		
 		if(edit){//修改
-			SysUser user=this.SysUserDao.selectByPrimaryKey(id);
+			SysUser user=this.sysUserDao.selectByPrimaryKey(id);
 			user.setUsername(username);
 			if(StringUtils.isNotBlank(password)){
 				user.setPassword(Md5Util.toMd5(password));
@@ -87,7 +87,7 @@ public class SysUserServiceImpl implements SysUserService {
 			user.setStatus(status);
 			user.setUpdatedAt(now);
 			user.setUpdatedBy(createdBy);
-			this.SysUserDao.updateByPrimaryKey(user);
+			this.sysUserDao.updateByPrimaryKey(user);
 		}else{//新增
 			SysUser user = new SysUser();
 			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -102,14 +102,14 @@ public class SysUserServiceImpl implements SysUserService {
 			user.setCreatedBy(createdBy);
 			user.setUpdatedAt(now);
 			user.setUpdatedBy(createdBy);
-			this.SysUserDao.insert(user);
+			this.sysUserDao.insert(user);
 		}
 		return ResResultBean.success();
 	}
 
 	@Override
 	public ResResultBean loadRole(Map<String, Object> params) {
-		List<SysRole> list = this.userDao.loadRoleList(params);
+		List<SysRole> list = this.omsSysUserDao.loadRoleList(params);
 		return ResResultBean.success(list);
 	}
 
@@ -122,7 +122,7 @@ public class SysUserServiceImpl implements SysUserService {
 		if (StringUtils.isBlank(userId)) {
 			return ResResultBean.error(ERROR_CODE + "01001", "用户id为空");
 		}
-		int num = this.userDao.updateUserStatus(userId, CommonConst.NO);
+		int num = this.omsSysUserDao.updateUserStatus(userId, CommonConst.NO);
 		if (num < 1) {
 			return ResResultBean.error(ERROR_CODE + "01002", "删除用户失败");
 		}
@@ -136,7 +136,7 @@ public class SysUserServiceImpl implements SysUserService {
 			return ResResultBean.error(ERROR_CODE + "02001", "用户id为空");
 		}
 
-		SysUser user = this.SysUserDao.selectByPrimaryKey(userId);
+		SysUser user = this.sysUserDao.selectByPrimaryKey(userId);
 		if (null == user) {
 			return ResResultBean.error(ERROR_CODE + "02002", "用户不存在");
 		}

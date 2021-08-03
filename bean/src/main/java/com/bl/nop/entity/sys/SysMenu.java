@@ -15,7 +15,7 @@ public class SysMenu implements Serializable {
 
     private Integer status;
 
-    private Integer ordernum;
+    private String odindex;
 
     private static final long serialVersionUID = 1L;
 
@@ -67,11 +67,11 @@ public class SysMenu implements Serializable {
         this.status = status;
     }
 
-    public Integer getOrdernum() {
-        return ordernum;
+    public String getOdindex() {
+        return odindex;
     }
 
-    public void setOrdernum(Integer ordernum) {
-        this.ordernum = ordernum;
+    public void setOdindex(String odindex) {
+        this.odindex = odindex == null ? null : odindex.trim();
     }
 }

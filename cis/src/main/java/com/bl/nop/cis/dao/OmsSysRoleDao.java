@@ -3,7 +3,7 @@ package com.bl.nop.cis.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.bl.nop.entity.sys.SysMenu;
+import com.bl.nop.dto.MenuTreeDto;
 import com.bl.nop.entity.sys.SysRole;
 
 import org.apache.ibatis.annotations.Param;
@@ -17,5 +17,7 @@ public interface OmsSysRoleDao {
 
     int cleanRoleMenu(@Param("roleId")String roleId);
 
-    List<SysMenu> findAllMenu();
+    List<MenuTreeDto> findAllMenu();
+
+    List<String> findRoleMenu(@Param("roleId")String roleId);
 }

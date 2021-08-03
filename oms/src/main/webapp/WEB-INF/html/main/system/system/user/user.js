@@ -86,6 +86,7 @@ var mainVue = new Vue({
             var url = "/oms/user/save";
             sendRequest(url, _this.infoData.row, function(jsonData) {
                 if (jsonData.isSuccess) {
+                    _this.$message.success("保存成功");
                     _this.drawer = false;
                     _this.loadDataList();
                 } else {

@@ -1,14 +1,14 @@
-package com.bl.nop.entity.sys;
+package com.bl.nop.entity.device;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class SysRole implements Serializable {
+public class DevicePc implements Serializable {
     private String id;
 
-    private String name;
+    private String remarks;
 
-    private String desc;
+    private Integer status;
 
     private Date createdAt;
 
@@ -28,20 +28,20 @@ public class SysRole implements Serializable {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getName() {
-        return name;
+    public String getRemarks() {
+        return remarks;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
     }
 
-    public String getDesc() {
-        return desc;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc == null ? null : desc.trim();
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Date getCreatedAt() {

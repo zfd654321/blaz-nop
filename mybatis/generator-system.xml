@@ -19,16 +19,16 @@
 
         <!-- ӔЂµ targetPackage ºˠtargetProject ˴єֵѨҪƤ׃ -->
         <!-- ʺ³ʄ£эµİ�»׃ -->
-        <javaModelGenerator targetPackage="com.bl.nop.entity.sys" targetProject="G:\ServProject\trunk\code_2020\java\nop\mybatis">
+        <javaModelGenerator targetPackage="com.bl.nop.entity.sys" targetProject="G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
         <!-- 生成的映射文件包名和位置 -->
-        <sqlMapGenerator targetPackage="com.bl.nop.dao.sys" targetProject="G:\ServProject\trunk\code_2020\java\nop\mybatis\resources">
+        <sqlMapGenerator targetPackage="com.bl.nop.dao.sys" targetProject="G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\resources">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.bl.nop.dao.sys" targetProject="G:\ServProject\trunk\code_2020\java\nop\mybatis">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.bl.nop.dao.sys" targetProject="G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
