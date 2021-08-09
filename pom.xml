@@ -56,7 +56,7 @@
 				<artifactId>bean</artifactId>
 				<version>1.0.0</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.bl.nop</groupId>
 				<artifactId>common</artifactId>
@@ -148,16 +148,6 @@
 				<version>${spring.version}</version>
 			</dependency>
 
-			<!-- activemq -->
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-all</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-pool</artifactId>
-			</dependency>
-
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
@@ -217,7 +207,6 @@
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>3.1.0</version>
-				<scope>provided</scope>
 			</dependency>
 			<!-- JSTL标签类 -->
 			<dependency>
@@ -226,6 +215,7 @@
 				<version>1.2</version>
 			</dependency>
 			<!-- 日志文件管理包 -->
+			<!-- log start -->
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-api</artifactId>

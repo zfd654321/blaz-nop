@@ -1,5 +1,6 @@
 <div id="main">
     <div class="titleline">用户管理</div>
+    <el-card class="box-card">
     <!-- 查询栏 -->
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="用户名称" size="mini">
@@ -23,47 +24,26 @@
     </el-row>
 
     <!-- 表格栏 -->
-    <el-table
-      :data="tableData.list"
-       size="mini"
-       style="margin-top:20px"
-        max-height="300"
-      stripe>
-        <el-table-column
-        prop="id"
-        label="用户编号"></el-table-column>
-        <el-table-column
-        prop="nickname"
-        label="用户名称"></el-table-column>
-        <el-table-column
-        prop="roleName"
-        label="用户角色"></el-table-column>
-        <el-table-column
-        prop="status"
-        label="用户状态"
-        :formatter="checkStatus"
-        ></el-table-column>
-        <el-table-column
-        label="操作">
+    <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
+        <el-table-column prop="id" label="用户编号"></el-table-column>
+        <el-table-column prop="nickname" label="用户名称"></el-table-column>
+        <el-table-column prop="roleName" label="用户角色"></el-table-column>
+        <el-table-column prop="status" label="用户状态" :formatter="checkStatus"></el-table-column>
+        <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
+        <el-table-column prop="createdAt" label="创建时间"></el-table-column>
+        <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
+        <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
+        <el-table-column label="操作">
             <template slot-scope="scope">
                 <el-button @click="openEdit(scope.row)" type="text" size="small">编辑</el-button>
             </template>
         </el-table-column>
     </el-table>
     <!-- 翻页 -->
-    <el-pagination
-        small
-        background
-        hide-on-single-page
-        style="margin-top: 10;"
-      @current-change="handleCurrentChange"
-      layout="prev, pager, next, jumper"
-      :total="tableData.totalCount"></el-pagination>
-
+    <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
+    </el-card>
     <!-- 详情弹出框（新增/修改） -->
-    <el-drawer
-  :title="infoData.row.edit?'用户修改':'用户新增'"
-  :visible.sync="drawer" ref="drawer">
+    <el-drawer :title="infoData.row.edit?'用户修改':'用户新增'" :visible.sync="drawer" ref="drawer">
         <el-form ref="form" :model="infoData.row" label-width="80px" style="margin:20">
             <el-form-item label="用户名称">
                 <el-input placeholder="请输入用户名称" v-model="infoData.row.nickname"></el-input>

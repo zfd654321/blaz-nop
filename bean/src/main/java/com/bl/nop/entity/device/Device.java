@@ -6,11 +6,13 @@ import java.util.Date;
 public class Device implements Serializable {
     private String deviceId;
 
-    private String sId;
+    private String pcId;
 
     private String name;
 
     private String remarks;
+
+    private String address;
 
     private Integer type;
 
@@ -38,12 +40,12 @@ public class Device implements Serializable {
         this.deviceId = deviceId == null ? null : deviceId.trim();
     }
 
-    public String getsId() {
-        return sId;
+    public String getPcId() {
+        return pcId;
     }
 
-    public void setsId(String sId) {
-        this.sId = sId == null ? null : sId.trim();
+    public void setPcId(String pcId) {
+        this.pcId = pcId == null ? null : pcId.trim();
     }
 
     public String getName() {
@@ -60,6 +62,14 @@ public class Device implements Serializable {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks == null ? null : remarks.trim();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
     }
 
     public Integer getType() {

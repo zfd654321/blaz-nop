@@ -3,9 +3,10 @@
 <mapper namespace="com.bl.nop.dao.device.DeviceDao">
   <resultMap id="BaseResultMap" type="com.bl.nop.entity.device.Device">
     <id column="device_id" jdbcType="VARCHAR" property="deviceId" />
-    <result column="s_id" jdbcType="VARCHAR" property="sId" />
+    <result column="pc_id" jdbcType="VARCHAR" property="pcId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="screen" jdbcType="INTEGER" property="screen" />
@@ -16,8 +17,8 @@
     <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    device_id, s_id, name, remarks, type, status, screen, camera, created_at, created_by, 
-    updated_at, updated_by
+    device_id, pc_id, name, remarks, address, type, status, screen, camera, created_at, 
+    created_by, updated_at, updated_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -30,16 +31,16 @@
     where device_id = #{deviceId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.device.Device">
-    insert into bl_device (device_id, s_id, name, 
-      remarks, type, status, 
-      screen, camera, created_at, 
-      created_by, updated_at, updated_by
-      )
-    values (#{deviceId,jdbcType=VARCHAR}, #{sId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{remarks,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
-      #{screen,jdbcType=INTEGER}, #{camera,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, 
-      #{createdBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR}
-      )
+    insert into bl_device (device_id, pc_id, name, 
+      remarks, address, type, 
+      status, screen, camera, 
+      created_at, created_by, updated_at, 
+      updated_by)
+    values (#{deviceId,jdbcType=VARCHAR}, #{pcId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{remarks,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{screen,jdbcType=INTEGER}, #{camera,jdbcType=VARCHAR}, 
+      #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, 
+      #{updatedBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.device.Device">
     insert into bl_device
@@ -47,14 +48,17 @@
       <if test="deviceId != null">
         device_id,
       </if>
-      <if test="sId != null">
-        s_id,
+      <if test="pcId != null">
+        pc_id,
       </if>
       <if test="name != null">
         name,
       </if>
       <if test="remarks != null">
         remarks,
+      </if>
+      <if test="address != null">
+        address,
       </if>
       <if test="type != null">
         type,
@@ -85,14 +89,17 @@
       <if test="deviceId != null">
         #{deviceId,jdbcType=VARCHAR},
       </if>
-      <if test="sId != null">
-        #{sId,jdbcType=VARCHAR},
+      <if test="pcId != null">
+        #{pcId,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="remarks != null">
         #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
@@ -123,14 +130,17 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.device.Device">
     update bl_device
     <set>
-      <if test="sId != null">
-        s_id = #{sId,jdbcType=VARCHAR},
+      <if test="pcId != null">
+        pc_id = #{pcId,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="remarks != null">
         remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
@@ -161,9 +171,10 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.device.Device">
     update bl_device
-    set s_id = #{sId,jdbcType=VARCHAR},
+    set pc_id = #{pcId,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       remarks = #{remarks,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       screen = #{screen,jdbcType=INTEGER},

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.device.DeviceConfigDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.device.DeviceConfig">
+    <id column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="kinect_left_and_right_dis" jdbcType="VARCHAR" property="kinectLeftAndRightDis" />
+    <result column="kinect_min_dis" jdbcType="VARCHAR" property="kinectMinDis" />
+    <result column="kinect_max_dis" jdbcType="VARCHAR" property="kinectMaxDis" />
+    <result column="host_url" jdbcType="VARCHAR" property="hostUrl" />
+    <result column="qrcode_url" jdbcType="VARCHAR" property="qrcodeUrl" />
+    <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
+    <result column="watermark_url" jdbcType="VARCHAR" property="watermarkUrl" />
+    <result column="theme_name" jdbcType="VARCHAR" property="themeName" />
+    <result column="game_enter_time" jdbcType="VARCHAR" property="gameEnterTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    device_id, kinect_left_and_right_dis, kinect_min_dis, kinect_max_dis, host_url, qrcode_url, 
+    logo_url, watermark_url, theme_name, game_enter_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bl_device_config
+    where device_id = #{deviceId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bl_device_config
+    where device_id = #{deviceId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bl.nop.entity.device.DeviceConfig">
+    insert into bl_device_config (device_id, kinect_left_and_right_dis, 
+      kinect_min_dis, kinect_max_dis, host_url, 
+      qrcode_url, logo_url, watermark_url, 
+      theme_name, game_enter_time)
+    values (#{deviceId,jdbcType=VARCHAR}, #{kinectLeftAndRightDis,jdbcType=VARCHAR}, 
+      #{kinectMinDis,jdbcType=VARCHAR}, #{kinectMaxDis,jdbcType=VARCHAR}, #{hostUrl,jdbcType=VARCHAR}, 
+      #{qrcodeUrl,jdbcType=VARCHAR}, #{logoUrl,jdbcType=VARCHAR}, #{watermarkUrl,jdbcType=VARCHAR}, 
+      #{themeName,jdbcType=VARCHAR}, #{gameEnterTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.device.DeviceConfig">
+    insert into bl_device_config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="kinectLeftAndRightDis != null">
+        kinect_left_and_right_dis,
+      </if>
+      <if test="kinectMinDis != null">
+        kinect_min_dis,
+      </if>
+      <if test="kinectMaxDis != null">
+        kinect_max_dis,
+      </if>
+      <if test="hostUrl != null">
+        host_url,
+      </if>
+      <if test="qrcodeUrl != null">
+        qrcode_url,
+      </if>
+      <if test="logoUrl != null">
+        logo_url,
+      </if>
+      <if test="watermarkUrl != null">
+        watermark_url,
+      </if>
+      <if test="themeName != null">
+        theme_name,
+      </if>
+      <if test="gameEnterTime != null">
+        game_enter_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="kinectLeftAndRightDis != null">
+        #{kinectLeftAndRightDis,jdbcType=VARCHAR},
+      </if>
+      <if test="kinectMinDis != null">
+        #{kinectMinDis,jdbcType=VARCHAR},
+      </if>
+      <if test="kinectMaxDis != null">
+        #{kinectMaxDis,jdbcType=VARCHAR},
+      </if>
+      <if test="hostUrl != null">
+        #{hostUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeUrl != null">
+        #{qrcodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="watermarkUrl != null">
+        #{watermarkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="themeName != null">
+        #{themeName,jdbcType=VARCHAR},
+      </if>
+      <if test="gameEnterTime != null">
+        #{gameEnterTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.device.DeviceConfig">
+    update bl_device_config
+    <set>
+      <if test="kinectLeftAndRightDis != null">
+        kinect_left_and_right_dis = #{kinectLeftAndRightDis,jdbcType=VARCHAR},
+      </if>
+      <if test="kinectMinDis != null">
+        kinect_min_dis = #{kinectMinDis,jdbcType=VARCHAR},
+      </if>
+      <if test="kinectMaxDis != null">
+        kinect_max_dis = #{kinectMaxDis,jdbcType=VARCHAR},
+      </if>
+      <if test="hostUrl != null">
+        host_url = #{hostUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeUrl != null">
+        qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        logo_url = #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="watermarkUrl != null">
+        watermark_url = #{watermarkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="themeName != null">
+        theme_name = #{themeName,jdbcType=VARCHAR},
+      </if>
+      <if test="gameEnterTime != null">
+        game_enter_time = #{gameEnterTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where device_id = #{deviceId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.device.DeviceConfig">
+    update bl_device_config
+    set kinect_left_and_right_dis = #{kinectLeftAndRightDis,jdbcType=VARCHAR},
+      kinect_min_dis = #{kinectMinDis,jdbcType=VARCHAR},
+      kinect_max_dis = #{kinectMaxDis,jdbcType=VARCHAR},
+      host_url = #{hostUrl,jdbcType=VARCHAR},
+      qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR},
+      logo_url = #{logoUrl,jdbcType=VARCHAR},
+      watermark_url = #{watermarkUrl,jdbcType=VARCHAR},
+      theme_name = #{themeName,jdbcType=VARCHAR},
+      game_enter_time = #{gameEnterTime,jdbcType=VARCHAR}
+    where device_id = #{deviceId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -37,6 +37,12 @@ var mainVue = new Vue({
                 "可用" :
                 "禁用"
         },
+        getCreater(row, column) {
+            return UserName[row.createdBy]
+        },
+        getUpdater(row, column) {
+            return UserName[row.updatedBy]
+        },
         loadDataList() {
             let _this = this;
             var url = "/oms/user/list";

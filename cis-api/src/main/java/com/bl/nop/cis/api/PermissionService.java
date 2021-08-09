@@ -29,5 +29,12 @@ public interface PermissionService {
 	 */
 	public ResResultBean updatePass(String oldPass, String newPass, String userId);
 
+	/**
+	 * 获取用户列表
+	 * 
+	 * @return
+	 */
+	public ResResultBean getUserList();
+
 
 }

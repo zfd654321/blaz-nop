@@ -1,13 +1,6 @@
 <div id="menu">
   <div class="menuline">
-    <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo"
-      text-color="#9e9e9e"
-      @select="handleSelect"
-      :collapse="isCollapse"
-      :unique-opened="true"
-    >
+    <el-menu default-active="2" class="el-menu-vertical-demo" text-color="#9e9e9e" @select="handleSelect" :collapse="isCollapse" :unique-opened="true" style="padding-top:20;box-sizing: border-box;">
       <el-submenu v-for="(menu,index) in menuData.menuList" :index="menu.odindex">
         <template slot="title">
           <i :class="menu.icon"></i>
@@ -18,7 +11,7 @@
             <i class="el-icon-arrow-right"></i>
             <span>{{smenu.text}}</span></template>
           <el-menu-item v-for="(cmenu,cindex) in smenu.children" :index="cmenu.url">
-            <i class="el-icon-d-arrow-right"></i>
+            <i class="el-icon-caret-right"></i>
             <span>{{cmenu.text}}</span></el-menu-item>
         </el-submenu>
       </el-submenu>

@@ -3,7 +3,7 @@
 <generatorConfiguration>
 
     <!-- ˽¾ݿ㈽¶¯°�-->
-    <classPathEntry location="G:\ServProject\trunk\code_2020\java\nop\mybatis\mysql-connector-java-8.0.23.jar" />
+    <classPathEntry location="G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\mysql-connector-java-8.0.23.jar" />
 
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
@@ -35,6 +35,7 @@
         <!-- 要生成那些表（更改 tableName 和 domainObjectName 就可以） -->
         <table tableName="bl_device" domainObjectName="Device" mapperName="DeviceDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_device_pc" domainObjectName="DevicePc" mapperName="DevicePcDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+        <table tableName="bl_device_config" domainObjectName="DeviceConfig" mapperName="DeviceConfigDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_device_switch" domainObjectName="DeviceSwitch" mapperName="DeviceSwitchDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_device_game" domainObjectName="DeviceGame" mapperName="DeviceGameDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_device_game_netres" domainObjectName="DeviceGameNetres" mapperName="DeviceGameNetresDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />

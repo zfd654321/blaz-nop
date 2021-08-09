@@ -25,4 +25,8 @@
 		#{roleId}
 		ORDER BY t.parent,t.odindex
 	</select>
+	<!-- 获取全部用户 -->
+	<select id="getAllUserList" parameterType="java.util.Map" resultType="com.bl.nop.entity.sys.SysUser">
+		SELECT id,nickname FROM `bl_sys_user`
+	</select>
 </mapper>

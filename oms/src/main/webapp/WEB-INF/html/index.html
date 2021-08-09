@@ -27,10 +27,17 @@
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 
   <script>
+    var UserName = {};
     $(function () {
       $("#menuLoader").load("other/menu.html")
       $("#headLoader").load("other/head.html")
       $("#mainLoader").load("other/main.html")
+      sendRequest("/oms/userList", null, function (jsonData) {
+        let userList = jsonData.data
+        for (var i = 0; i < userList.length; i++) {
+          UserName[userList[i].id] = userList[i].nickname
+        }
+      });
     })
   </script>
 

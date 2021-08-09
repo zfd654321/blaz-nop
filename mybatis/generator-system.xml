@@ -3,7 +3,7 @@
 <generatorConfiguration>
 
     <!-- ˽¾ݿ㈽¶¯°�-->
-    <classPathEntry location="G:\ServProject\trunk\code_2020\java\nop\mybatis\mysql-connector-java-8.0.23.jar" />
+    <classPathEntry location="G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\mysql-connector-java-8.0.23.jar" />
 
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />

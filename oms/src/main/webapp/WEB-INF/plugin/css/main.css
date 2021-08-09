@@ -9,6 +9,11 @@ body {
     height: 100%
 }
 
+table {
+    font-size: 14px;
+    color: gray;
+}
+
 #app {
     background: url("../../img/login/login.jpg") no-repeat;
 }
@@ -49,7 +54,6 @@ body {
 .menuline {
     box-sizing: border-box;
     height: 100%;
-    padding-top: 20px;
     background: #fffe;
     box-shadow: #0003 2px 0 50px;
 }
@@ -74,4 +78,25 @@ body {
     height: 50px;
     margin-bottom: 50px;
     border-bottom: solid 2px #ccc;
+}
+
+.tableheader {
+    background-color: #409eff !important;
+    color: #fff;
+}
+
+.el-table__empty-block {
+    height: auto !important
+}
+
+.el-table {
+    max-height: calc(100% - 200px) !important;
+}
+
+.el-table__body-wrapper {
+    max-height: calc(100% - 236px) !important;
+}
+
+.el-checkbox__label {
+    line-height: 40px;
 }

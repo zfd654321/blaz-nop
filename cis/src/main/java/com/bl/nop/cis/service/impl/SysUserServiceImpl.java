@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service("userService")
+@Service("sysUserService")
 public class SysUserServiceImpl implements SysUserService {
 
 	private final static Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
@@ -34,7 +34,7 @@ public class SysUserServiceImpl implements SysUserService {
 	@Autowired
 	private OmsSysUserDao omsSysUserDao;
 
-	private static final String ERROR_CODE = "10101";
+	private static final String ERROR_CODE = "011";
 
 	@Override
 	public ResResultBean queryByPage(Map<String, Object> param) {

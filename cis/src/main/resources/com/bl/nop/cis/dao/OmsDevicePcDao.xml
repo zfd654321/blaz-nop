@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.OmsDevicePcDao">
+
+	<!-- 获取角色列表 -->
+	<select id="findItemByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.device.DevicePc">
+		SELECT * FROM bl_device_pc WHERE 1=1
+		<if test="id!=null and id!=''">
+			AND id like
+			concat('%',#{id},'%')
+		</if>
+		<if test="remarks!=null and remarks!=''">
+			AND remarks like
+			concat('%',#{remarks},'%')
+		</if>
+		<if test="status!=null and status!=''">
+			AND status =#{status}
+		</if>
+		order by updated_at DESC
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findItemCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)
+		FROM bl_device_pc WHERE 1=1
+		<if test="id!=null and id!=''">
+			AND id like
+			concat('%',#{id},'%')
+		</if>
+		<if test="remarks!=null and remarks!=''">
+			AND remarks like
+			concat('%',#{remarks},'%')
+		</if>
+		<if test="status!=null and status!=''">
+			AND status =#{status}
+		</if>
+	</select>
+
+</mapper>

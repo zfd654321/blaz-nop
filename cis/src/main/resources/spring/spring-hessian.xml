@@ -9,13 +9,23 @@
                 <property name="serviceInterface" value="com.bl.nop.cis.api.PermissionService" />
                 <property name="service" ref="permissionService"></property>
         </bean>
-        <bean name="/userService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+
+        <bean name="/sysUserService" class="org.springframework.remoting.caucho.HessianServiceExporter">
                 <property name="serviceInterface" value="com.bl.nop.cis.api.SysUserService" />
-                <property name="service" ref="userService"></property>
+                <property name="service" ref="sysUserService"></property>
         </bean>
-        <bean name="/roleService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <bean name="/sysRoleService" class="org.springframework.remoting.caucho.HessianServiceExporter">
                 <property name="serviceInterface" value="com.bl.nop.cis.api.SysRoleService" />
-                <property name="service" ref="roleService"></property>
+                <property name="service" ref="sysRoleService"></property>
+        </bean>
+
+        <bean name="/devicePcService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.cis.api.DevicePcService" />
+                <property name="service" ref="devicePcService"></property>
+        </bean>
+        <bean name="/deviceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.cis.api.DeviceService" />
+                <property name="service" ref="deviceService"></property>
         </bean>
 
 

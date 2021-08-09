@@ -15,4 +15,6 @@ public interface PermissionDao {
 
 	List<MenuTreeDto> findMenuByRoleId(String roleId);
 
+	List<SysUser> getAllUserList();
+
 }

@@ -15,15 +15,30 @@
 	</bean>
 	
 	<!-- 系统模块接口 -->
-	<bean id="userService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
-		<property name="serviceUrl" value="${hessian.serviceUrl}/userService" />
+	<bean id="sysUserService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/sysUserService" />
 		<property name="serviceInterface" value="com.bl.nop.cis.api.SysUserService" />
 		<property name="chunkedPost" value="false" />
 		<property name="overloadEnabled" value="true" />
 	</bean>
-	<bean id="roleService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
-		<property name="serviceUrl" value="${hessian.serviceUrl}/roleService" />
+	<bean id="sysRoleService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/sysRoleService" />
 		<property name="serviceInterface" value="com.bl.nop.cis.api.SysRoleService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<!-- 设备模块接口 -->
+	<bean id="devicePcService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/devicePcService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.DevicePcService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="deviceService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/deviceService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.DeviceService" />
 		<property name="chunkedPost" value="false" />
 		<property name="overloadEnabled" value="true" />
 	</bean>

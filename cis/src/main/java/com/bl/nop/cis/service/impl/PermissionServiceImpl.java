@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class PermissionServiceImpl implements PermissionService {
 
 	private final static Logger log = LoggerFactory.getLogger(PermissionServiceImpl.class);
-	
+
 	@Autowired
 	private PermissionDao permissionDao;
 	@Autowired
@@ -45,14 +45,14 @@ public class PermissionServiceImpl implements PermissionService {
 	/* 获取角色菜单 */
 	@Override
 	public ResResultBean getMenuTree(String roleId) {
-		if(StringUtils.isEmpty(roleId)) {
+		if (StringUtils.isEmpty(roleId)) {
 			log.info("获取菜单>>>>>角色为空");
-			return ResResultBean.error(ERROR_CODE+"01001", "角色id为空");
+			return ResResultBean.error(ERROR_CODE + "01001", "角色id为空");
 		}
-		
+
 		List<MenuTreeDto> showMenus = new ArrayList<MenuTreeDto>();
 		List<MenuTreeDto> listMenus = permissionDao.findMenuByRoleId(roleId);
-		if(null != listMenus && !listMenus.isEmpty()) {
+		if (null != listMenus && !listMenus.isEmpty()) {
 			List<MenuTreeDto> childMenus = null;
 			for (MenuTreeDto menu : listMenus) {
 				childMenus = new ArrayList<MenuTreeDto>();
@@ -67,10 +67,9 @@ public class PermissionServiceImpl implements PermissionService {
 				}
 			}
 		}
-		
+
 		return ResResultBean.success(showMenus);
 	}
-
 
 	/* 更新用户密码 */
 	@Override
@@ -99,5 +98,12 @@ public class PermissionServiceImpl implements PermissionService {
 		this.SysUserDao.updateByPrimaryKey(user);
 		return ResResultBean.success();
 	}
-	
+
+	/* 获取全用户列表 */
+	@Override
+	public ResResultBean getUserList() {
+		List<SysUser> list = this.permissionDao.getAllUserList();
+		return ResResultBean.success(list);
+	}
+
 }
