@@ -9,6 +9,7 @@ var mainVue = new Vue({
             pageSize: 10,
             pageNo: 1
         },
+        resourceElement: null,
         tableData: { list: [], totalCount: 0 },
         freePc: [],
         drawer: false,
@@ -251,5 +252,8 @@ var mainVue = new Vue({
                 });
             });
         },
+        checkResource(url, element, type) {
+            resourceVue.loadResources(url, element, type)
+        }
     }
 })

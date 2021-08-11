@@ -42,7 +42,7 @@
     </el-card>
     <!-- 详情弹出框（信息） -->
     <el-drawer title="设备信息" :visible.sync="drawer" ref="drawer">
-        <el-descriptions column=1 border style="margin:20">
+        <el-descriptions :column="1" border style="margin:20px">
             <el-descriptions-item label="设备编号">{{infoData.row.deviceId}}</el-descriptions-item>
             <el-descriptions-item label="机器码">{{infoData.row.pcId}}</el-descriptions-item>
             <el-descriptions-item label="设备名称">{{infoData.row.name}}</el-descriptions-item>
@@ -62,5 +62,4 @@
     </el-drawer>
 
 </div>
-<style></style>
 <script src="main/operate/device/online/online.js"></script>

@@ -2,10 +2,7 @@
 
 <div id="head">
     <div class="menutop">
-        <el-image
-      style="width: 178px; height: 59px;margin:10px"
-      src="../img/head/logo.png"
-      fit="fill"></el-image>
+        <el-image style="width: 178px; height: 59px;margin:10px" src="../img/head/logo.png" fit="fill" @click="loadMain"></el-image>
     </div>
     <!--<div class="headtitle">引力透镜[x-mirror] 后台管理系统</div>-->
     <div class="rightspan">
@@ -35,7 +32,6 @@
             handleCommand(command) {
                 if (command == 1) {
                     $("#mainLoader").load("other/password.html")
-
                 } else if (command == 2) {
                     window.location.href = "login.html"
                 }
@@ -45,6 +41,9 @@
                 sendRequest("/oms/getUser", null, function (jsonData) {
                     _this.headData.userInfo = jsonData.data
                 });
+            },
+            loadMain:function(){
+                $("#mainLoader").load("other/main.html")
             }
         }
     })

@@ -105,13 +105,19 @@
                 <el-input placeholder="请输入API地址" v-model.trim="configData.row.hostUrl"></el-input>
             </el-form-item>
             <el-form-item label="离线二维码" prop="qrcodeUrl">
-                <el-input placeholder="请选择离线二维码" v-model.trim="configData.row.qrcodeUrl"></el-input>
+                <el-input placeholder="请选择离线二维码" readonly v-model.trim="configData.row.qrcodeUrl" id="qrcodeUrl">
+                    <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(configData.row.qrcodeUrl,'qrcodeUrl','img')"></el-button>
+                </el-input>
             </el-form-item>
             <el-form-item label="大屏Logo地址" prop="logoUrl">
-                <el-input placeholder="请输入大屏Logo地址" v-model.trim="configData.row.logoUrl"></el-input>
+                <el-input placeholder="请输入大屏Logo地址" readonly v-model.trim="configData.row.logoUrl" id="logoUrl">
+                    <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(configData.row.logoUrl,'logoUrl','img')"></el-button>
+                </el-input>
             </el-form-item>
             <el-form-item label="照片水印地址" prop="watermarkUrl">
-                <el-input placeholder="请输入照片水印地址" v-model.trim="configData.row.watermarkUrl"></el-input>
+                <el-input placeholder="请输入照片水印地址" readonly v-model.trim="configData.row.watermarkUrl" id="watermarkUrl">
+                    <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(configData.row.watermarkUrl,'watermarkUrl','img')"></el-button>
+                </el-input>
             </el-form-item>
             <el-form-item label="主题名称" prop="themeName">
                 <el-input placeholder="请输入主题名称" v-model.trim="configData.row.themeName"></el-input>

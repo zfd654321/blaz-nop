@@ -28,5 +28,14 @@
                 <property name="service" ref="deviceService"></property>
         </bean>
 
+        <bean name="/resourcesService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.cis.api.ResourcesService" />
+                <property name="service" ref="resourcesService"></property>
+        </bean>
+        <bean name="/gameService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.cis.api.GameService" />
+                <property name="service" ref="gameService"></property>
+        </bean>
+
 
 </beans>

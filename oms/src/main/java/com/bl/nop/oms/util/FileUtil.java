@@ -55,20 +55,19 @@ public class FileUtil {
 		return value;
 	}
 
-	public static String getFileResourcesCutImage(String imgSrc, String imgdist) {
-		String cutImageUrl = "";
+	public static void getImageResourcesCutImage(String imgSrc, String imgdist) {
 		int widthdist = 0;
 		int heightdist = 0;
 		try {
 			File srcfile = new File(imgSrc);
 			// 检查图片文件是否存在
 			if (!srcfile.exists()) {// 确认源图片是否存在
-				return cutImageUrl;
+				return;
 			} else {
 				// 获得源图片的宽高存入数组中
 				int[] results = getImgWidthHeight(srcfile);
 				if (results == null || results[0] == 0 || results[1] == 0) {
-					return cutImageUrl;
+					return;
 				} else {
 					// 按比例缩放或扩大图片大小，将浮点型转为整型
 					widthdist = (int) (results[0]);
@@ -96,13 +95,24 @@ public class FileUtil {
 				graphics.drawImage(image, 0, 0, null);
 				graphics.dispose();
 				ImageIO.write(outputImage, "jpg", new File(imgdist));
-				cutImageUrl = imgdist.replace(PropertyUtil.getProperty("saveDir"), PropertyUtil.getProperty("fileDir"));
 
 			}
 		} catch (Exception ef) {
 			ef.printStackTrace();
 		}
-		return cutImageUrl;
+	}
+
+	public static void getVideoResourcesCutImage(String imgSrc, String imgdist) {
+		try {
+			StringBuffer ffmpegStr = new StringBuffer();
+			ffmpegStr.append("time ffmpeg -ss 00:00:05 -i ");
+			ffmpegStr.append(imgSrc);
+			ffmpegStr.append(" -f image2 -y -s 100*100 ");
+			ffmpegStr.append(imgdist);
+			Runtime.getRuntime().exec(ffmpegStr.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static int[] getImgWidthHeight(File file) {

@@ -1,20 +1,25 @@
 <div id="main">
-    <div class="titleline">PC管理</div>
+    <div class="titleline">资源列表</div>
     <el-card class="box-card">
         <!-- 查询栏 -->
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="机器码" size="mini">
-                <el-input  v-model.trim="formInline.id" placeholder="机器码"></el-input>
+            <el-form-item label="名称" size="mini">
+                <el-input  v-model.trim="formInline.name" placeholder="名称"></el-input>
             </el-form-item>
-            <el-form-item label="备注" size="mini">
-                <el-input  v-model.trim="formInline.remarks" placeholder="备注"></el-input>
+            <el-form-item label="类型" size="mini">
+                <el-select v-model="formInline.type">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="图片" value="img"></el-option>
+                    <el-option label="视频" value="video"></el-option>
+                    <el-option label="其他" value="other"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="状态" size="mini">
-                <el-select v-model="formInline.status" placeholder="请选择活动区域">
+                <el-select v-model="formInline.status">
                     <el-option label="全部" value=""></el-option>
-                    <el-option label="空闲" value="1"></el-option>
-                    <el-option label="占用" value="2"></el-option>
-                    <el-option label="已坏" value="3"></el-option>
+                    <el-option label="新增" value="1"></el-option>
+                    <el-option label="审核中" value="2"></el-option>
+                    <el-option label="审核通过" value="3"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item size="mini">
@@ -29,30 +34,52 @@
 
         <!-- 表格栏 -->
         <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
-            <el-table-column prop="id" width="220" label="机器码"></el-table-column>
-            <el-table-column prop="remarks" width="220" label="备注"></el-table-column>
-            <el-table-column prop="status" label="状态" :formatter="checkStatus"></el-table-column>
+            <el-table-column label="缩略图">
+                <template slot-scope="scope">
+                    <el-image :src="scope.row.thumbnail" style="width: 100px; height: 100px;display: block;margin: 0 auto;" fit="contain"></el-image>
+                </template>
+            </el-table-column>
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column prop="md5" label="md5值"></el-table-column>
+            <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
+            <el-table-column prop="type" label="文件大小" :formatter="getFileSize"></el-table-column>
             <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
             <el-table-column prop="createdAt" label="创建时间"></el-table-column>
             <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
             <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button @click="openEdit(scope.row)" type="text" size="small">编辑</el-button>
+                    <el-button @click="showRow(scope.row)" type="text" size="small">查看</el-button>
+                    <el-button @click="deleteRow(scope.row)" type="text" size="small">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <!-- 翻页 -->
-        <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
+        <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount" :page-size="formInline.pageSize"></el-pagination>
     </el-card>
     <!-- 详情弹出框（新增/修改） -->
-    <el-drawer :title="infoData.row.edit?'PC修改':'PC新增'" :visible.sync="drawer" ref="drawer" :before-close="handleClose">
+    <el-drawer :title="infoData.row.edit?'资源修改':'资源新增'" :visible.sync="drawer" ref="drawer" :before-close="handleClose" v-loading="loading" element-loading-text="正在上传，请稍候">
         <el-form :model="infoData.row"  :rules="infoData.rules" ref="pcForm" label-width="80px" style="margin:20">
-            <el-form-item label="机器码" prop="id">
-                <el-input placeholder="请输入机器码" v-model.trim="infoData.row.id" :readonly="infoData.row.edit"></el-input>
+            <el-form-item label="名称" prop="name">
+                <el-input placeholder="请输入文件名称" v-model.trim="infoData.row.name"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="remarks">
-                <el-input placeholder="请输入备注" v-model.trim="infoData.row.remarks"></el-input>
+            <el-form-item label="类型" prop="type">
+                <el-select v-model="infoData.row.type" filterable placeholder="请选择资源类型" @change="infoData.fileList=[]">
+                    <el-option label="图片" value="img"></el-option>
+                    <el-option label="视频" value="video"></el-option>
+                    <el-option label="其他" value="other"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="文件" prop="file" v-if="infoData.row.type!=''">
+                <el-upload class="upload-demo" :file-list="infoData.fileList" ref="upload" action="#" drag :on-change="fileOnChange" :auto-upload="false" :multiple="false" list-type="picture" :show-file-list="false" :accept="checkAccpt(infoData.row.type)">
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>
+                    </div>
+                </el-upload>
+            </el-form-item>
+            <el-form-item  label="预览" v-if="infoData.fileList.length>0">
+                <el-image v-if="infoData.row.type=='img'" style="max-width: 300px; max-height: 300px" fit="contain" :src="infoData.fileList[0].url"/>
+                <video v-if="infoData.row.type=='video'" style="max-width: 300px; max-height: 300px" fit="contain" :src="infoData.fileList[0].url" controls></video>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -60,13 +87,10 @@
         </el-form>
     </el-drawer>
 
+    <el-dialog title="预览" :visible.sync="showData.visible" width="30%">
+        <el-image v-if="showData.row.type=='img'" style="max-width: 100%; max-height: 30%; display: block;" fit="contain" :src="showData.row.url"/>
+        <video v-if="showData.row.type=='video'" style="max-width: 100%; max-height: 100%" fit="contain" :src="showData.row.url" controls></video>
+    </el-dialog>
+
 </div>
-<style>
-    .el-table {
-        max-height: calc(100% - 200px) !important;
-    }
-    .el-table__body-wrapper {
-        max-height: calc(100% - 236px) !important;
-    }
-</style>
-<script src="main/operate/device/pc/pc.js"></script>
+<script src="main/resources/resources/list/list.js"></script>

@@ -15,6 +15,7 @@
         <div id="menuLoader"></div>
         <div id="mainLoader"></div>
       </div>
+      <div id="resourceLoader"></div>
     </div>
 
   </body>
@@ -32,6 +33,7 @@
       $("#menuLoader").load("other/menu.html")
       $("#headLoader").load("other/head.html")
       $("#mainLoader").load("other/main.html")
+      $("#resourceLoader").load("other/resource.html")
       sendRequest("/oms/userList", null, function (jsonData) {
         let userList = jsonData.data
         for (var i = 0; i < userList.length; i++) {
