@@ -117,3 +117,7 @@ table {
 .el-checkbox__label {
     line-height: 40px;
 }
+
+.el-upload-list__item-name {
+    height: 30px;
+}

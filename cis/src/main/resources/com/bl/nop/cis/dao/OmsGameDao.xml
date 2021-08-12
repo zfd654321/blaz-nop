@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.OmsGameDao">
+
+	<!-- 获取游戏列表 -->
+	<select id="findItemByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.game.Game">
+		SELECT * FROM `bl_game` WHERE 1=1
+		<if test="id!=null and id!=''">
+			AND id like
+			concat('%',#{id},'%')
+		</if>
+		<if test="name!=null and name!=''">
+			AND name like
+			concat('%',#{name},'%')
+		</if>
+		<if test="screen!=null and screen!=''">
+			AND screen =#{screen}
+		</if>
+		<if test="camera!=null and camera!=''">
+			CONCAT(",",camera,",") LIKE CONCAT("%,",#{camera},",%")
+		</if>
+		order by updated_at DESC
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findItemCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)
+		FROM `bl_game` WHERE 1=1
+		<if test="id!=null and id!=''">
+			AND id like
+			concat('%',#{id},'%')
+		</if>
+		<if test="name!=null and name!=''">
+			AND name like
+			concat('%',#{name},'%')
+		</if>
+		<if test="screen!=null and screen!=''">
+			AND screen =#{screen}
+		</if>
+		<if test="camera!=null and camera!=''">
+			CONCAT(",",camera,",") LIKE CONCAT("%,",#{camera},",%")
+		</if>
+	</select>
+
+	<!-- 清理游戏属性 -->
+	<delete id="cleanGameBetres" parameterType="String">
+		DELETE FROM `bl_game_netres` WHERE 1=1
+		AND game_id =#{id}
+	</delete>
+
+	<!-- 获取指定游戏版本 -->
+	<select id="getGameVersion" parameterType="java.util.Map" resultType="com.bl.nop.entity.game.GameVersion">
+		SELECT * FROM `bl_game_version` WHERE 1=1
+		AND game_id=#{id}
+		AND version =#{version}
+		LIMIT 0,1
+	</select>
+
+	<!-- 获取可删除游戏版本[保留最新3个版本] -->
+	<select id="queryOutGameVersion" parameterType="java.util.Map" resultType="com.bl.nop.entity.game.GameVersion">
+		SELECT * FROM `bl_game_version` WHERE 1=1
+		AND game_id=#{id}
+		AND status=1
+		ORDER BY updated_at DESC
+		LIMIT 3,10
+	</select>
+
+	<!-- 获取游戏更新日志 -->
+	<select id="queryGameVersionList" parameterType="java.util.Map" resultType="com.bl.nop.entity.game.GameVersion">
+		SELECT * FROM `bl_game_version` WHERE 1=1
+		AND game_id=#{id}
+		ORDER BY updated_at DESC
+	</select>
+
+</mapper>

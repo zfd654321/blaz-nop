@@ -31,4 +31,6 @@ public interface GameService {
      * @return
      */
     public ResResultBean delete(Map<String, Object> params);
+
+    public ResResultBean version(Map<String, Object> params);
 }

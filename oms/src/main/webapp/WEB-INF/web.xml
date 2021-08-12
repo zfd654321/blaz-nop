@@ -97,9 +97,9 @@
     </mime-mapping>
     <welcome-file-list>
         <!--定义首页列单.-->
+        <welcome-file>/html/login.html</welcome-file>
         <welcome-file>/index.jsp</welcome-file> <!--用来指定首页文件名称.我们可以用<welcome-file>指定几个首页,而服务器会依照设定的顺序来找首页.-->
         <welcome-file>/index.html</welcome-file>
-        <welcome-file>/cmshtml/login.html</welcome-file>
     </welcome-file-list>
 
     <error-page>

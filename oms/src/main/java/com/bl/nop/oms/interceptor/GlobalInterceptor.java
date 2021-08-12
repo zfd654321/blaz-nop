@@ -27,7 +27,8 @@ public class GlobalInterceptor implements HandlerInterceptor {
 			".png",
 			".jpg",
             "/login",
-            "/imgcode"
+            "/imgcode",
+            "/"
     };
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)

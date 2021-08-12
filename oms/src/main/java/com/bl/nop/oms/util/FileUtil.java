@@ -10,17 +10,24 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.IOUtils;
 
 public class FileUtil {
 	public static String getMd5ByFile(File file) throws FileNotFoundException {
@@ -157,6 +164,54 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 		return sb.toString();
+	}
+
+	public static void unZipIt(String file, String outputFolder) throws IOException {
+		ZipFile zipFile = new ZipFile(file);
+		try {
+			Enumeration<? extends ZipEntry> entries = zipFile.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				File entryDestination = new File(outputFolder, entry.getName());
+				if (entry.isDirectory()) {
+					entryDestination.mkdirs();
+				} else {
+					entryDestination.getParentFile().mkdirs();
+					InputStream in = zipFile.getInputStream(entry);
+					OutputStream out = new FileOutputStream(entryDestination);
+					IOUtils.copy(in, out);
+					IOUtils.closeQuietly(in);
+					out.close();
+				}
+			}
+		} finally {
+			zipFile.close();
+		}
+	}
+
+	/**
+	 * 对临时生成的文件夹和文件夹下的文件进行删除
+	 */
+	public static void deletefile(String delpath) {
+		try {
+			File file = new File(delpath);
+			if (!file.isDirectory()) {
+				file.delete();
+			} else if (file.isDirectory()) {
+				String[] filelist = file.list();
+				for (int i = 0; i < filelist.length; i++) {
+					File delfile = new File(delpath + File.separator + filelist[i]);
+					if (!delfile.isDirectory()) {
+						delfile.delete();
+					} else if (delfile.isDirectory()) {
+						deletefile(delpath + File.separator + filelist[i]);
+					}
+				}
+				file.delete();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

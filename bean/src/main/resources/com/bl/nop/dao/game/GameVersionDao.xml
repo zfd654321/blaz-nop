@@ -5,12 +5,13 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="game_id" jdbcType="VARCHAR" property="gameId" />
     <result column="version" jdbcType="VARCHAR" property="version" />
-    <result column="log" jdbcType="VARCHAR" property="log" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="version_log" jdbcType="VARCHAR" property="versionLog" />
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
     <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, game_id, version, log, updated_at, updated_by
+    id, game_id, version, status, version_log, updated_at, updated_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,11 +25,11 @@
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.game.GameVersion">
     insert into bl_game_version (id, game_id, version, 
-      log, updated_at, updated_by
-      )
+      status, version_log, updated_at, 
+      updated_by)
     values (#{id,jdbcType=INTEGER}, #{gameId,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
-      #{log,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR}
-      )
+      #{status,jdbcType=INTEGER}, #{versionLog,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, 
+      #{updatedBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.game.GameVersion">
     insert into bl_game_version
@@ -42,8 +43,11 @@
       <if test="version != null">
         version,
       </if>
-      <if test="log != null">
-        log,
+      <if test="status != null">
+        status,
+      </if>
+      <if test="versionLog != null">
+        version_log,
       </if>
       <if test="updatedAt != null">
         updated_at,
@@ -62,8 +66,11 @@
       <if test="version != null">
         #{version,jdbcType=VARCHAR},
       </if>
-      <if test="log != null">
-        #{log,jdbcType=VARCHAR},
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="versionLog != null">
+        #{versionLog,jdbcType=VARCHAR},
       </if>
       <if test="updatedAt != null">
         #{updatedAt,jdbcType=TIMESTAMP},
@@ -82,8 +89,11 @@
       <if test="version != null">
         version = #{version,jdbcType=VARCHAR},
       </if>
-      <if test="log != null">
-        log = #{log,jdbcType=VARCHAR},
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="versionLog != null">
+        version_log = #{versionLog,jdbcType=VARCHAR},
       </if>
       <if test="updatedAt != null">
         updated_at = #{updatedAt,jdbcType=TIMESTAMP},
@@ -98,7 +108,8 @@
     update bl_game_version
     set game_id = #{gameId,jdbcType=VARCHAR},
       version = #{version,jdbcType=VARCHAR},
-      log = #{log,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      version_log = #{versionLog,jdbcType=VARCHAR},
       updated_at = #{updatedAt,jdbcType=TIMESTAMP},
       updated_by = #{updatedBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

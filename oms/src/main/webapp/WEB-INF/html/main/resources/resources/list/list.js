@@ -14,13 +14,24 @@ var mainVue = new Vue({
                 name: '',
                 type: '',
             },
-            rule: {
+            rules: {
                 name: [
                     { required: true, message: '请输入资源名称', trigger: 'blur' },
                 ],
                 type: [
                     { required: true, message: '请选择文件类型', trigger: 'change' }
-                ]
+                ],
+                file: [{
+                    validator: (rule, value, callback) => {
+                        if (mainVue.infoData.fileList.length < 1) {
+                            callback(new Error('请选择上传文件'));
+                        } else {
+                            callback();
+                        }
+
+                    },
+                    trigger: 'change'
+                }]
             },
             fileList: []
         },
@@ -112,6 +123,7 @@ var mainVue = new Vue({
             this.infoData.row.edit = false
             this.infoData.row.id = ''
             this.infoData.row.remarks = ''
+            this.infoData.fileList = []
         },
         checkAccpt(type) {
             switch (type) {
@@ -135,27 +147,32 @@ var mainVue = new Vue({
         },
         onSubmit() {
             let _this = this;
-            var formData = new FormData();
-            formData.append("file", _this.infoData.fileList[0].raw)
-            _this.loading = true
-            $.ajax({
-                url: "/oms/resources/save?name=" + _this.infoData.row.name + "&type=" + _this.infoData.row.type,
-                type: 'POST',
-                async: true,
-                cache: false,
-                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
-                processData: false, // 告诉jQuery不要去处理发送的数据
-                data: formData,
-                beforeSend: function(XMLHttpRequest) {},
-                success: function(jsonData) {
-                    if (jsonData.isSuccess) {
-                        _this.$message.success("保存成功");
-                        _this.loading = false;
-                        _this.drawer = false;
-                        _this.loadDataList();
-                    } else {
-                        _this.$message.error(jsonData.message);
-                    }
+            let formName = "pcForm"
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    var formData = new FormData();
+                    formData.append("file", _this.infoData.fileList[0].raw)
+                    _this.loading = true
+                    $.ajax({
+                        url: "/oms/resources/save?name=" + _this.infoData.row.name + "&type=" + _this.infoData.row.type,
+                        type: 'POST',
+                        async: true,
+                        cache: false,
+                        contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                        processData: false, // 告诉jQuery不要去处理发送的数据
+                        data: formData,
+                        beforeSend: function(XMLHttpRequest) {},
+                        success: function(jsonData) {
+                            if (jsonData.isSuccess) {
+                                _this.$message.success("保存成功");
+                                _this.loading = false;
+                                _this.drawer = false;
+                                _this.loadDataList();
+                            } else {
+                                _this.$message.error(jsonData.message);
+                            }
+                        }
+                    })
                 }
             })
 

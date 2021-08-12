@@ -10,7 +10,9 @@ public class GameVersion implements Serializable {
 
     private String version;
 
-    private String log;
+    private Integer status;
+
+    private String versionLog;
 
     private Date updatedAt;
 
@@ -42,12 +44,20 @@ public class GameVersion implements Serializable {
         this.version = version == null ? null : version.trim();
     }
 
-    public String getLog() {
-        return log;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setLog(String log) {
-        this.log = log == null ? null : log.trim();
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getVersionLog() {
+        return versionLog;
+    }
+
+    public void setVersionLog(String versionLog) {
+        this.versionLog = versionLog == null ? null : versionLog.trim();
     }
 
     public Date getUpdatedAt() {

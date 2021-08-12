@@ -56,8 +56,8 @@ public class ResourcesController extends JsonBaseController {
 				String filename = file.getOriginalFilename();
 				String extName = filename.substring(filename.lastIndexOf(".")).toLowerCase();// 文件后缀
 				String fileId = "CMSFile" + DateUtil.getStringYMDHMS();
-				String pathDir = PropertyUtil.getProperty("filePath");
-				String urlDir = PropertyUtil.getProperty("fileUrl");
+				String pathDir = PropertyUtil.getProperty("filePath") + "forever/resouces/";
+				String urlDir = PropertyUtil.getProperty("fileUrl") + "forever/resouces/";
 				String path = pathDir + type + "/" + fileId + extName;
 				String url = urlDir + type + "/" + fileId + extName;
 				FileCopyUtils.copy(file.getBytes(), new File(path));
@@ -94,7 +94,6 @@ public class ResourcesController extends JsonBaseController {
 		ResResultBean resResultBean = this.resourcesService.save(params);
 		return resResultBean;
 	}
-
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
