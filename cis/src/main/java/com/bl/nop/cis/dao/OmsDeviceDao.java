@@ -12,4 +12,6 @@ public interface OmsDeviceDao {
     int findItemCount(Map<String, Object> param);
 
     List<DevicePc> freePcList(Map<String, Object> params);
+    
+    List<DevicePc> freePcList(Map<String, Object> params);
 }
