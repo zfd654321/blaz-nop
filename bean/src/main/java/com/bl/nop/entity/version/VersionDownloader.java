@@ -4,13 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class VersionDownloader implements Serializable {
-    private Integer id;
+    private String id;
 
-    private String version;
+    private String path;
 
     private String url;
 
-    private String log;
+    private String versionLog;
+
+    private String md5;
+
+    private Integer status;
 
     private Date createdAt;
 
@@ -18,20 +22,20 @@ public class VersionDownloader implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
-    public String getVersion() {
-        return version;
+    public String getPath() {
+        return path;
     }
 
-    public void setVersion(String version) {
-        this.version = version == null ? null : version.trim();
+    public void setPath(String path) {
+        this.path = path == null ? null : path.trim();
     }
 
     public String getUrl() {
@@ -42,12 +46,28 @@ public class VersionDownloader implements Serializable {
         this.url = url == null ? null : url.trim();
     }
 
-    public String getLog() {
-        return log;
+    public String getVersionLog() {
+        return versionLog;
     }
 
-    public void setLog(String log) {
-        this.log = log == null ? null : log.trim();
+    public void setVersionLog(String versionLog) {
+        this.versionLog = versionLog == null ? null : versionLog.trim();
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5 == null ? null : md5.trim();
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Date getCreatedAt() {

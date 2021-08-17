@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.bl.nop.cis.api.VersionService;
-import com.bl.nop.cis.dao.OmsAdvertDao;
+import com.bl.nop.cis.dao.OmsVersionDao;
 import com.bl.nop.common.bean.ResResultBean;
 import com.bl.nop.common.util.NumberUtil;
 import com.bl.nop.common.util.Page;
 import com.bl.nop.common.util.StringUtil;
-import com.bl.nop.dao.advert.AdvertDao;
-import com.bl.nop.dao.advert.AdvertTypeDao;
-import com.bl.nop.entity.advert.Advert;
-import com.bl.nop.entity.advert.AdvertType;
+import com.bl.nop.dao.version.VersionDao;
+import com.bl.nop.dao.version.VersionDownloaderDao;
+import com.bl.nop.entity.version.Version;
+import com.bl.nop.entity.version.VersionDownloader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +26,11 @@ public class VersionServiceImpl implements VersionService {
 	private final static Logger log = LoggerFactory.getLogger(VersionServiceImpl.class);
 
 	@Autowired
-	private AdvertDao advertDao;
+	private VersionDao versionDao;
 	@Autowired
-	private AdvertTypeDao advertTypeDao;
+	private VersionDownloaderDao versionDownloaderDao;
 	@Autowired
-	private OmsAdvertDao omsAdvertDao;
+	private OmsVersionDao omsVersionDao;
 
 	private static final String ERROR_CODE = "021";
 
@@ -38,14 +38,14 @@ public class VersionServiceImpl implements VersionService {
 	public ResResultBean queryByPage(Map<String, Object> param) {
 		int pageNo = NumberUtil.toInt(param.get("pageNo"), 0);
 		int pageSize = NumberUtil.toInt(param.get("pageSize"), Page.DEFAULT_PAGE_SIZE);
-		Page<Advert> page = new Page<Advert>(pageNo, pageSize);
+		Page<Version> page = new Page<Version>(pageNo, pageSize);
 
 		int start = page.getStart();
 		if (start < 0) {
 			return ResResultBean.success(page);
 		}
 
-		int count = this.omsAdvertDao.findItemCount(param);
+		int count = this.omsVersionDao.findItemCount(param);
 		page.setTotalCount(count);
 		if (page.getTotalPage() < pageNo) {
 			page.setCurrentPage(page.getTotalPage());
@@ -53,7 +53,7 @@ public class VersionServiceImpl implements VersionService {
 
 		param.put("startNum", start);
 		param.put("pageSize", pageSize);
-		List<Advert> list = this.omsAdvertDao.findItemByPage(param);
+		List<Version> list = this.omsVersionDao.findItemByPage(param);
 		page.setList(list);
 
 		return ResResultBean.success(page);
@@ -65,52 +65,29 @@ public class VersionServiceImpl implements VersionService {
 			return ResResultBean.error(ERROR_CODE + "001", "参数为空");
 		}
 		String id = StringUtil.toStr(params.get("id"));
-		boolean edit = StringUtil.toStr(params.get("edit")).equals("true");
-		String name = StringUtil.toStr(params.get("name"));
-		String remarks = StringUtil.toStr(params.get("remarks"));
-		Integer type = NumberUtil.toInt(params.get("type"));
-		String resource = StringUtil.toStr(params.get("resource"));
-		Integer scount = NumberUtil.toInt(params.get("scount"));
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
 		Date now = new Date();
-		Advert reitem = this.advertDao.selectByPrimaryKey(id);
+		Version reitem = this.versionDao.selectByPrimaryKey(id);
 
-		if (edit) {// 修改
-			Advert item = reitem;
-			item.setName(name);
-			item.setRemarks(remarks);
-			item.setType(type);
-			item.setResource(resource);
-			item.setScount(scount);
-			item.setUpdatedAt(now);
-			item.setUpdatedBy(createdBy);
-			this.advertDao.updateByPrimaryKey(item);
-
-		} else {// 新增
-			if (reitem != null) {
-				return ResResultBean.error(ERROR_CODE + "002", "该机器码已存在");
-			}
-			log.info("新增PC>>>>>pc_id:" + id);
-			Advert item = new Advert();
-			item.setId(id);
-			item.setName(name);
-			item.setRemarks(remarks);
-			item.setType(type);
-			item.setResource(resource);
-			item.setScount(scount);
-			item.setCreatedAt(now);
-			item.setCreatedBy(createdBy);
-			item.setUpdatedAt(now);
-			item.setUpdatedBy(createdBy);
-			this.advertDao.insert(item);
+		if (reitem != null) {
+			return ResResultBean.error(ERROR_CODE + "002", "该版本号已存在");
 		}
+		log.info("新增版本>>>>>version:" + id);
+		Version item = new Version();
+		item.setId(id);
+		item.setCreatedAt(now);
+		item.setCreatedBy(createdBy);
+		this.versionDao.insert(item);
+
 		return ResResultBean.success();
 	}
 
 	@Override
 	public ResResultBean delete(Map<String, Object> params) {
 		String id = StringUtil.toStr(params.get("id"));
-		this.advertDao.deleteByPrimaryKey(id);
+		Version reitem = this.versionDao.selectByPrimaryKey(id);
+		reitem.setStatus(3);
+		this.versionDao.updateByPrimaryKey(reitem);
 		return ResResultBean.success();
 	}
 
@@ -118,14 +95,14 @@ public class VersionServiceImpl implements VersionService {
 	public ResResultBean downLoaderList(Map<String, Object> param) {
 		int pageNo = NumberUtil.toInt(param.get("pageNo"), 0);
 		int pageSize = NumberUtil.toInt(param.get("pageSize"), Page.DEFAULT_PAGE_SIZE);
-		Page<AdvertType> page = new Page<AdvertType>(pageNo, pageSize);
+		Page<VersionDownloader> page = new Page<VersionDownloader>(pageNo, pageSize);
 
 		int start = page.getStart();
 		if (start < 0) {
 			return ResResultBean.success(page);
 		}
 
-		int count = this.omsAdvertDao.findTypeItemCount(param);
+		int count = this.omsVersionDao.findDownloaderItemCount(param);
 		page.setTotalCount(count);
 		if (page.getTotalPage() < pageNo) {
 			page.setCurrentPage(page.getTotalPage());
@@ -133,7 +110,7 @@ public class VersionServiceImpl implements VersionService {
 
 		param.put("startNum", start);
 		param.put("pageSize", pageSize);
-		List<AdvertType> list = this.omsAdvertDao.findTypeItemByPage(param);
+		List<VersionDownloader> list = this.omsVersionDao.findDownloaderItemByPage(param);
 		page.setList(list);
 
 		return ResResultBean.success(page);
@@ -144,60 +121,39 @@ public class VersionServiceImpl implements VersionService {
 		if (null == params || params.isEmpty()) {
 			return ResResultBean.error(ERROR_CODE + "001", "参数为空");
 		}
-		Integer id = NumberUtil.toInt(params.get("id"));
-		boolean edit = StringUtil.toStr(params.get("edit")).equals("true");
-		String name = StringUtil.toStr(params.get("name"));
-		String remarks = StringUtil.toStr(params.get("remarks"));
-		Integer screen = NumberUtil.toInt(params.get("screen"));
-		String bundleName = StringUtil.toStr(params.get("bundleName"));
-		String assetName = StringUtil.toStr(params.get("assetName"));
-		Integer time = NumberUtil.toInt(params.get("time"));
-		Integer type = NumberUtil.toInt(params.get("type"));
+		String id = StringUtil.toStr(params.get("id"));
+		String path = StringUtil.toStr(params.get("path"));
+		String url = StringUtil.toStr(params.get("url"));
+		String md5 = StringUtil.toStr(params.get("md5"));
+		String versionLog = StringUtil.toStr(params.get("versionLog"));
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
 		Date now = new Date();
-		AdvertType reitem = this.advertTypeDao.selectByPrimaryKey(id);
+		VersionDownloader reitem = this.versionDownloaderDao.selectByPrimaryKey(id);
 
-		if (edit) {// 修改
-			AdvertType item = reitem;
-			item.setName(name);
-			item.setRemarks(remarks);
-			item.setScreen(screen);
-			item.setType(type);
-			item.setBundleName(bundleName);
-			item.setAssetName(assetName);
-			item.setTime(time);
-			item.setType(type);
-			item.setUpdatedAt(now);
-			item.setUpdatedBy(createdBy);
-			this.advertTypeDao.updateByPrimaryKey(item);
-
-		} else {// 新增
-			if (reitem != null) {
-				return ResResultBean.error(ERROR_CODE + "002", "该机器码已存在");
-			}
-			log.info("新增PC>>>>>pc_id:" + id);
-			AdvertType item = new AdvertType();
-			item.setName(name);
-			item.setRemarks(remarks);
-			item.setScreen(screen);
-			item.setType(type);
-			item.setBundleName(bundleName);
-			item.setAssetName(assetName);
-			item.setTime(time);
-			item.setType(type);
-			item.setCreatedAt(now);
-			item.setCreatedBy(createdBy);
-			item.setUpdatedAt(now);
-			item.setUpdatedBy(createdBy);
-			this.advertTypeDao.insert(item);
+		if (reitem != null) {
+			return ResResultBean.error(ERROR_CODE + "002", "该版本号已存在");
 		}
+		VersionDownloader item = new VersionDownloader();
+		item.setId(id);
+		item.setPath(path);
+		item.setUrl(url);
+		item.setVersionLog(versionLog);
+		item.setMd5(md5);
+		item.setStatus(1);
+		item.setCreatedAt(now);
+		item.setCreatedBy(createdBy);
+		this.versionDownloaderDao.insert(item);
+
 		return ResResultBean.success();
 	}
 
 	@Override
 	public ResResultBean downloaderDelete(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+		String id = StringUtil.toStr(params.get("id"));
+		VersionDownloader reitem = this.versionDownloaderDao.selectByPrimaryKey(id);
+		reitem.setStatus(0);
+		this.versionDownloaderDao.updateByPrimaryKey(reitem);
+		return ResResultBean.success();
 	}
 
 }

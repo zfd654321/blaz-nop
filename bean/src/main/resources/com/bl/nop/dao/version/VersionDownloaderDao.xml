@@ -2,33 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bl.nop.dao.version.VersionDownloaderDao">
   <resultMap id="BaseResultMap" type="com.bl.nop.entity.version.VersionDownloader">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="version" jdbcType="VARCHAR" property="version" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
     <result column="url" jdbcType="VARCHAR" property="url" />
-    <result column="log" jdbcType="VARCHAR" property="log" />
+    <result column="version_log" jdbcType="VARCHAR" property="versionLog" />
+    <result column="md5" jdbcType="VARCHAR" property="md5" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
     <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, version, url, log, created_at, created_by
+    id, path, url, version_log, md5, status, created_at, created_by
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from bl_version_downloader
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from bl_version_downloader
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.version.VersionDownloader">
-    insert into bl_version_downloader (id, version, url, 
-      log, created_at, created_by
-      )
-    values (#{id,jdbcType=INTEGER}, #{version,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
-      #{log,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}
-      )
+    insert into bl_version_downloader (id, path, url, 
+      version_log, md5, status, 
+      created_at, created_by)
+    values (#{id,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{versionLog,jdbcType=VARCHAR}, #{md5,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.version.VersionDownloader">
     insert into bl_version_downloader
@@ -36,14 +38,20 @@
       <if test="id != null">
         id,
       </if>
-      <if test="version != null">
-        version,
+      <if test="path != null">
+        path,
       </if>
       <if test="url != null">
         url,
       </if>
-      <if test="log != null">
-        log,
+      <if test="versionLog != null">
+        version_log,
+      </if>
+      <if test="md5 != null">
+        md5,
+      </if>
+      <if test="status != null">
+        status,
       </if>
       <if test="createdAt != null">
         created_at,
@@ -54,16 +62,22 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=VARCHAR},
       </if>
-      <if test="version != null">
-        #{version,jdbcType=VARCHAR},
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
       </if>
-      <if test="log != null">
-        #{log,jdbcType=VARCHAR},
+      <if test="versionLog != null">
+        #{versionLog,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="createdAt != null">
         #{createdAt,jdbcType=TIMESTAMP},
@@ -76,14 +90,20 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.version.VersionDownloader">
     update bl_version_downloader
     <set>
-      <if test="version != null">
-        version = #{version,jdbcType=VARCHAR},
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
       </if>
       <if test="url != null">
         url = #{url,jdbcType=VARCHAR},
       </if>
-      <if test="log != null">
-        log = #{log,jdbcType=VARCHAR},
+      <if test="versionLog != null">
+        version_log = #{versionLog,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        md5 = #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
       </if>
       <if test="createdAt != null">
         created_at = #{createdAt,jdbcType=TIMESTAMP},
@@ -92,15 +112,17 @@
         created_by = #{createdBy,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.version.VersionDownloader">
     update bl_version_downloader
-    set version = #{version,jdbcType=VARCHAR},
+    set path = #{path,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
-      log = #{log,jdbcType=VARCHAR},
+      version_log = #{versionLog,jdbcType=VARCHAR},
+      md5 = #{md5,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
       created_at = #{createdAt,jdbcType=TIMESTAMP},
       created_by = #{createdBy,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

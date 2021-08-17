@@ -2,10 +2,11 @@ var mainVue = new Vue({
     el: '#main',
     data: {
         drawer: false,
+        logDrawer: false,
         formInline: {
             id: '',
             remarks: '',
-            status: '',
+            status: "1",
             pageSize: 10,
             pageNo: 1
         },
@@ -17,14 +18,30 @@ var mainVue = new Vue({
             },
             rules: {
                 id: [
-                    { required: true, message: '请输入机器码', trigger: 'blur' },
-                    { min: 24, max: 24, message: '机器码格式错误', trigger: 'blur' }
+                    { required: true, message: '请输入版本编号', trigger: 'blur' },
+                    { pattern: /^[a-zA-Z0-9_.]+$/, message: '版本编号可使用英文、数字、点和下划线', trigger: 'blur' }
                 ],
-                remarks: [
-                    { required: true, message: '请输入备注', trigger: 'blur' }
+                versionLog: [
+                    { required: true, message: '请输入更新日志', trigger: 'blur' }
                 ],
+                zipFile: [{
+                    validator: (rule, value, callback) => {
+                        if (mainVue.infoData.zipFile.length < 1) {
+                            callback(new Error('请选择上传zip文件'));
+                        } else {
+                            callback();
+                        }
 
-            }
+                    },
+                    trigger: 'change'
+                }]
+
+            },
+            zipFile: []
+        },
+        logData: {
+            list: [],
+            reverse: false
         },
         tableData: { list: [], totalCount: 0 }
 
@@ -40,11 +57,9 @@ var mainVue = new Vue({
         checkStatus(row, column) {
             switch (row.status) {
                 case 1:
-                    return "空闲"
-                case 2:
-                    return "占用"
-                case 3:
-                    return "已坏"
+                    return "正常"
+                case 0:
+                    return "回滚"
 
                 default:
                     return "未知"
@@ -53,12 +68,36 @@ var mainVue = new Vue({
         getCreater(row, column) {
             return UserName[row.createdBy]
         },
-        getUpdater(row, column) {
-            return UserName[row.updatedBy]
+        getUser(id) {
+            return UserName[id]
+        },
+        getStatus(status) {
+            switch (status) {
+                case 0:
+                    {
+                        return "已回滚"
+                    }
+                case 1:
+                    {
+                        return "可用版本"
+                    }
+            }
+        },
+        statusType(status) {
+            switch (status) {
+                case 0:
+                    {
+                        return "info"
+                    }
+                case 1:
+                    {
+                        return ""
+                    }
+            }
         },
         loadDataList() {
             let _this = this;
-            var url = "/oms/pc/list";
+            var url = "/oms/version/downLoaderList";
             sendRequest(url, _this.formInline, function(jsonData) {
                 console.log(jsonData)
                 _this.tableData.list = jsonData.data.list
@@ -80,17 +119,6 @@ var mainVue = new Vue({
             this.infoData.row.id = ''
             this.infoData.row.remarks = ''
         },
-        openEdit(row) {
-            console.log(row)
-            this.drawer = true;
-            let formName = "pcForm"
-            if (this.$refs[formName]) {
-                this.resetForm(formName)
-            }
-            this.infoData.row.edit = true
-            this.infoData.row.id = row.id
-            this.infoData.row.remarks = row.remarks
-        },
         handleClose(done) {
             this.$confirm('确认关闭(未保存的内容将会丢失)？')
                 .then(_ => {
@@ -106,22 +134,76 @@ var mainVue = new Vue({
             let formName = "pcForm"
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    var url = "/oms/pc/save";
-                    var params = _this.infoData.row;
-                    sendRequest(url, params, function(jsonData) {
-                        if (jsonData.isSuccess) {
-                            _this.$message.success("保存成功");
-                            _this.drawer = false;
-                            _this.loadDataList();
-                        } else {
-                            _this.$message.error(jsonData.message);
+                    var formData = new FormData();
+                    formData.append("file", _this.infoData.zipFile[0].raw)
+                    _this.loading = true
+                    $.ajax({
+                        url: "/oms/version/downloaderSave?id=" + _this.infoData.row.id + "&versionLog=" + _this.infoData.row.versionLog,
+                        type: 'POST',
+                        async: true,
+                        cache: false,
+                        contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                        processData: false, // 告诉jQuery不要去处理发送的数据
+                        data: formData,
+                        beforeSend: function(XMLHttpRequest) {},
+                        success: function(jsonData) {
+                            if (jsonData.isSuccess) {
+                                _this.$message.success("保存成功");
+                                _this.loading = false;
+                                _this.drawer = false;
+                                _this.loadDataList();
+                            } else {
+                                _this.$message.error(jsonData.message);
+                            }
                         }
                     })
                 }
             })
         },
-        delete(row) {
-            console.log(row)
+        zipOnChange(file, fileList) {
+            if (fileList.length > 0) {
+                this.infoData.zipFile = [fileList[fileList.length - 1]] //这一步，是 展示最后一次选择文件
+                this.$refs.pcForm.validateField('zipFile')
+            }
+        },
+        downZip(row) {
+            window.open(row.url)
+        },
+        deleteRow(row) {
+            let _this = this
+            _this.$confirm('确认要回滚该版本么?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            }).then(() => {
+                var url = "/oms/version/downloaderDelete";
+                var params = { id: row.id };
+
+                sendRequest(url, params, function(jsonData) {
+                    if (jsonData.isSuccess) {
+                        _this.$message.success("删除成功");
+                        _this.drawer = false;
+                        _this.loadDataList();
+                    } else {
+                        _this.$message.error(jsonData.message);
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
+        openLog() {
+            let _this = this
+            var url = "/oms/version/downLoaderList";
+            sendRequest(url, { pageSize: 999, pageNo: 1 }, function(jsonData) {
+                console.log(jsonData)
+                _this.logData.list = jsonData.data.list
+                _this.logData.reverse = false
+                _this.logDrawer = true
+            })
         },
     }
 })

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.OmsVersionDao">
+
+	<!-- 获取版本列表 -->
+	<select id="findItemByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.version.Version">
+		SELECT * FROM bl_version
+		WHERE 1=1
+		<if test="screen!=null and screen!=''">
+			AND screen =#{screen}
+		</if>
+		<if test="status!=null and status!=''">
+			AND status =#{status}
+		</if>
+		ORDER BY created_at DESC
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findItemCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)	FROM bl_version
+		WHERE 1=1
+		<if test="screen!=null and screen!=''">
+			AND screen =#{screen}
+		</if>
+		<if test="status!=null and status!=''">
+			AND status =#{status}
+		</if>
+	</select>
+
+	<!-- 获取过期版本 -->
+	<select id="queryOutVersion" parameterType="java.util.Map" resultType="com.bl.nop.entity.version.Version">
+		SELECT * FROM bl_version
+		WHERE status = 1
+		ORDER BY created_at DESC
+		LIMIT 2,10
+	</select>
+
+
+	<!-- 获取下载器列表 -->
+	<select id="findDownloaderItemByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.version.VersionDownloader">
+		SELECT * 
+		FROM bl_version_downloader 
+		WHERE 1=1
+		<if test="status!=null and status!=''">
+			AND status =#{status}
+		</if>
+		ORDER BY created_at DESC
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findDownloaderItemCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)
+		FROM bl_version_downloader 
+		WHERE 1=1
+		<if test="status!=null and status!=''">
+			AND status =#{status}
+		</if>
+	</select>
+
+</mapper>

@@ -12,7 +12,7 @@ public class Version implements Serializable {
 
     private Integer status;
 
-    private String log;
+    private String versionLog;
 
     private Date createdAt;
 
@@ -52,12 +52,12 @@ public class Version implements Serializable {
         this.status = status;
     }
 
-    public String getLog() {
-        return log;
+    public String getVersionLog() {
+        return versionLog;
     }
 
-    public void setLog(String log) {
-        this.log = log == null ? null : log.trim();
+    public void setVersionLog(String versionLog) {
+        this.versionLog = versionLog == null ? null : versionLog.trim();
     }
 
     public Date getCreatedAt() {
