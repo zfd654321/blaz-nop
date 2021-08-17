@@ -9,4 +9,10 @@ public interface DeviceBaseService {
 	 * @return
 	 */
 	public JSONObject getDeviceID(String sId);
+	/**
+	 * 获取下载器
+	 * @param sId
+	 * @return
+	 */
+    public JSONObject getDownloader();
 }

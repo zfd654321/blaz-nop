@@ -2,7 +2,7 @@
 <configuration>
     <Properties>
         <Property name="LOG_HOME">${sys:user.dir}/logs</Property>
-        <Property name="LOG_FILE">@logging.file-web@</Property>
+        <Property name="LOG_FILE">tcs.log</Property>
     </Properties>
     
     <Appenders>

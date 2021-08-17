@@ -31,4 +31,18 @@ public class ApiController extends BaseController {
         log.info("请求根据设备软件码[" + sId + "]获取设备激活信息，返回数据：" + oj.toJSONString());
         writeResponseByJson(request, response, oj);
     }
+
+        /**
+     * U3D前端通过软件编码得到对应的设备编号的信息 得到设备的激活信息
+     * 
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "/getDownloader")
+    public void getDownloader(HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取最新下载器信息");
+        JSONObject oj = deviceBaseService.getDownloader();
+        log.info("获取最新下载器信息，返回数据：" + oj.toJSONString());
+        writeResponseByJson(request, response, oj);
+    }
 }

@@ -2,7 +2,7 @@
 <configuration>
     <Properties>
         <Property name="LOG_HOME">log</Property>
-        <Property name="LOG_FILE">@logging.file-web@</Property>
+        <Property name="LOG_FILE">cis.log</Property>
     </Properties>
     
     <Appenders>

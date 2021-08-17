@@ -4,6 +4,7 @@ import com.bl.nop.bis.api.DeviceService;
 import com.bl.nop.bis.dao.DeviceInfoDao;
 import com.bl.nop.entity.device.Device;
 import com.bl.nop.entity.device.DevicePc;
+import com.bl.nop.entity.version.VersionDownloader;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -39,6 +40,13 @@ public class DeviceServiceImpl implements DeviceService {
 		log.info("根据软件码[" + sId + "]获取设备信息");
 		DevicePc pc = deviceInfoDao.getDevicePcById(sId);
 		return pc;
+	}
+
+	@Override
+	public VersionDownloader getDownLoader() {
+		VersionDownloader downloader=deviceInfoDao.getDownLoader("");
+
+		return downloader;
 	}
 
 }

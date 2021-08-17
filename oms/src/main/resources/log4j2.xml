@@ -2,7 +2,7 @@
 <configuration>
     <Properties>
         <Property name="LOG_HOME">log</Property>
-        <Property name="LOG_FILE">@logging.file-web@</Property>
+        <Property name="LOG_FILE">oms.log</Property>
     </Properties>
     
     <Appenders>
