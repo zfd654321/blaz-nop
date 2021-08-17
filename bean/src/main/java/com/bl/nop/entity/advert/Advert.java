@@ -1,24 +1,20 @@
-package com.bl.nop.entity.resources;
+package com.bl.nop.entity.advert;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class Resources implements Serializable {
-    private Integer id;
+public class Advert implements Serializable {
+    private String id;
 
     private String name;
 
+    private String remarks;
+
     private Integer type;
 
-    private String md5;
+    private String resource;
 
-    private String path;
-
-    private String url;
-
-    private Integer status;
-
-    private Integer size;
+    private Integer scount;
 
     private Date createdAt;
 
@@ -30,12 +26,12 @@ public class Resources implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     public String getName() {
@@ -46,6 +42,14 @@ public class Resources implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
+    }
+
     public Integer getType() {
         return type;
     }
@@ -54,44 +58,20 @@ public class Resources implements Serializable {
         this.type = type;
     }
 
-    public String getMd5() {
-        return md5;
+    public String getResource() {
+        return resource;
     }
 
-    public void setMd5(String md5) {
-        this.md5 = md5 == null ? null : md5.trim();
+    public void setResource(String resource) {
+        this.resource = resource == null ? null : resource.trim();
     }
 
-    public String getPath() {
-        return path;
+    public Integer getScount() {
+        return scount;
     }
 
-    public void setPath(String path) {
-        this.path = path == null ? null : path.trim();
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url == null ? null : url.trim();
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
+    public void setScount(Integer scount) {
+        this.scount = scount;
     }
 
     public Date getCreatedAt() {

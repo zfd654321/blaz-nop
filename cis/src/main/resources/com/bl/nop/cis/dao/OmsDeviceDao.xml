@@ -48,4 +48,41 @@
 		SELECT * FROM bl_device_pc WHERE status=1
 	</select>
 
+	<select id="deviceAdvertList" parameterType="java.util.Map" resultType="com.bl.nop.entity.advert.Advert">
+		SELECT g.* FROM bl_device_advert d 
+		LEFT JOIN bl_advert g 
+		ON d.`advert_id`=g.id 
+		WHERE d.`device_id`=#{deviceId}  
+		ORDER BY d.`weight`
+	</select>
+
+	<delete id="cleanDeviceAdvert" parameterType="java.util.Map">
+		DELETE FROM bl_device_advert WHERE device_id=#{deviceId} 
+	</delete>
+
+	<select id="deviceGameList" parameterType="java.util.Map" resultType="com.bl.nop.entity.game.Game">
+		SELECT g.* FROM bl_device_game d 
+		LEFT JOIN bl_game g 
+		ON d.`game_id`=g.id 
+		WHERE d.`device_id`=#{deviceId}  
+		ORDER BY d.`weight`
+	</select>
+
+	<select id="deviceGameNetresList" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.GameNetresDto">
+		SELECT g.*,d.res_url 
+		FROM `bl_game_netres` g
+		LEFT JOIN bl_device_game_netres d
+		ON g.id=d.`netres_id`
+		AND d.`device_id`=#{deviceId}
+		WHERE CONCAT(",",#{gameIds},",") LIKE CONCAT("%,",g.game_id,",%")
+	</select>
+
+	<delete id="cleanDeviceGame" parameterType="java.util.Map">
+		DELETE FROM bl_device_game WHERE device_id=#{deviceId}
+	</delete>
+
+	<delete id="cleanDeviceGameNetres" parameterType="java.util.Map">
+		DELETE FROM bl_device_game_netres WHERE device_id=#{deviceId} 
+	</delete>
+
 </mapper>

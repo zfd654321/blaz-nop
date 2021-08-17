@@ -37,6 +37,7 @@
         <table tableName="bl_device_pc" domainObjectName="DevicePc" mapperName="DevicePcDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_device_config" domainObjectName="DeviceConfig" mapperName="DeviceConfigDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_device_switch" domainObjectName="DeviceSwitch" mapperName="DeviceSwitchDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+        <table tableName="bl_device_advert" domainObjectName="DeviceAdvert" mapperName="DeviceAdvertDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_device_game" domainObjectName="DeviceGame" mapperName="DeviceGameDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_device_game_netres" domainObjectName="DeviceGameNetres" mapperName="DeviceGameNetresDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
     </context>

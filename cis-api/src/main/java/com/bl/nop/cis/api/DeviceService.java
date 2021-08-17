@@ -21,13 +21,15 @@ public interface DeviceService {
 	 * @return
 	 */
 	public ResResultBean save(Map<String, Object> params);
+
 	/**
 	 * 空闲pc列表
 	 * 
 	 * @param params
 	 * @return
 	 */
-    public ResResultBean freePcList(Map<String, Object> params);
+	public ResResultBean freePcList(Map<String, Object> params);
+
 	/**
 	 * 设备入库
 	 * 
@@ -35,13 +37,15 @@ public interface DeviceService {
 	 * @return
 	 */
 	public ResResultBean intoHouse(Map<String, Object> params);
+
 	/**
 	 * 设备上下线
 	 * 
 	 * @param params
 	 * @return
 	 */
-    public ResResultBean updateStatus(Map<String, Object> params);
+	public ResResultBean updateStatus(Map<String, Object> params);
+
 	/**
 	 * 设备删除
 	 * 
@@ -50,8 +54,68 @@ public interface DeviceService {
 	 */
 	public ResResultBean delete(Map<String, Object> params);
 
-    public ResResultBean loadDeviceConfig(Map<String, Object> params);
+	/**
+	 * 读取设备配置
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean loadDeviceConfig(Map<String, Object> params);
 
-    public ResResultBean saveDeviceConfig(Map<String, Object> params);
+	/**
+	 * 保存设备配置
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean saveDeviceConfig(Map<String, Object> params);
+
+	/**
+	 * 读取设备广告
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean loadDeviceAdvert(Map<String, Object> params);
+
+	/**
+	 * 保存设备广告
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean saveDeviceAdvert(Map<String, Object> params);
+
+	/**
+	 * 读取设备游戏
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean loadDeviceGame(Map<String, Object> params);
+
+	/**
+	 * 读取设备游戏2d资源
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean loadDeviceGameNetres(Map<String, Object> params);
+
+	/**
+	 * 保存设备游戏
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean saveDeviceGame(Map<String, Object> params);
+
+	/**
+	 * 设备上线校验
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean deviceOnlineCheck(Map<String, Object> params);
 
 }

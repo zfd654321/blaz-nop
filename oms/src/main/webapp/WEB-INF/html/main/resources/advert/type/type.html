@@ -1,0 +1,83 @@
+<div id="main">
+    <div class="titleline">广告模板</div>
+    <el-card class="box-card">
+        <!-- 查询栏 -->
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="名称" size="mini">
+                <el-input  v-model.trim="formInline.name" placeholder="名称"></el-input>
+            </el-form-item>
+
+            <el-form-item label="屏幕版本" size="mini">
+                <el-select v-model="formInline.screen" placeholder="屏幕版本">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="竖屏" value="1"></el-option>
+                    <el-option label="横屏" value="2"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item size="mini">
+                <el-button type="primary" @click="doQuery" plain>查询</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!-- 按钮栏 -->
+        <el-row>
+            <el-button size="mini" type="primary" @click="openAdd">添加</el-button>
+        </el-row>
+
+        <!-- 表格栏 -->
+        <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
+            <el-table-column prop="name" label="模板名称"></el-table-column>
+            <el-table-column prop="screen" label="屏幕版本":formatter="checkScreen"></el-table-column>
+            <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
+            <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
+            <el-table-column prop="createdAt" label="创建时间"></el-table-column>
+            <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
+            <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button @click="openEdit(scope.row)" type="text" size="small">编辑</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!-- 翻页 -->
+        <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
+    </el-card>
+    <!-- 详情弹出框（新增/修改） -->
+    <el-drawer :title="infoData.row.edit?'模板修改':'模板新增'" :visible.sync="drawer" ref="drawer" :before-close="handleClose">
+        <el-form :model="infoData.row"  :rules="infoData.rules" ref="pcForm" label-width="80px" style="margin:20">
+            <el-form-item label="模板名称" prop="name">
+                <el-input placeholder="请输入模板名称" v-model.trim="infoData.row.name" ></el-input>
+            </el-form-item>
+            <el-form-item label="模板备注" prop="remarks">
+                <el-input placeholder="请输入模板备注" v-model.trim="infoData.row.remarks" ></el-input>
+            </el-form-item>
+            <el-form-item label="屏幕版本" prop="screen">
+                <el-select v-model="infoData.row.screen" filterable placeholder="请选择屏幕版本">
+                    <el-option label="竖屏" :value="1"></el-option>
+                    <el-option label="横屏" :value="2"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="模型路径" prop="bundleName">
+                <el-input placeholder="请输入模型文件路径" v-model.trim="infoData.row.bundleName"></el-input>
+            </el-form-item>
+            <el-form-item label="模型名称" prop="assetName">
+                <el-input placeholder="请输入模型文件名称" v-model.trim="infoData.row.assetName"></el-input>
+            </el-form-item>
+            <el-form-item label="模板时长" prop="time">
+                <el-input placeholder="请输入模板时长" v-model.trim="infoData.row.time"></el-input>
+            </el-form-item>
+            <el-form-item label="模板类别" prop="type">
+                <el-select v-model="infoData.row.type" filterable placeholder="请选择模板类别">
+                    <el-option label="无额外资源" :value="0"></el-option>
+                    <el-option label="图片轮播" :value="1"></el-option>
+                    <el-option label="视频" :value="2"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">保存</el-button>
+            </el-form-item>
+        </el-form>
+    </el-drawer>
+
+</div>
+<script src="main/resources/advert/type/type.js"></script>

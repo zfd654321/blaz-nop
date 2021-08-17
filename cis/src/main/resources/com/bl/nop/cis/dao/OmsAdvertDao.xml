@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.OmsAdvertDao">
+
+	<!-- 获取广告列表 -->
+	<select id="findItemByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.advert.Advert">
+		SELECT a.* 
+		FROM bl_advert a 
+		LEFT JOIN bl_advert_type t
+		ON a.type=t.id
+		WHERE 1=1
+		<if test="name!=null and name!=''">
+			AND a.name like
+			concat('%',#{name},'%')
+		</if>
+		<if test="screen!=null and screen!=''">
+			AND t.screen =#{screen}
+		</if>
+		order by a.updated_at DESC
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findItemCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)
+		FROM bl_advert a
+		LEFT JOIN bl_advert_type t
+		ON a.type=t.id
+		WHERE 1=1
+		<if test="name!=null and name!=''">
+			AND a.name like
+			concat('%',#{name},'%')
+		</if>
+		<if test="screen!=null and screen!=''">
+			AND t.screen =#{screen}
+		</if>
+	</select>
+
+	<!-- 获取广告模板列表 -->
+	<select id="findTypeItemByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.advert.AdvertType">
+		SELECT * 
+		FROM bl_advert_type WHERE 1=1
+		<if test="name!=null and name!=''">
+			AND name like
+			concat('%',#{name},'%')
+		</if>
+		<if test="screen!=null and screen!=''">
+			AND screen =#{screen}
+		</if>
+		order by updated_at DESC
+			LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findTypeItemCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)
+		FROM bl_advert_type WHERE 1=1
+		<if test="name!=null and name!=''">
+			AND name like
+			concat('%',#{name},'%')
+		</if>
+		<if test="screen!=null and screen!=''">
+			AND screen =#{screen}
+		</if>
+	</select>
+
+</mapper>

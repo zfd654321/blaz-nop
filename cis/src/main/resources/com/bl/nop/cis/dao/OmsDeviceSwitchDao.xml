@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.OmsDeviceSwitchDao">
+
+	<!-- 获取角色列表 -->
+	<select id="findItemByPage" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.SwitchDto">
+		SELECT s.*,d.`pc_id`,d.`name` 
+		FROM `bl_device_switch` s
+		LEFT JOIN bl_device d
+		ON s.`device_id`=d.`device_id`
+		WHERE d.`status`=3
+		<if test="deviceId!=null and deviceId!=''">
+			AND s.`device_id` like
+			concat('%',#{deviceId},'%')
+		</if>
+		<if test="pcId!=null and pcId!=''">
+			AND d.`pc_id` like
+			concat('%',#{pcId},'%')
+		</if>
+		<if test="name!=null and name!=''">
+			AND d.`name` like
+			concat('%',#{name},'%')
+		</if>
+		order by updated_at DESC
+		LIMIT ${startNum},${pageSize}
+	</select>
+
+	<select id="findItemCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)
+		FROM `bl_device_switch` s
+		LEFT JOIN bl_device d
+		ON s.`device_id`=d.`device_id`
+		WHERE d.`status`=3
+		<if test="deviceId!=null and deviceId!=''">
+			AND s.`device_id` like
+			concat('%',#{deviceId},'%')
+		</if>
+		<if test="pcId!=null and pcId!=''">
+			AND d.`pc_id` like
+			concat('%',#{pcId},'%')
+		</if>
+		<if test="name!=null and name!=''">
+			AND d.`name` like
+			concat('%',#{name},'%')
+		</if>
+	</select>
+
+</mapper>

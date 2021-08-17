@@ -8,6 +8,8 @@ public class DevicePc implements Serializable {
 
     private String remarks;
 
+    private String license;
+
     private Integer status;
 
     private Date createdAt;
@@ -34,6 +36,14 @@ public class DevicePc implements Serializable {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks == null ? null : remarks.trim();
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license == null ? null : license.trim();
     }
 
     public Integer getStatus() {

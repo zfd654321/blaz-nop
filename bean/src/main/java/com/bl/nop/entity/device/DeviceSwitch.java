@@ -14,6 +14,8 @@ public class DeviceSwitch implements Serializable {
 
     private Integer onlinecheck;
 
+    private Integer filecheck;
+
     private Date shutdown;
 
     private Date restart;
@@ -58,6 +60,14 @@ public class DeviceSwitch implements Serializable {
 
     public void setOnlinecheck(Integer onlinecheck) {
         this.onlinecheck = onlinecheck;
+    }
+
+    public Integer getFilecheck() {
+        return filecheck;
+    }
+
+    public void setFilecheck(Integer filecheck) {
+        this.filecheck = filecheck;
     }
 
     public Date getShutdown() {

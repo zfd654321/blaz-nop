@@ -2,9 +2,9 @@
     <el-drawer title="资源选择" :visible.sync="resourcesDrawer" ref="resourcesDrawer" :modal-append-to-body="false">
         <el-form style="margin:20">
             <el-form-item  label="当前资源">
-                <el-empty v-if="resourceUrl==''" description="未选择"></el-empty>
-                <el-image v-else-if="formInline.type=='img'" style="max-width: 150px; max-height: 150px" fit="contain" :src="resourceUrl"/>
-                <video v-else-if="formInline.type=='video'" style="max-width: 150px; max-height: 150px" fit="contain" :src="resourceUrl" controls></video>
+                <el-empty v-if="resourceUrl=='' || resourceUrl==null" description="未选择" style="max-width: 200px; max-height: 200px"></el-empty>
+                <el-image v-else-if="formInline.type=='img' " style=" max-height: 200px" fit="contain" :src="resourceUrl"/>
+                <video v-else-if="formInline.type=='video' " style=" max-height: 200px" fit="contain" :src="resourceUrl" controls></video>
             </el-form-item>
         </el-form>
         <el-divider></el-divider>

@@ -1,0 +1,56 @@
+<div id="main">
+    <div class="titleline">PC管理</div>
+    <el-card class="box-card">
+        <!-- 查询栏 -->
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="设备编号" size="mini">
+                <el-input  v-model.trim="formInline.deviceId" placeholder="设备编号"></el-input>
+            </el-form-item>
+            <el-form-item label="机器码" size="mini">
+                <el-input  v-model.trim="formInline.pcId" placeholder="机器码"></el-input>
+            </el-form-item>
+            <el-form-item label="设备名称" size="mini">
+                <el-input  v-model.trim="formInline.name" placeholder="设备名称"></el-input>
+            </el-form-item>
+            <el-form-item size="mini">
+                <el-button type="primary" @click="doQuery" plain>查询</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!-- 表格栏 -->
+        <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
+            <el-table-column prop="deviceId" label="设备编号"></el-table-column>
+            <el-table-column prop="pcId" width="220" label="机器码"></el-table-column>
+            <el-table-column prop="name" label="设备名称"></el-table-column>
+            <el-table-column label="更新开关">
+                <template slot-scope="scope">
+                    <el-switch v-model="scope.row.software" :active-value="1" :inactive-value="0" @change='changeStatus($event,scope.row.deviceId,"software")'></el-switch>
+                </template>
+            </el-table-column>
+            <el-table-column label="支付开关">
+                <template slot-scope="scope">
+                    <el-switch v-model="scope.row.pay" :active-value="1" :inactive-value="0" @change='changeStatus($event,scope.row.deviceId,"pay")'></el-switch>
+                </template>
+            </el-table-column>
+            <el-table-column label="统计开关">
+                <template slot-scope="scope">
+                    <el-switch v-model="scope.row.statistics" :active-value="1" :inactive-value="0" @change='changeStatus($event,scope.row.deviceId,"statistics")'></el-switch>
+                </template>
+            </el-table-column>
+            <el-table-column label="联网校验开关">
+                <template slot-scope="scope">
+                    <el-switch v-model="scope.row.onlinecheck" :active-value="1" :inactive-value="0" @change='changeStatus($event,scope.row.deviceId,"onlinecheck")'></el-switch>
+                </template>
+            </el-table-column>
+            <el-table-column label="文件比对开关">
+                <template slot-scope="scope">
+                    <el-switch v-model="scope.row.filecheck" :active-value="1" :inactive-value="0" @change='changeStatus($event,scope.row.deviceId,"filecheck")'></el-switch>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!-- 翻页 -->
+        <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
+    </el-card>
+
+</div>
+<script src="main/operate/device/switch/switch.js"></script>

@@ -22,7 +22,7 @@ public class DeviceController extends JsonBaseController {
 
 	@Autowired
 	private DeviceService deviceService;
-	
+
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	@ResponseBody
 	public ResResultBean list(HttpServletRequest request, HttpServletResponse response) {
@@ -96,7 +96,53 @@ public class DeviceController extends JsonBaseController {
 		ResResultBean resResultBean = this.deviceService.saveDeviceConfig(params);
 		return resResultBean;
 	}
-	
 
-	
+	@RequestMapping(value = "/loadDeviceAdvert", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean loadDeviceAdvert(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		ResResultBean resResultBean = this.deviceService.loadDeviceAdvert(params);
+		return resResultBean;
+	}
+
+	@RequestMapping(value = "/saveDeviceAdvert", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean saveDeviceAdvert(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		ResResultBean resResultBean = this.deviceService.saveDeviceAdvert(params);
+		return resResultBean;
+	}
+
+	@RequestMapping(value = "/loadDeviceGame", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean loadDeviceGame(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		ResResultBean resResultBean = this.deviceService.loadDeviceGame(params);
+		return resResultBean;
+	}
+
+	@RequestMapping(value = "/loadDeviceGameNetres", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean loadDeviceGameNetres(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		ResResultBean resResultBean = this.deviceService.loadDeviceGameNetres(params);
+		return resResultBean;
+	}
+
+	@RequestMapping(value = "/saveDeviceGame", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean saveDeviceGame(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		ResResultBean resResultBean = this.deviceService.saveDeviceGame(params);
+		return resResultBean;
+	}
+
+	@RequestMapping(value = "/deviceOnlineCheck", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean deviceOnlineCheck(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		ResResultBean resResultBean = this.deviceService.deviceOnlineCheck(params);
+		return resResultBean;
+	}
+
 }

@@ -3,15 +3,14 @@
 <mapper namespace="com.bl.nop.dao.device.DeviceGameNetresDao">
   <resultMap id="BaseResultMap" type="com.bl.nop.entity.device.DeviceGameNetres">
     <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
-    <result column="game_id" jdbcType="VARCHAR" property="gameId" />
-    <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
+    <result column="netres_id" jdbcType="VARCHAR" property="netresId" />
     <result column="res_url" jdbcType="VARCHAR" property="resUrl" />
   </resultMap>
   <insert id="insert" parameterType="com.bl.nop.entity.device.DeviceGameNetres">
-    insert into bl_device_game_netres (device_id, game_id, property_name, 
-      res_url)
-    values (#{deviceId,jdbcType=VARCHAR}, #{gameId,jdbcType=VARCHAR}, #{propertyName,jdbcType=VARCHAR}, 
-      #{resUrl,jdbcType=VARCHAR})
+    insert into bl_device_game_netres (device_id, netres_id, res_url
+      )
+    values (#{deviceId,jdbcType=VARCHAR}, #{netresId,jdbcType=VARCHAR}, #{resUrl,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.device.DeviceGameNetres">
     insert into bl_device_game_netres
@@ -19,11 +18,8 @@
       <if test="deviceId != null">
         device_id,
       </if>
-      <if test="gameId != null">
-        game_id,
-      </if>
-      <if test="propertyName != null">
-        property_name,
+      <if test="netresId != null">
+        netres_id,
       </if>
       <if test="resUrl != null">
         res_url,
@@ -33,11 +29,8 @@
       <if test="deviceId != null">
         #{deviceId,jdbcType=VARCHAR},
       </if>
-      <if test="gameId != null">
-        #{gameId,jdbcType=VARCHAR},
-      </if>
-      <if test="propertyName != null">
-        #{propertyName,jdbcType=VARCHAR},
+      <if test="netresId != null">
+        #{netresId,jdbcType=VARCHAR},
       </if>
       <if test="resUrl != null">
         #{resUrl,jdbcType=VARCHAR},

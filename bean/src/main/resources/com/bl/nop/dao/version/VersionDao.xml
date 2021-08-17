@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.version.VersionDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.version.Version">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+    <result column="screen" jdbcType="INTEGER" property="screen" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="log" jdbcType="VARCHAR" property="log" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, file_path, screen, status, log, created_at, created_by
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bl_version
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bl_version
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bl.nop.entity.version.Version">
+    insert into bl_version (id, file_path, screen, 
+      status, log, created_at, 
+      created_by)
+    values (#{id,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{screen,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{log,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, 
+      #{createdBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.version.Version">
+    insert into bl_version
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="filePath != null">
+        file_path,
+      </if>
+      <if test="screen != null">
+        screen,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="log != null">
+        log,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="screen != null">
+        #{screen,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="log != null">
+        #{log,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.version.Version">
+    update bl_version
+    <set>
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="screen != null">
+        screen = #{screen,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="log != null">
+        log = #{log,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null">
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.version.Version">
+    update bl_version
+    set file_path = #{filePath,jdbcType=VARCHAR},
+      screen = #{screen,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      log = #{log,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      created_by = #{createdBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

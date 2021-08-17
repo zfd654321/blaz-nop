@@ -4,8 +4,8 @@
     <el-card class="box-card">
         <!-- 查询栏 -->
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="设备码" size="mini">
-                <el-input  v-model.trim="formInline.deviceId" placeholder="设备码"></el-input>
+            <el-form-item label="设备编号" size="mini">
+                <el-input  v-model.trim="formInline.deviceId" placeholder="设备编号"></el-input>
             </el-form-item>
             <el-form-item label="机器码" size="mini">
                 <el-input  v-model.trim="formInline.pcId" placeholder="机器码"></el-input>
@@ -25,16 +25,18 @@
             <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
             <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
             <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
-            <el-table-column prop="createdAt" label="创建时间"></el-table-column>
+            <el-table-column prop="createdAt" label="创建时间" width="110"></el-table-column>
             <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
-            <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
-            <el-table-column label="操作" width="220">
+            <el-table-column prop="updatedAt" label="更新时间" width="110"></el-table-column>
+            <el-table-column label="操作" width="170">
                 <template slot-scope="scope">
-                    <el-button @click="openEdit(scope.row)" type="text" size="small">编辑</el-button>
+                    <el-button @click="openEdit(scope.row)" type="text" size="small">信息</el-button>
                     <el-button @click="openConfig(scope.row)" type="text" size="small">配置</el-button>
                     <el-button @click="openAdvert(scope.row)" type="text" size="small">广告</el-button>
                     <el-button @click="openGame(scope.row)" type="text" size="small">游戏</el-button>
                     <el-button @click="online(scope.row)" type="text" size="small">上线</el-button>
+                    <el-button @click="deviceCopy(scope.row)" type="text" size="small">平移</el-button>
+                    <el-button @click="deleteRow(scope.row)" type="text" size="small">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -110,12 +112,12 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="大屏Logo地址" prop="logoUrl">
-                <el-input placeholder="请输入大屏Logo地址" readonly v-model.trim="configData.row.logoUrl" id="logoUrl">
+                <el-input placeholder="请选择大屏Logo" readonly v-model.trim="configData.row.logoUrl" id="logoUrl">
                     <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(configData.row.logoUrl,'logoUrl','img')"></el-button>
                 </el-input>
             </el-form-item>
             <el-form-item label="照片水印地址" prop="watermarkUrl">
-                <el-input placeholder="请输入照片水印地址" readonly v-model.trim="configData.row.watermarkUrl" id="watermarkUrl">
+                <el-input placeholder="请选择照片水印" readonly v-model.trim="configData.row.watermarkUrl" id="watermarkUrl">
                     <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(configData.row.watermarkUrl,'watermarkUrl','img')"></el-button>
                 </el-input>
             </el-form-item>
@@ -131,19 +133,50 @@
         </el-form>
     </el-drawer>
 
+    <!-- 广告配置弹出框 -->
+    <el-drawer title="广告配置" :visible.sync="advertDrawer" ref="advertDrawer" :before-close="handleClose" size="640">
+        <el-form :model="advertData.row" ref="advertForm" label-width="auto" style="margin:20">
+            <el-form-item>
+                <el-transfer v-model="advertData.advertChecked" :data="advertData.advertList" :titles="['可选广告', '已选广告']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onAdvertSubmit">保存</el-button>
+            </el-form-item>
+        </el-form>
+    </el-drawer>
+
     <!-- 游戏配置弹出框 -->
     <el-drawer title="游戏配置" :visible.sync="gameDrawer" ref="gameDrawer" :before-close="handleClose" size="640">
-        <el-steps :active="gameData.active" finish-status="success" align-center	simple>
+        <el-steps :active="gameData.active" finish-status="success" align-center simple>
             <el-step title="游戏选择"></el-step>
             <el-step title="2d资源配置"></el-step>
         </el-steps>
         <el-form :rules="gameData.rules" :model="gameData.row" ref="gameForm" label-width="auto" style="margin:20">
-            <el-form-item>
-                <el-transfer v-model="gameData.gameChecked" :data="gameData.gameList" :titles="['可选游戏', '已选游戏']" filterable></el-transfer>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onConfigSubmit">下一步</el-button>
-            </el-form-item>
+            <template v-if="gameData.active==0">
+                <el-form-item>
+                    <el-transfer v-model="gameData.gameChecked" :data="gameData.gameList" :titles="['可选游戏', '已选游戏']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="gameNext">下一步</el-button>
+                </el-form-item>
+            </template>
+
+            <template v-if="gameData.active==1">
+                <el-collapse v-model="gameData.collapseActive" accordion style="margin:20 0">
+                    <el-collapse-item :title="item.gameId+'['+item.gameName+']'" :name="index" v-for="(item,index) in gameData.netresList">
+                        <el-form-item :label="netreItem.name" v-for="(netreItem,index) in item.netres">
+                            <el-input placeholder="默认资源" readonly v-model.trim="netreItem.resUrl" :id="'netre'+netreItem.id">
+                                <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(netreItem.resUrl,'netre'+netreItem.id,netreItem.type)"></el-button>
+                            </el-input>
+                        </el-form-item>
+                        <el-empty description="该游戏没有可配置项" v-if="item.netres.length<1" style="height:150"></el-empty>
+                    </el-collapse-item>
+                </el-collapse>
+                <el-form-item>
+                    <el-button type="primary" @click="gamePre">上一步</el-button>
+                    <el-button type="primary" @click="onGameSubmit">保存</el-button>
+                </el-form-item>
+            </template>
         </el-form>
     </el-drawer>
 

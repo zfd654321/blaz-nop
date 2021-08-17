@@ -70,7 +70,6 @@ public class ResourcesController extends JsonBaseController {
 				params.put("url", url);
 				params.put("size", size);
 				params.put("ext", extName);
-				params.put("thumbnail", thumbnailurl);
 				switch (type) {
 					case "img": {
 						FileUtil.getImageResourcesCutImage(path, thumbnailpath);
@@ -85,6 +84,7 @@ public class ResourcesController extends JsonBaseController {
 						break;
 					}
 				}
+				params.put("thumbnail", thumbnailurl);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

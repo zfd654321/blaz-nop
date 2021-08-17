@@ -2,6 +2,8 @@ var mainVue = new Vue({
     el: '#main',
     data: {
         drawer: false,
+        advertDrawer: false,
+        gameDrawer: false,
         formInline: {
             deviceId: '',
             pcId: '',
@@ -43,6 +45,14 @@ var mainVue = new Vue({
                 ],
 
             }
+        },
+        advertData: {
+            deviceId: "",
+            list: []
+        },
+        gameData: {
+            deviceId: "",
+            list: []
         },
         tableData: { list: [], totalCount: 0 }
 
@@ -101,43 +111,29 @@ var mainVue = new Vue({
         openEdit(row) {
             console.log(row)
             this.drawer = true;
-            let formName = "deviceForm"
-            if (this.$refs[formName]) {
-                this.resetForm(formName)
-            }
-            this.infoData.row.deviceId = row.deviceId
-            this.infoData.row.pcId = row.pcId
-            this.infoData.row.name = row.name
-            this.infoData.row.remarks = row.remarks
-            this.infoData.row.address = row.address
-            this.infoData.row.type = row.type
-            this.infoData.row.screen = row.screen
-            this.infoData.row.camera = row.camera
-            this.infoData.row.edit = true
+            this.infoData.row = row
         },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
-        },
-        onSubmit() {
+        openAdvert(row) {
+            console.log(row)
             let _this = this;
-            let formName = "deviceForm"
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    var url = "/oms/device/save";
-                    var params = _this.infoData.row;
-
-                    sendRequest(url, params, function(jsonData) {
-                        if (jsonData.isSuccess) {
-                            _this.$message.success("保存成功");
-                            _this.drawer = false;
-                            _this.loadDataList();
-                        } else {
-                            _this.$message.error(jsonData.message);
-                        }
-                    })
-                }
+            this.advertDrawer = true;
+            var url = "/oms/device/loadDeviceAdvert";
+            sendRequest(url, { deviceId: row.deviceId, }, function(jsonData) {
+                console.log(jsonData)
+                _this.advertData.list = jsonData.data
             })
         },
+        openGame(row) {
+            console.log(row)
+            let _this = this;
+            _this.gameDrawer = true;
+            var url = "/oms/device/loadDeviceGame";
+            sendRequest(url, { deviceId: row.deviceId, }, function(jsonData) {
+                console.log(jsonData)
+                _this.gameData.list = jsonData.data
+            })
+        },
+
         offline(row) {
             let _this = this
             _this.$confirm('确认将该设备下线么?', '提示', {

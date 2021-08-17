@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.bl.nop.cis.api.PermissionService;
 import com.bl.nop.cis.dao.PermissionDao;
+import com.bl.nop.cis.dto.MenuTreeDto;
 import com.bl.nop.common.bean.ResResultBean;
 import com.bl.nop.common.util.Md5Util;
 import com.bl.nop.dao.sys.SysUserDao;
-import com.bl.nop.dto.MenuTreeDto;
 import com.bl.nop.entity.sys.SysUser;
 
 import org.apache.commons.lang.StringUtils;

@@ -1,4 +1,4 @@
-package com.bl.nop.dto;
+package com.bl.nop.cis.dto;
 
 import java.io.Serializable;
 import java.util.List;

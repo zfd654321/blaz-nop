@@ -7,11 +7,12 @@
     <result column="pay" jdbcType="INTEGER" property="pay" />
     <result column="statistics" jdbcType="INTEGER" property="statistics" />
     <result column="onlinecheck" jdbcType="INTEGER" property="onlinecheck" />
+    <result column="filecheck" jdbcType="INTEGER" property="filecheck" />
     <result column="shutdown" jdbcType="TIMESTAMP" property="shutdown" />
     <result column="restart" jdbcType="TIMESTAMP" property="restart" />
   </resultMap>
   <sql id="Base_Column_List">
-    device_id, software, pay, statistics, onlinecheck, shutdown, restart
+    device_id, software, pay, statistics, onlinecheck, filecheck, shutdown, restart
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -25,11 +26,11 @@
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.device.DeviceSwitch">
     insert into bl_device_switch (device_id, software, pay, 
-      statistics, onlinecheck, shutdown, 
-      restart)
+      statistics, onlinecheck, filecheck, 
+      shutdown, restart)
     values (#{deviceId,jdbcType=VARCHAR}, #{software,jdbcType=INTEGER}, #{pay,jdbcType=INTEGER}, 
-      #{statistics,jdbcType=INTEGER}, #{onlinecheck,jdbcType=INTEGER}, #{shutdown,jdbcType=TIMESTAMP}, 
-      #{restart,jdbcType=TIMESTAMP})
+      #{statistics,jdbcType=INTEGER}, #{onlinecheck,jdbcType=INTEGER}, #{filecheck,jdbcType=INTEGER}, 
+      #{shutdown,jdbcType=TIMESTAMP}, #{restart,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.device.DeviceSwitch">
     insert into bl_device_switch
@@ -48,6 +49,9 @@
       </if>
       <if test="onlinecheck != null">
         onlinecheck,
+      </if>
+      <if test="filecheck != null">
+        filecheck,
       </if>
       <if test="shutdown != null">
         shutdown,
@@ -72,6 +76,9 @@
       <if test="onlinecheck != null">
         #{onlinecheck,jdbcType=INTEGER},
       </if>
+      <if test="filecheck != null">
+        #{filecheck,jdbcType=INTEGER},
+      </if>
       <if test="shutdown != null">
         #{shutdown,jdbcType=TIMESTAMP},
       </if>
@@ -95,6 +102,9 @@
       <if test="onlinecheck != null">
         onlinecheck = #{onlinecheck,jdbcType=INTEGER},
       </if>
+      <if test="filecheck != null">
+        filecheck = #{filecheck,jdbcType=INTEGER},
+      </if>
       <if test="shutdown != null">
         shutdown = #{shutdown,jdbcType=TIMESTAMP},
       </if>
@@ -110,6 +120,7 @@
       pay = #{pay,jdbcType=INTEGER},
       statistics = #{statistics,jdbcType=INTEGER},
       onlinecheck = #{onlinecheck,jdbcType=INTEGER},
+      filecheck = #{filecheck,jdbcType=INTEGER},
       shutdown = #{shutdown,jdbcType=TIMESTAMP},
       restart = #{restart,jdbcType=TIMESTAMP}
     where device_id = #{deviceId,jdbcType=VARCHAR}

@@ -8,7 +8,7 @@
 		password=#{password}
 	</select>
 	<!-- 获取角色菜单 -->
-	<select id="findMenuByRoleId" parameterType="java.lang.String" resultType="com.bl.nop.dto.MenuTreeDto">
+	<select id="findMenuByRoleId" parameterType="java.lang.String" resultType="com.bl.nop.cis.dto.MenuTreeDto">
 		SELECT t.id AS id,
 		t.name AS `text`,
 		t.href AS url,

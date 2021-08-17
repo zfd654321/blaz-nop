@@ -43,7 +43,21 @@
 		<property name="overloadEnabled" value="true" />
 	</bean>
 
+	<bean id="deviceSwitchService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/deviceSwitchService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.DeviceSwitchService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
 	<!-- 资源模块接口 -->
+	<bean id="versionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/versionService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.VersionService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
 	<bean id="resourcesService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
 		<property name="serviceUrl" value="${hessian.serviceUrl}/resourcesService" />
 		<property name="serviceInterface" value="com.bl.nop.cis.api.ResourcesService" />
@@ -54,6 +68,13 @@
 	<bean id="gameService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
 		<property name="serviceUrl" value="${hessian.serviceUrl}/gameService" />
 		<property name="serviceInterface" value="com.bl.nop.cis.api.GameService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<bean id="advertService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/advertService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.AdvertService" />
 		<property name="chunkedPost" value="false" />
 		<property name="overloadEnabled" value="true" />
 	</bean>

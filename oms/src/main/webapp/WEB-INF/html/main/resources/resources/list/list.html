@@ -79,7 +79,7 @@
             </el-form-item>
             <el-form-item  label="预览" v-if="infoData.fileList.length>0">
                 <el-image v-if="infoData.row.type=='img'" style="max-width: 300px; max-height: 300px" fit="contain" :src="infoData.fileList[0].url"/>
-                <video v-if="infoData.row.type=='video'" style="max-width: 300px; max-height: 300px" fit="contain" :src="infoData.fileList[0].url" controls></video>
+                <video v-else-if="infoData.row.type=='video'" style="max-width: 300px; max-height: 300px" fit="contain" :src="infoData.fileList[0].url" controls></video>
             </el-form-item>
             <el-form-item  label="文件大小" v-if="infoData.fileList.length>0">
                 {{getFileSize(infoData.fileList[0])}}
@@ -92,7 +92,8 @@
 
     <el-dialog title="预览" :visible.sync="showData.visible" width="30%">
         <el-image v-if="showData.row.type=='img'" style="max-width: 100%; max-height: 30%; display: block;" fit="contain" :src="showData.row.url"/>
-        <video v-if="showData.row.type=='video'" style="max-width: 100%; max-height: 100%" fit="contain" :src="showData.row.url" controls></video>
+        <video v-else-if="showData.row.type=='video'" style="max-width: 100%; max-height: 100%" fit="contain" :src="showData.row.url" controls></video>
+        <el-button v-else type="primary" @click="downFile(showData.row.url)">下载<i class="el-icon-upload el-icon--right"></i></el-button>
     </el-dialog>
 
 </div>

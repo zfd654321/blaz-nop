@@ -3,7 +3,7 @@ package com.bl.nop.cis.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.bl.nop.dto.MenuTreeDto;
+import com.bl.nop.cis.dto.MenuTreeDto;
 import com.bl.nop.entity.sys.SysRole;
 
 import org.apache.ibatis.annotations.Param;

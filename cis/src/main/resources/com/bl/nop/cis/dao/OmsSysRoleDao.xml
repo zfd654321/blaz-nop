@@ -39,7 +39,7 @@
 	</delete>
 
 	<!-- 查询所有的菜单 -->
-	<select id="findAllMenu" resultType="com.bl.nop.dto.MenuTreeDto">
+	<select id="findAllMenu" resultType="com.bl.nop.cis.dto.MenuTreeDto">
 		SELECT t.id AS id,
 		t.name AS `text`,
 		t.href AS url,

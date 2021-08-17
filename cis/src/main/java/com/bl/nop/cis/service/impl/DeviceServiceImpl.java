@@ -5,21 +5,32 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.bl.nop.cis.api.DeviceService;
 import com.bl.nop.cis.dao.OmsDeviceDao;
+import com.bl.nop.cis.dto.GameNetresDto;
 import com.bl.nop.cis.util.PropertyUtil;
 import com.bl.nop.common.bean.ResResultBean;
 import com.bl.nop.common.util.NumberUtil;
 import com.bl.nop.common.util.Page;
 import com.bl.nop.common.util.StringUtil;
+import com.bl.nop.dao.device.DeviceAdvertDao;
 import com.bl.nop.dao.device.DeviceConfigDao;
 import com.bl.nop.dao.device.DeviceDao;
+import com.bl.nop.dao.device.DeviceGameDao;
+import com.bl.nop.dao.device.DeviceGameNetresDao;
 import com.bl.nop.dao.device.DevicePcDao;
 import com.bl.nop.dao.device.DeviceSwitchDao;
+import com.bl.nop.entity.advert.Advert;
 import com.bl.nop.entity.device.Device;
+import com.bl.nop.entity.device.DeviceAdvert;
 import com.bl.nop.entity.device.DeviceConfig;
+import com.bl.nop.entity.device.DeviceGame;
+import com.bl.nop.entity.device.DeviceGameNetres;
 import com.bl.nop.entity.device.DevicePc;
 import com.bl.nop.entity.device.DeviceSwitch;
+import com.bl.nop.entity.game.Game;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +50,12 @@ public class DeviceServiceImpl implements DeviceService {
 	private DeviceConfigDao deviceConfigDao;
 	@Autowired
 	private DeviceSwitchDao deviceSwitchDao;
+	@Autowired
+	private DeviceAdvertDao deviceAdvertDao;
+	@Autowired
+	private DeviceGameDao deviceGameDao;
+	@Autowired
+	private DeviceGameNetresDao deviceGameNetresDao;
 	@Autowired
 	private OmsDeviceDao omsDeviceDao;
 
@@ -98,7 +115,7 @@ public class DeviceServiceImpl implements DeviceService {
 				pc.setStatus(2);
 				this.devicePcDao.updateByPrimaryKey(repc);
 				this.devicePcDao.updateByPrimaryKey(pc);
-				item.setPcId(pcId);
+
 			}
 			item.setName(name);
 			item.setRemarks(remarks);
@@ -113,7 +130,7 @@ public class DeviceServiceImpl implements DeviceService {
 		} else {// 新增
 			log.info("新增设备>>>>>deviceId:" + deviceId);
 			if (reitem != null) {
-				return ResResultBean.error(ERROR_CODE + "002", "该设备码已存在，请勿重复添加");
+				return ResResultBean.error(ERROR_CODE + "002", "该设备编号已存在，请勿重复添加");
 			}
 			DevicePc pc = this.devicePcDao.selectByPrimaryKey(pcId);
 			if (pc.getStatus() != 1) {
@@ -186,6 +203,7 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceSwitch.setPay(0);
 			deviceSwitch.setStatistics(1);
 			deviceSwitch.setOnlinecheck(0);
+			deviceSwitch.setFilecheck(0);
 			this.deviceSwitchDao.insert(deviceSwitch);
 		}
 
@@ -245,6 +263,87 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 		DeviceConfig deviceConfig = JSON.parseObject(JSON.toJSONString(params), DeviceConfig.class);
 		this.deviceConfigDao.updateByPrimaryKey(deviceConfig);
+		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean loadDeviceAdvert(Map<String, Object> params) {
+		List<Advert> list = this.omsDeviceDao.deviceAdvertList(params);
+		return ResResultBean.success(list);
+	}
+
+	@Override
+	public ResResultBean saveDeviceAdvert(Map<String, Object> params) {
+		String deviceId = StringUtil.toStr(params.get("deviceId"));
+		String adverts = StringUtil.toStr(params.get("adverts"));
+		this.omsDeviceDao.cleanDeviceAdvert(deviceId);
+		String[] advertList = adverts.split(",");
+		for (int i = 0; i < advertList.length; i++) {
+			String advertId = advertList[i];
+			DeviceAdvert deviceAdvert = new DeviceAdvert();
+			deviceAdvert.setDeviceId(deviceId);
+			deviceAdvert.setAdvertId(advertId);
+			deviceAdvert.setWeight(i);
+			this.deviceAdvertDao.insert(deviceAdvert);
+		}
+		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean loadDeviceGame(Map<String, Object> params) {
+		List<Game> list = this.omsDeviceDao.deviceGameList(params);
+		return ResResultBean.success(list);
+	}
+
+	@Override
+	public ResResultBean loadDeviceGameNetres(Map<String, Object> params) {
+		List<GameNetresDto> list = this.omsDeviceDao.deviceGameNetresList(params);
+		return ResResultBean.success(list);
+	}
+
+	@Override
+	public ResResultBean saveDeviceGame(Map<String, Object> params) {
+		String deviceId = StringUtil.toStr(params.get("deviceId"));
+		String gameIds = StringUtil.toStr(params.get("gameIds"));
+
+		this.omsDeviceDao.cleanDeviceGame(deviceId);
+		this.omsDeviceDao.cleanDeviceGameNetres(deviceId);
+		String[] gameIdList = gameIds.split(",");
+		Integer i = 0;
+		for (String gameId : gameIdList) {
+			DeviceGame game = new DeviceGame();
+			game.setDeviceId(deviceId);
+			game.setGameId(gameId);
+			game.setWeight(i++);
+			this.deviceGameDao.insert(game);
+		}
+
+		String slist = StringUtil.toStr(params.get("slist"));
+		JSONArray jsonArray = JSONArray.parseArray(slist);
+		for (Object object : jsonArray) {
+			JSONObject obj = (JSONObject) object;
+			String netresId = obj.getString("netresId");
+			String resUrl = obj.getString("resUrl");
+			DeviceGameNetres netres = new DeviceGameNetres();
+			netres.setDeviceId(deviceId);
+			netres.setNetresId(netresId);
+			netres.setResUrl(resUrl);
+			this.deviceGameNetresDao.insert(netres);
+		}
+		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean deviceOnlineCheck(Map<String, Object> params) {
+		List<Advert> advertList = this.omsDeviceDao.deviceAdvertList(params);
+		List<Game> gameList = this.omsDeviceDao.deviceGameList(params);
+		log.info("advertCount"+advertList.size());
+		if (advertList.isEmpty()) {
+			return ResResultBean.error(ERROR_CODE + "011", "设备尚未配置广告位，无法上线");
+		}
+		if (gameList.isEmpty()) {
+			return ResResultBean.error(ERROR_CODE + "012", "设备尚未配置游戏，无法上线");
+		}
 		return ResResultBean.success();
 	}
 

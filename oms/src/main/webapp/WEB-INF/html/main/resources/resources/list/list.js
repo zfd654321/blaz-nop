@@ -210,6 +210,9 @@ var mainVue = new Vue({
             if (fileList.length > 0) {
                 this.infoData.fileList = [fileList[fileList.length - 1]] //这一步，是 展示最后一次选择文件
             }
+        },
+        downFile(url) {
+            window.open(url)
         }
 
     }

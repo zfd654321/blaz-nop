@@ -1,11 +1,14 @@
 package com.bl.nop.cis.service.impl;
 
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.bl.nop.cis.api.DevicePcService;
 import com.bl.nop.cis.dao.OmsDevicePcDao;
+import com.bl.nop.cis.util.FileUtil;
+import com.bl.nop.cis.util.PropertyUtil;
 import com.bl.nop.common.bean.ResResultBean;
 import com.bl.nop.common.util.NumberUtil;
 import com.bl.nop.common.util.Page;
@@ -68,26 +71,32 @@ public class DevicePcServiceImpl implements DevicePcService {
 		DevicePc reitem = this.devicePcDao.selectByPrimaryKey(id);
 
 		if (edit) {// 修改
-			DevicePc item=reitem;
+			DevicePc item = reitem;
 			item.setRemarks(remarks);
 			item.setUpdatedAt(now);
 			item.setUpdatedBy(createdBy);
 			this.devicePcDao.updateByPrimaryKey(item);
 
 		} else {// 新增
-			if(reitem!=null){
+			if (reitem != null) {
 				return ResResultBean.error(ERROR_CODE + "002", "该机器码已存在");
 			}
 			log.info("新增PC>>>>>pc_id:" + id);
+			// 生成pc激活文件
+			String filePath = "forever/license/" + id + ".lisence";
+			String requestUrl = MessageFormat.format(PropertyUtil.getProperty("license_request_url"), id);
+			String license = FileUtil.saveImageToDisk(filePath, requestUrl);
 			DevicePc item = new DevicePc();
 			item.setId(id);
 			item.setRemarks(remarks);
 			item.setStatus(1);
+			item.setLicense(license);
 			item.setCreatedAt(now);
 			item.setCreatedBy(createdBy);
 			item.setUpdatedAt(now);
 			item.setUpdatedBy(createdBy);
 			this.devicePcDao.insert(item);
+
 		}
 		return ResResultBean.success();
 	}

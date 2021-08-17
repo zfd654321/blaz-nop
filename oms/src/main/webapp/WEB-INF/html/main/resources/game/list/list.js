@@ -173,7 +173,6 @@ var mainVue = new Vue({
             })
         },
         showJson(row) {
-            let _this = this
             window.open("/files/oms/forever/game/" + row.id + "/" + row.version + "/game.json")
         },
         downZip(row) {
