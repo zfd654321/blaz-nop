@@ -59,7 +59,7 @@ public class ApiServiceImpl implements ApiService {
 			throw new BusinessException(ERROR_CODE + "015", "设备["+sId+"]未对参数进行加密");
 		}
 		
-		Device Device = deviceService.getDeviceBySId(sId);
+		Device Device = deviceService.getOnlineDeviceByPcId(sId);
 		if(null == Device) {
 			log.info("----------s_id["+sId+"]未找到设备----------");
 			throw new BusinessException(ERROR_CODE + "016", "设备["+sId+"]没有在BL控制中心上线");

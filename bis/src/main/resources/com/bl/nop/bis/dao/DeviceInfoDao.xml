@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.bis.dao.DeviceInfoDao">
+	<select id="getOnlineDeviceByPcId" parameterType="java.lang.String" resultType="com.bl.nop.entity.device.Device">
+		SELECT * FROM `bl_device` d WHERE d.`status`=3 AND d.`pc_id`=#{sId} LIMIT 0,1
+  </select>
+	<select id="getDevicePcById" parameterType="java.lang.String" resultType="com.bl.nop.entity.device.DevicePc">
+		SELECT * FROM `bl_device_pc` d WHERE id=#{sId} LIMIT 0,1
+  </select>
+
+</mapper>

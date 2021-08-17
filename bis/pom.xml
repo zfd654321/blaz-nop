@@ -161,46 +161,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jms</artifactId>
 		</dependency>
-
-          <!-- activemq -->
-          <dependency>
-              <groupId>org.apache.activemq</groupId>
-              <artifactId>activemq-all</artifactId>
-              <version>5.16.0</version>
-          </dependency>
-		  <dependency>
-		    <groupId>org.apache.activemq</groupId>
-		    <artifactId>activemq-pool</artifactId>
-		    <version>5.9.0</version>
-		</dependency>
-
-		<!-- reids -->
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-redis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-		</dependency>
-		
-		<!-- jna -->
-		<dependency>
-			<groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>4.2.2</version>
-		</dependency>
-		<!--freemarker-->
-		<dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-        </dependency>
-
-
 	</dependencies>
 
 	<profiles>
