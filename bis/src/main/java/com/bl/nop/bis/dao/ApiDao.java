@@ -7,7 +7,7 @@ import com.bl.nop.entity.version.VersionDownloader;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DeviceInfoDao {
+public interface ApiDao {
 
 	public Device getOnlineDeviceByPcId(String sId);
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.bis.dao.ConfigDao">
+	<select id="queryDeviceRequestList" parameterType="java.lang.String" resultType="com.bl.nop.entity.device.DeviceRequest">
+		SELECT * FROM `bl_device_request` d WHERE d.`status`=1
+  	</select>
+
+	<select id="queryDeviceAdvertList" parameterType="java.lang.String" resultType="com.bl.nop.bis.dto.AdvertDto">
+		SELECT a.`id`,
+		t.`bundle_name`,
+		t.`asset_name`,
+		t.`time`,
+		t.`type`,
+		a.`resource`,
+		a.`scount` 
+		FROM bl_device_advert d
+		LEFT JOIN bl_advert a
+		ON d.`advert_id`=a.`id`
+		LEFT JOIN bl_advert_type t
+		ON a.`type`=t.`id`
+		WHERE d.`device_id`=#{deviceId}  
+  	</select>
+
+	<select id="queryDeviceGameList" parameterType="java.lang.String" resultType="com.bl.nop.entity.game.Game">
+		SELECT g.* FROM bl_device_game d 
+		LEFT JOIN bl_game g 
+		ON d.`game_id`=g.id 
+		WHERE d.`device_id`=#{deviceId}  
+		ORDER BY d.`weight`
+  	</select>
+
+	<select id="queryDeviceGameNetresList" parameterType="java.lang.String" resultType="com.bl.nop.bis.dto.NetresDto">
+		SELECT n.`game_id` id,
+		n.`name`,
+		n.`property`,
+		n.`type`,
+		d.`res_url` url
+		FROM bl_device_game_netres d
+		LEFT JOIN bl_game_netres n
+		ON d.`netres_id`=n.`id`
+		WHERE d.`device_id`=#{deviceId}  
+		ORDER BY n.`game_id`
+  	</select>
+
+</mapper>

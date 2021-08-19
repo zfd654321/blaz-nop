@@ -7,9 +7,16 @@
 
     <context:property-placeholder location="classpath:config/config.properties" />
     <!-- 设备接口 -->
-    <bean id="deviceService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
-        <property name="serviceUrl" value="${hessian.bis.serviceUrl}/deviceService" />
-        <property name="serviceInterface" value="com.bl.nop.bis.api.DeviceService" />
+    <bean id="apiService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${hessian.bis.serviceUrl}/apiService" />
+        <property name="serviceInterface" value="com.bl.nop.bis.api.ApiService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+    <!-- 设备配置接口 -->
+    <bean id="configService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${hessian.bis.serviceUrl}/configService" />
+        <property name="serviceInterface" value="com.bl.nop.bis.api.ConfigService" />
         <property name="chunkedPost" value="false" />
         <property name="overloadEnabled" value="true" />
     </bean>

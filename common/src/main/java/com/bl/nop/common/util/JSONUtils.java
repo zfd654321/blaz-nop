@@ -7,9 +7,18 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class JSONUtils {
     
-	public static void resultJSON(JSONObject oj,String return_code,JSONObject data_content,String return_msg){
-		oj.put("return_code", return_code);
-		oj.put("data_content", data_content);
-		oj.put("return_msg", return_msg);
+	public static JSONObject error(String returnCode,JSONObject dataContent,String returnMsg){
+		JSONObject oj = new JSONObject();
+		oj.put("returnCode", returnCode);
+		oj.put("dataContent", dataContent);
+		oj.put("returnMsg", returnMsg);
+		return oj;
+	}
+
+	public static JSONObject success(JSONObject dataContent){
+		JSONObject oj = new JSONObject();
+		oj.put("returnCode", "1");
+		oj.put("dataContent", dataContent);
+		return oj;
 	}
 }

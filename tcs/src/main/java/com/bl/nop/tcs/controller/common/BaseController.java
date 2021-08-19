@@ -60,6 +60,24 @@ public class BaseController {
 			paramsMap.put(key, request.getParameter(key));
 		}
 		log.info("请求数据为："+paramsMap);
+		paramsMap.put("request_ip", getRemoteHost(request));
+		return paramsMap;
+	}
+
+	/**
+     * 从请求头报文中取出请求的参数放入Map中(含附件)
+     * @param request
+     * @param paramsMap
+     * @return
+     */
+    public static Map<String, Object> buildMutipartParamsMap(HttpServletRequest request){
+    	Map<String, Object> paramsMap = new HashMap<>();
+		Enumeration<?> paramNames = request.getParameterNames();
+		while (paramNames.hasMoreElements()) {
+			String key = (String) paramNames.nextElement();
+			paramsMap.put(key, request.getParameter(key));
+		}
+		log.info("请求数据为："+paramsMap);
 		//得到请求中的附件
 		MultipartHttpServletRequest mureq = null;
 		try {
@@ -103,14 +121,14 @@ public class BaseController {
        if(ex instanceof BusinessException) {
            BusinessException e = (BusinessException)ex;
            JSONObject oj = new JSONObject();
-           oj.put("return_code", e.getCode());
-		   oj.put("return_msg",  e.getMessage());
+           oj.put("returnCode", e.getCode());
+		   oj.put("returnMsg",  e.getMessage());
            writeResponseByJson(request, response, oj);
            return;
        } 
        JSONObject oj = new JSONObject();
-       oj.put("return_code", "-100");
-		oj.put("return_msg", "操作失败");
+       oj.put("returnCode", "-100");
+		oj.put("returnMsg", "操作失败");
        writeResponseByJson(request, response, oj);
    }
 }

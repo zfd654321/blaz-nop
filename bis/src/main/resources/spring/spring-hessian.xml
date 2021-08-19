@@ -5,8 +5,12 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-        <bean name="/deviceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
-                <property name="serviceInterface" value="com.bl.nop.bis.api.DeviceService" />
-                <property name="service" ref="deviceService"></property>
+        <bean name="/apiService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.bis.api.ApiService" />
+                <property name="service" ref="apiService"></property>
+        </bean>
+        <bean name="/configService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.bis.api.ConfigService" />
+                <property name="service" ref="configService"></property>
         </bean>
 </beans>

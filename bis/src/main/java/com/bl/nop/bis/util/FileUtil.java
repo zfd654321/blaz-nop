@@ -1,4 +1,4 @@
-package com.bl.nop.cis.util;
+package com.bl.nop.bis.util;
 
 import java.io.BufferedReader;
 import java.io.File;

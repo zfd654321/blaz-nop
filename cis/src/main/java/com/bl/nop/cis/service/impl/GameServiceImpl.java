@@ -1,6 +1,8 @@
 package com.bl.nop.cis.service.impl;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import com.bl.nop.entity.game.Game;
 import com.bl.nop.entity.game.GameNetres;
 import com.bl.nop.entity.game.GameVersion;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +78,7 @@ public class GameServiceImpl implements GameService {
 		}
 		String id = StringUtil.toStr(params.get("id"));
 		String version = StringUtil.toStr(params.get("version"));
+		String gameDir = PropertyUtil.getProperty("filePath") + "forever/game/" + id + "/" + version;
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
 		boolean edit = StringUtil.toStr(params.get("edit")).equals("true");
 		Game game = this.gameDao.selectByPrimaryKey(id);
@@ -93,7 +97,7 @@ public class GameServiceImpl implements GameService {
 			log.info("新增游戏>>>>>" + id + ">>>>>" + id);
 		}
 		game = new Game();
-		String jsonUrl = PropertyUtil.getProperty("filePath") + "forever/game/" + id + "/" + version + "/game.json";
+		String jsonUrl = gameDir + "/game.json";
 		JSONObject game_json = FileUtil.getFileJson(jsonUrl);
 		String name = game_json.getString("GameName");
 		Integer screen = NumberUtil.toInt(game_json.getString("ScreenType"));
@@ -108,7 +112,7 @@ public class GameServiceImpl implements GameService {
 		game.setPath(path);
 		game.setUpdatedAt(now);
 		game.setUpdatedBy(createdBy);
-		
+
 		if (edit) {// 游戏更新
 			game.setCreatedAt(now);
 			game.setCreatedBy(createdBy);
@@ -126,15 +130,17 @@ public class GameServiceImpl implements GameService {
 			for (Object listob : proarray) {
 				GameNetres netres = new GameNetres();
 				JSONObject projson = JSONObject.parseObject(StringUtil.toStr(listob));
-				String netresName = projson.getString("Name");
-				String netresProperty = projson.getString("PropertyName");
-				String type = projson.getString("ResType");
-				String defaulturl = projson.getString("DefaultUrl");
+				String netresName = projson.getString("name");
+				String netresProperty = projson.getString("property");
+				String type = projson.getString("type");
+				String defaulturl = projson.getString("defaultUrl");
 				netres.setGameId(id);
 				netres.setName(netresName);
 				netres.setProperty(netresProperty);
 				netres.setType(type);
-				netres.setDefaulturl(defaulturl);
+				if (!StringUtils.isBlank(defaulturl)) {
+					netres.setDefaulturl(defaulturl);
+				}
 				this.gameNetresDao.insert(netres);
 			}
 		}
@@ -163,6 +169,41 @@ public class GameServiceImpl implements GameService {
 				this.gameVersionDao.updateByPrimaryKey(versionVo);
 			}
 		}
+
+		// 生成游戏文件列表json
+		FileWriter fwriter = null;
+		try {
+			JSONArray array = new JSONArray();
+			array = FileUtil.traverseFoloder(array, gameDir + "/gameFile", gameDir + "/gameFile");
+
+			JSONArray saveArray = new JSONArray();
+			for (Object object : array) {
+				JSONObject oj = JSONObject.parseObject(StringUtil.toStr(object));
+				String url = PropertyUtil.getProperty("fileUrl") + "forever/game/" + id + "/" + version
+						+ oj.getString("path");
+				oj.put("url", url);
+				saveArray.add(oj);
+			}
+			JSONObject filejson = new JSONObject();
+			filejson.put("id", id);
+			filejson.put("fileList", saveArray);
+			String jsonStr = filejson.toJSONString();
+			fwriter = new FileWriter(gameDir + "/file.json");
+			fwriter.write(jsonStr);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fwriter.flush();
+				fwriter.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		//清除zip包
+		File zipfile = new File(gameDir + "/game.zip");
+		FileUtil.deleteFile(zipfile);
 
 		return ResResultBean.success();
 

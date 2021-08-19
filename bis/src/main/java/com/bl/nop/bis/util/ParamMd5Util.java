@@ -1,4 +1,4 @@
-package com.bl.nop.tcs.util;
+package com.bl.nop.bis.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
