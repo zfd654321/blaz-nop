@@ -8,9 +8,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.security.MessageDigest;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -140,5 +144,37 @@ public class FileUtil {
 			}
 		}
 		return array;
+	}
+
+	public static String getMd5ByFile(File file) throws FileNotFoundException {
+		String value = null;
+		FileInputStream in = new FileInputStream(file);
+		try {
+			MappedByteBuffer byteBuffer = in.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+			MessageDigest md5 = MessageDigest.getInstance("MD5");
+			md5.update(byteBuffer);
+			BigInteger bi = new BigInteger(1, md5.digest());
+			value = bi.toString(16);
+			if (value.length() != 32) {
+				int value_length = 32 - value.length();
+				StringBuffer str = new StringBuffer();
+				for (int i = 0; i < value_length; i++) {
+					str.append("0");
+				}
+				str.append(value);
+				value = str.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != in) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return value;
 	}
 }

@@ -1,11 +1,19 @@
 package com.bl.nop.cis.service.impl;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.bl.nop.cis.api.VersionService;
 import com.bl.nop.cis.dao.OmsVersionDao;
+import com.bl.nop.cis.util.FileUtil;
+import com.bl.nop.cis.util.PropertyUtil;
 import com.bl.nop.common.bean.ResResultBean;
 import com.bl.nop.common.util.NumberUtil;
 import com.bl.nop.common.util.Page;
@@ -65,6 +73,8 @@ public class VersionServiceImpl implements VersionService {
 			return ResResultBean.error(ERROR_CODE + "001", "参数为空");
 		}
 		String id = StringUtil.toStr(params.get("id"));
+		Integer screen = NumberUtil.toInt(params.get("screen"));
+		String versionLog = StringUtil.toStr(params.get("versionLog"));
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
 		Date now = new Date();
 		Version reitem = this.versionDao.selectByPrimaryKey(id);
@@ -75,6 +85,10 @@ public class VersionServiceImpl implements VersionService {
 		log.info("新增版本>>>>>version:" + id);
 		Version item = new Version();
 		item.setId(id);
+		item.setFilePath(PropertyUtil.getProperty("filePath") + "forever/version/procedure/" + id);
+		item.setScreen(screen);
+		item.setStatus(1);
+		item.setVersionLog(versionLog);
 		item.setCreatedAt(now);
 		item.setCreatedBy(createdBy);
 		this.versionDao.insert(item);
@@ -83,9 +97,143 @@ public class VersionServiceImpl implements VersionService {
 	}
 
 	@Override
+	public ResResultBean build(Map<String, Object> params) {
+		String lastVersion = StringUtil.toStr(params.get("lastVersion"));
+		String newVersion = StringUtil.toStr(params.get("newVersion"));
+		String addVersion = "new_" + lastVersion + "_" + newVersion;
+		Version oldVersion = this.versionDao.selectByPrimaryKey(lastVersion);
+		if (oldVersion == null) {
+			return ResResultBean.error(ERROR_CODE + "011", "指定的旧版本文件不存在");
+		}
+		Version Version = this.versionDao.selectByPrimaryKey(newVersion);
+		if (Version != null) {
+			return ResResultBean.error(ERROR_CODE + "010", "该版本号已上传，请勿重复操作");
+		}
+
+		String lastPath = PropertyUtil.getProperty("filePath") + "forever/version/procedure/" + lastVersion;
+		String newPath = PropertyUtil.getProperty("filePath") + "forever/version/procedure/" + newVersion;
+		String addPath = PropertyUtil.getProperty("filePath") + "forever/version/incremental/" + addVersion;
+
+		File lastDir = new File(lastPath);
+		File addDir = new File(addPath);
+		if (!lastDir.exists()) {
+			return ResResultBean.error(ERROR_CODE + "011", "指定的旧版本文件不存在");
+		}
+		if (!addDir.exists()) {
+			return ResResultBean.error(ERROR_CODE + "012", "增量包文件未上传,请检查路径：" + addPath);
+		}
+
+		// 拷贝旧版本文件
+		FileUtil.copyFolder(lastPath, newPath, "");
+		// 拷贝增量包文件
+		FileUtil.copyFolder(addDir + "/" + newVersion, newPath, "");
+
+		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean check(Map<String, Object> params) {
+		String lastVersion = StringUtil.toStr(params.get("lastVersion"));
+		String newVersion = StringUtil.toStr(params.get("newVersion"));
+		String addVersion = "new_" + lastVersion + "_" + newVersion;
+
+		String newPath = PropertyUtil.getProperty("filePath") + "forever/version/procedure/" + newVersion;
+		String newUrl = PropertyUtil.getProperty("fileUrl") + "forever/version/procedure/" + newVersion;
+		String addPath = PropertyUtil.getProperty("filePath") + "forever/version/incremental/" + addVersion;
+
+		String vjson = addPath + "/Version.json";
+		JSONObject version_json = FileUtil.getFileJson(vjson);
+		String version_id = version_json.getString("VersionNum");
+		if (!newVersion.equals(version_id)) {
+			return ResResultBean.error(ERROR_CODE + "013", "校验文件版本号与输入的版本号不一致");
+		}
+
+		try {
+			JSONArray software = version_json.getJSONArray("VersionExeFiles");
+			JSONArray fileList = new JSONArray();
+			for (int i = 0; i < software.size(); i++) {
+				JSONObject filejson = software.getJSONObject(i);
+				String filePath = filejson.getString("FilePath");
+				String fileMd5 = filejson.getString("FileMD5");
+				File file = new File(newPath + "/" + filePath);
+				if (!file.exists() || !fileMd5.equals(FileUtil.getMd5ByFile(file))) {
+					return ResResultBean.error(ERROR_CODE + "014", "文件校验失败..." + filePath);
+				}
+				JSONObject oj = new JSONObject();
+				oj.put("name", file.getName());
+				oj.put("md5", fileMd5);
+				oj.put("path", filePath);
+				oj.put("length", file.length());
+				oj.put("url", newUrl + "/" + filePath);
+				fileList.add(oj);
+			}
+			JSONObject fileJson = new JSONObject();
+			fileJson.put("version", newVersion);
+			fileJson.put("fileList", fileList);
+			String jsonStr = fileJson.toJSONString();
+			FileWriter fwriter = new FileWriter(newPath + "/file.json");
+			fwriter.write(jsonStr);
+			fwriter.flush();
+			fwriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean add(Map<String, Object> params) {
+		String lastVersion = StringUtil.toStr(params.get("lastVersion"));
+		String newVersion = StringUtil.toStr(params.get("newVersion"));
+		String versionLog = StringUtil.toStr(params.get("versionLog"));
+
+		String createdBy = StringUtil.toStr(params.get("createdBy"));
+		Date now = new Date();
+		Version oldVersion = this.versionDao.selectByPrimaryKey(lastVersion);
+		Version item = new Version();
+		item.setId(newVersion);
+		item.setFilePath(PropertyUtil.getProperty("filePath") + "forever/version/procedure/" + newVersion);
+		item.setScreen(oldVersion.getScreen());
+		item.setVersionLog(versionLog);
+		item.setStatus(1);
+		item.setCreatedAt(now);
+		item.setCreatedBy(createdBy);
+		this.versionDao.insert(item);
+		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean clean(Map<String, Object> params) {
+		String lastVersion = StringUtil.toStr(params.get("lastVersion"));
+		String newVersion = StringUtil.toStr(params.get("newVersion"));
+		String addVersion = "new_" + lastVersion + "_" + newVersion;
+		String addPath = PropertyUtil.getProperty("filePath") + "forever/version/incremental/" + addVersion;
+		Version oldVersion = this.versionDao.selectByPrimaryKey(lastVersion);
+		Map<String, Object> map = new HashMap<>();
+		map.put("screen", oldVersion.getScreen());
+		// 清理过期旧版本（保留3个版本）
+		List<Version> outlist = this.omsVersionDao.queryOutVersion(map);
+		if (!outlist.isEmpty()) {
+			for (Version version : outlist) {
+				File file = new File(version.getFilePath());
+				FileUtil.deleteFile(file);
+				version.setStatus(2);
+				this.versionDao.updateByPrimaryKey(version);
+			}
+		}
+		// 清理增量包
+		File addfile = new File(addPath);
+		FileUtil.deleteFile(addfile);
+		return ResResultBean.success();
+	}
+
+	@Override
 	public ResResultBean delete(Map<String, Object> params) {
 		String id = StringUtil.toStr(params.get("id"));
 		Version reitem = this.versionDao.selectByPrimaryKey(id);
+		File file = new File(reitem.getFilePath());
+		FileUtil.deleteFile(file);
 		reitem.setStatus(3);
 		this.versionDao.updateByPrimaryKey(reitem);
 		return ResResultBean.success();

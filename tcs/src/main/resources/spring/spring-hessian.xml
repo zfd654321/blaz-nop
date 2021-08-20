@@ -21,4 +21,12 @@
         <property name="overloadEnabled" value="true" />
     </bean>
 
+    <!-- 资源下载接口 -->
+    <bean id="downloadService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${hessian.bis.serviceUrl}/downloadService" />
+        <property name="serviceInterface" value="com.bl.nop.bis.api.DownloadService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+
 </beans>

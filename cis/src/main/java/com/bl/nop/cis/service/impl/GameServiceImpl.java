@@ -180,7 +180,7 @@ public class GameServiceImpl implements GameService {
 			for (Object object : array) {
 				JSONObject oj = JSONObject.parseObject(StringUtil.toStr(object));
 				String url = PropertyUtil.getProperty("fileUrl") + "forever/game/" + id + "/" + version
-						+ oj.getString("path");
+						+"/gameFile"+ oj.getString("path");
 				oj.put("url", url);
 				saveArray.add(oj);
 			}

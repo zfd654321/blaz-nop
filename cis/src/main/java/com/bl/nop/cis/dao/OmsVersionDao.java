@@ -11,7 +11,7 @@ public interface OmsVersionDao {
 
     int findItemCount(Map<String, Object> param);
 
-    List<Version> queryOutVersion(String id);
+    List<Version> queryOutVersion(Map<String, Object> map);
 
     List<VersionDownloader> findDownloaderItemByPage(Map<String, Object> param);
 

@@ -31,6 +31,7 @@
 	<select id="queryOutVersion" parameterType="java.util.Map" resultType="com.bl.nop.entity.version.Version">
 		SELECT * FROM bl_version
 		WHERE status = 1
+		AND screen =#{screen}
 		ORDER BY created_at DESC
 		LIMIT 2,10
 	</select>

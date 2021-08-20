@@ -13,4 +13,8 @@
                 <property name="serviceInterface" value="com.bl.nop.bis.api.ConfigService" />
                 <property name="service" ref="configService"></property>
         </bean>
+        <bean name="/downloadService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.bis.api.DownloadService" />
+                <property name="service" ref="downloadService"></property>
+        </bean>
 </beans>

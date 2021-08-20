@@ -25,9 +25,9 @@
             <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
             <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
             <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
-            <el-table-column prop="createdAt" label="创建时间" width="110"></el-table-column>
+            <el-table-column prop="createdAt" label="创建时间"></el-table-column>
             <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
-            <el-table-column prop="updatedAt" label="更新时间" width="110"></el-table-column>
+            <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
             <el-table-column label="操作" width="170">
                 <template slot-scope="scope">
                     <el-button @click="openEdit(scope.row)" type="text" size="small">信息</el-button>
@@ -137,7 +137,7 @@
     <el-drawer title="广告配置" :visible.sync="advertDrawer" ref="advertDrawer" :before-close="handleClose" size="640">
         <el-form :model="advertData.row" ref="advertForm" label-width="auto" style="margin:20">
             <el-form-item>
-                <el-transfer v-model="advertData.advertChecked" :data="advertData.advertList" :titles="['可选广告', '已选广告']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
+                <el-transfer filterable v-model="advertData.advertChecked" :data="advertData.advertList" :titles="['可选广告', '已选广告']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onAdvertSubmit">保存</el-button>
@@ -154,10 +154,10 @@
         <el-form :rules="gameData.rules" :model="gameData.row" ref="gameForm" label-width="auto" style="margin:20">
             <template v-if="gameData.active==0">
                 <el-form-item>
-                    <el-transfer v-model="gameData.gameChecked" :data="gameData.gameList" :titles="['可选游戏', '已选游戏']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
+                    <el-transfer filterable v-model="gameData.gameChecked" :data="gameData.gameList" :titles="['可选游戏', '已选游戏']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="gameNext">下一步</el-button>
+                    <el-button type="primary" @click="gameNext" style="margin-left: 250px;">下一步</el-button>
                 </el-form-item>
             </template>
 

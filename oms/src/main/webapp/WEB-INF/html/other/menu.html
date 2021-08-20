@@ -1,6 +1,7 @@
 <div id="menu">
   <div class="menuline">
-    <el-menu default-active="2" class="el-menu-vertical-demo" text-color="#9e9e9e" @select="handleSelect" :collapse="isCollapse" :unique-opened="true" style="padding-top:20;box-sizing: border-box;">
+    <el-menu default-active="2" class="el-menu-vertical-demo menugroup" text-color="#9e9e9e" @select="handleSelect" :collapse="isCollapse" :unique-opened="true" >
+      <el-button :icon="isCollapse?'el-icon-plus':'el-icon-minus'" circle class="menuButton" @click="changeCollapse" plain  type="primary"></el-button>
       <el-submenu v-for="(menu,index) in menuData.menuList" :index="menu.odindex">
         <template slot="title">
           <i :class="menu.icon"></i>
@@ -8,10 +9,10 @@
         </template>
         <el-submenu v-for="(smenu,sindex) in menu.children" :index="smenu.odindex">
           <template slot="title">
-            <i class="el-icon-arrow-right"></i>
+            <i class="el-icon-caret-right"></i>
             <span>{{smenu.text}}</span></template>
           <el-menu-item v-for="(cmenu,cindex) in smenu.children" :index="cmenu.url">
-            <i class="el-icon-caret-right"></i>
+            <i class="el-icon-arrow-right"></i>
             <span>{{cmenu.text}}</span></el-menu-item>
         </el-submenu>
       </el-submenu>
@@ -24,7 +25,6 @@
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
     height: 100%;
-    background-color: #FFF0;
   }
 </style>
 <script>
@@ -56,6 +56,10 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      changeCollapse() {
+        this.isCollapse = !this.isCollapse
+        $("#mainLoader").css("width",this.isCollapse?"1856px":"1720px")
       }
     }
   })

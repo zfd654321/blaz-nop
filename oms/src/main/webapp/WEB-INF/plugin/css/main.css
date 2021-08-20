@@ -1,6 +1,7 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: "Microsoft YaHei"
 }
 
 html,
@@ -16,6 +17,7 @@ table {
 
 #app {
     background: url("../../img/login/login.jpg") no-repeat;
+    background-size: 100% 100%;
 }
 
 #headLoader {
@@ -37,12 +39,9 @@ table {
 
 #menuLoader {
     box-sizing: border-box;
-    width: 200px;
     height: 100%;
-    position: absolute;
     top: 0;
     left: 0;
-    display: inline-block;
 }
 
 #menu {
@@ -51,19 +50,32 @@ table {
     padding-top: 80px;
 }
 
+.menuButton {
+    position: absolute;
+    z-index: 20;
+    left: 50%;
+    margin-left: -20px;
+    margin-top: -50px;
+}
+
+.menugroup {
+    padding-top: 80;
+    box-sizing: border-box;
+    background: #fffe;
+    box-shadow: #0003 2px 0 50px;
+    height: 100%;
+}
+
 .menuline {
     box-sizing: border-box;
     height: 100%;
-    background: #fffe;
-    box-shadow: #0003 2px 0 50px;
 }
 
 #mainLoader {
     box-sizing: border-box;
-    width: 100%;
     height: 100%;
     padding-top: 80px;
-    padding-left: 200px;
+    flex-grow: 1;
 }
 
 #main {

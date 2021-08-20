@@ -48,6 +48,42 @@ public class VersionController extends JsonBaseController {
 		ResResultBean resResultBean = this.versionService.save(params);
 		return resResultBean;
 	}
+	@RequestMapping(value = "/build", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean build(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		SysUser user = this.getUser(request);
+		params.put("createdBy", user.getId());
+		ResResultBean resResultBean = this.versionService.build(params);
+		return resResultBean;
+	}
+	@RequestMapping(value = "/check", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean check(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		SysUser user = this.getUser(request);
+		params.put("createdBy", user.getId());
+		ResResultBean resResultBean = this.versionService.check(params);
+		return resResultBean;
+	}
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean add(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		SysUser user = this.getUser(request);
+		params.put("createdBy", user.getId());
+		ResResultBean resResultBean = this.versionService.add(params);
+		return resResultBean;
+	}
+	@RequestMapping(value = "/clean", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean clean(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		SysUser user = this.getUser(request);
+		params.put("createdBy", user.getId());
+		ResResultBean resResultBean = this.versionService.clean(params);
+		return resResultBean;
+	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody

@@ -88,9 +88,9 @@ public class AdvertServiceImpl implements AdvertService {
 
 		} else {// 新增
 			if (reitem != null) {
-				return ResResultBean.error(ERROR_CODE + "002", "该机器码已存在");
+				return ResResultBean.error(ERROR_CODE + "002", "该广告码已存在");
 			}
-			log.info("新增PC>>>>>pc_id:" + id);
+			log.info("新增广告>>>>>id:" + id);
 			Advert item = new Advert();
 			item.setId(id);
 			item.setName(name);

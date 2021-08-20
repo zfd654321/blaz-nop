@@ -8,13 +8,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.security.MessageDigest;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bl.nop.common.util.Md5Util;
+
+import org.apache.commons.lang.StringUtils;
 
 public class FileUtil {
 	public static JSONObject getFileJson(String file) {
@@ -141,4 +147,78 @@ public class FileUtil {
 		}
 		return array;
 	}
+
+	public static void copyFolder(String oldPath, String newPath, String excludeFile) {
+		try {
+			(new File(newPath)).mkdirs(); // 如果文件夹不存在 则建立新文件夹
+			File a = new File(oldPath);
+			String[] file = a.list();
+			File temp;
+			for (int i = 0; i < file.length; i++) {
+				if (oldPath.endsWith(File.separator)) {
+					temp = new File(oldPath + file[i]);
+				} else {
+					temp = new File(oldPath + File.separator + file[i]);
+				}
+
+				if (temp.isFile() && !"gameBuildJ.json".equals(temp.getName())) {// 不复制gamejson
+					String fileName = temp.getName();
+					if (StringUtils.isNotBlank(excludeFile) && excludeFile.equals(fileName)) {
+						continue;
+					}
+					FileInputStream input = new FileInputStream(temp);
+					FileOutputStream output = new FileOutputStream(newPath + "/" + (temp.getName()).toString());
+					byte[] b = new byte[1024 * 5];
+					int len;
+					while ((len = input.read(b)) != -1) {
+						output.write(b, 0, len);
+					}
+					output.flush();
+					output.close();
+					input.close();
+				}
+				if (temp.isDirectory()) {// 如果是子文件夹
+					copyFolder(oldPath + "/" + file[i], newPath + "/" + file[i], excludeFile);
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("复制整个文件夹内容操作出错");
+			e.printStackTrace();
+
+		}
+
+	}
+
+	public static String getMd5ByFile(File file) throws FileNotFoundException {
+		String value = null;
+		FileInputStream in = new FileInputStream(file);
+		try {
+			MappedByteBuffer byteBuffer = in.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+			MessageDigest md5 = MessageDigest.getInstance("MD5");
+			md5.update(byteBuffer);
+			BigInteger bi = new BigInteger(1, md5.digest());
+			value = bi.toString(16);
+			if (value.length() != 32) {
+				int value_length = 32 - value.length();
+				StringBuffer str = new StringBuffer();
+				for (int i = 0; i < value_length; i++) {
+					str.append("0");
+				}
+				str.append(value);
+				value = str.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != in) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return value;
+	}
+	
 }
