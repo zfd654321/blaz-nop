@@ -83,15 +83,52 @@ public class VersionServiceImpl implements VersionService {
 			return ResResultBean.error(ERROR_CODE + "002", "该版本号已存在");
 		}
 		log.info("新增版本>>>>>version:" + id);
+		String filePath = PropertyUtil.getProperty("filePath") + "forever/version/procedure/" + id + "/";
+		String fileUrl = PropertyUtil.getProperty("fileUrl") + "forever/version/procedure/" + id + "/";
+		File file=new File(filePath);
+		if(!file.exists()){
+			return ResResultBean.error(ERROR_CODE + "003", "未找到版本文件");
+		}
 		Version item = new Version();
 		item.setId(id);
-		item.setFilePath(PropertyUtil.getProperty("filePath") + "forever/version/procedure/" + id);
+		item.setFilePath(filePath);
 		item.setScreen(screen);
 		item.setStatus(1);
 		item.setVersionLog(versionLog);
 		item.setCreatedAt(now);
 		item.setCreatedBy(createdBy);
 		this.versionDao.insert(item);
+
+		// 添加版本文件列表
+		FileWriter fwriter = null;
+		try {
+			JSONArray array = new JSONArray();
+			array = FileUtil.traverseFoloder(array, filePath, filePath);
+
+			JSONArray saveArray = new JSONArray();
+			for (Object object : array) {
+				JSONObject oj = JSONObject.parseObject(StringUtil.toStr(object));
+				String url = fileUrl + oj.getString("path");
+				oj.put("url", url);
+				saveArray.add(oj);
+			}
+			JSONObject filejson = new JSONObject();
+			filejson.put("id", id);
+			filejson.put("fileList", saveArray);
+			String jsonStr = filejson.toJSONString();
+			fwriter = new FileWriter(filePath + "file.json");
+			fwriter.write(jsonStr);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fwriter.flush();
+				fwriter.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
 
 		return ResResultBean.success();
 	}

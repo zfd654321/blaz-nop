@@ -1,5 +1,6 @@
 package com.bl.nop.bis.service.impl;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
@@ -41,17 +42,22 @@ public class DomainServiceImpl implements DomainService {
 			throw new BusinessException(ERROR_CODE + "015", "设备["+pcId+"]未对参数进行加密");
 		}
 		
-		Device Device = apiDao.getOnlineDeviceByPcId(pcId);
-		if(null == Device) {
+		Device device = apiDao.getOnlineDeviceByPcId(pcId);
+		if(null == device) {
 			log.info("----------pcId["+pcId+"]未找到设备----------");
 			throw new BusinessException(ERROR_CODE + "016", "设备["+pcId+"]没有在后台控制中心上线");
 		}
 		
-		String deviceId = Device.getDeviceId();
+		String deviceId = device.getDeviceId();
 		boolean isEncrypt = ParamMd5Util.encrypt(deviceId, deviceIdMd5);
 		if(!isEncrypt) {
 			log.info("-------------设备["+deviceId+"]验证参数加密不对，加密数："+deviceIdMd5);
 			throw new BusinessException(ERROR_CODE + "017", "参数验证加密不合法");
+		}
+
+		if(device.getOutDate()==null || device.getOutDate().before(new Date())){
+			log.info("-------------设备["+deviceId+"]授权日期已过，授权期："+device.getOutDate());
+			throw new BusinessException(ERROR_CODE + "018", "设备授权日期已过");
 		}
 		
 		JSONObject retObj = new JSONObject();

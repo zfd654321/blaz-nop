@@ -54,11 +54,15 @@ var mainVue = new Vue({
             deviceId: "",
             list: []
         },
-        tableData: { list: [], totalCount: 0 }
+        tableData: { list: [], totalCount: 0 },
+        ready: false
 
     },
     created: function() {
         this.loadDataList();
+    },
+    mounted: function() {
+        this.ready = true;
     },
     methods: {
         doQuery() {

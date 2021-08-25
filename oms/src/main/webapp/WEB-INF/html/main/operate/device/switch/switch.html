@@ -1,6 +1,7 @@
 <div id="main">
     <div class="titleline">设备开关</div>
-    <el-card class="box-card">
+    <transition name="el-zoom-in-top">
+        <el-card class="box-card" v-show="ready">
         <!-- 查询栏 -->
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="设备编号" size="mini">
@@ -51,6 +52,6 @@
         <!-- 翻页 -->
         <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
     </el-card>
-
+</transition>
 </div>
 <script src="main/operate/device/switch/switch.js"></script>

@@ -8,7 +8,7 @@
 		SELECT * FROM `bl_device_pc` d WHERE id=#{sId} LIMIT 0,1
 	</select>
 	<select id="getDownLoader" parameterType="java.lang.String" resultType="com.bl.nop.entity.version.VersionDownloader">
-		SELECT * FROM `bl_version_downloader` d WHERE d.`status`=1 ORDER BY d.`created_at` LIMIT 0,1
+		SELECT * FROM `bl_version_downloader` d WHERE d.`status`=1 ORDER BY d.`created_at` DESC LIMIT 0,1
 	</select>
 
 </mapper>

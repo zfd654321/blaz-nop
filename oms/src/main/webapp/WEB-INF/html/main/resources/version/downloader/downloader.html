@@ -1,6 +1,7 @@
 <div id="main">
     <div class="titleline">下载器管理</div>
-    <el-card class="box-card">
+    <transition name="el-zoom-in-top">
+        <el-card class="box-card" v-show="ready">
         <!-- 查询栏 -->
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="机器码" size="mini">
@@ -35,14 +36,15 @@
             <el-table-column prop="createdAt" label="更新时间"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button @click="downZip(scope.row)" type="text" size="small">下载</el-button>
-                    <el-button @click="deleteRow(scope.row)" type="text" size="small">删除</el-button>
+                    <el-button @click="downZip(scope.row)" type="text" size="mini">下载</el-button>
+                    <el-button @click="deleteRow(scope.row)" type="text" size="mini">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <!-- 翻页 -->
         <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
     </el-card>
+    </transition>
     <!-- 详情弹出框（新增/修改） -->
     <el-drawer title="下载器更新" :visible.sync="drawer" ref="drawer" :before-close="handleClose">
         <el-form :model="infoData.row"  :rules="infoData.rules" ref="pcForm" label-width="80px" style="margin:20">
@@ -74,7 +76,7 @@
             <el-timeline-item v-for="(version, index) in logData.list" :key="index" :timestamp="version.createdAt" placement="top">
                 <el-card class="box-card" style="line-height: 30px;">
                     <p>{{version.id}}
-                        <el-tag size="small" style="margin-left:10" :type="statusType(version.status)">{{getStatus(version.status)}}</el-tag>
+                        <el-tag size="mini" style="margin-left:10" :type="statusType(version.status)">{{getStatus(version.status)}}</el-tag>
                     </p>
                     <p>{{version.versionLog}}</p>
                     <p>

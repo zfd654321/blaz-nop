@@ -110,6 +110,15 @@ public interface DeviceService {
 	 */
 	public ResResultBean saveDeviceGame(Map<String, Object> params);
 
+
+	/**
+	 * 设备配置平移
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean deviceCopy(Map<String, Object> params);
+
 	/**
 	 * 设备上线校验
 	 * 

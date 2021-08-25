@@ -20,7 +20,8 @@ var mainVue = new Vue({
                 address: '',
                 type: 1,
                 screen: 1,
-                camera: "Kinect2.0"
+                camera: "Kinect2.0",
+                outDate: ""
             },
             rules: {
                 deviceId: [
@@ -41,16 +42,28 @@ var mainVue = new Vue({
                 address: [
                     { required: true, message: '请输入地址', trigger: 'blur' },
                 ],
+                outDate: [
+                    { required: true, message: '请填写授权日期', trigger: 'blur' },
+                ],
+
+            },
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now();
+                }
 
             },
             freePc: []
         },
-        tableData: { list: [], totalCount: 0 }
+        tableData: { list: [], totalCount: 0 },
+        ready: false
 
     },
     created: function() {
-        this.loadDataList();
         this.loadFreePcList();
+    },
+    mounted: function() {
+        this.ready = true;
     },
     methods: {
         doQuery() {
@@ -80,19 +93,19 @@ var mainVue = new Vue({
                     return "未知"
             }
         },
-        getCreater(row, column) {
-            return UserName[row.createdBy]
-        },
-        getUpdater(row, column) {
-            return UserName[row.updatedBy]
-        },
         loadDataList() {
             let _this = this;
             var url = "/oms/device/list";
             sendRequest(url, _this.formInline, function(jsonData) {
-                console.log(jsonData)
-                _this.tableData.list = jsonData.data.list
-                _this.tableData.totalCount = jsonData.data.totalCount
+                var list = jsonData.data.list
+                var count = jsonData.data.totalCount
+                list.forEach(element => {
+                    element.createdName = UserName[element.createdBy]
+                    element.updatedName = UserName[element.updatedBy]
+                });
+                console.log(list)
+                _this.tableData.list = list
+                _this.tableData.totalCount = count
             })
         },
         loadFreePcList() {
@@ -101,6 +114,7 @@ var mainVue = new Vue({
             sendRequest(url, _this.formInline, function(jsonData) {
                 console.log(jsonData)
                 _this.infoData.freePc = jsonData.data
+                _this.loadDataList();
             })
         },
         handleCurrentChange(pageNo) {
@@ -121,6 +135,7 @@ var mainVue = new Vue({
             this.infoData.row.name = ''
             this.infoData.row.remarks = ''
             this.infoData.row.address = ''
+            this.infoData.row.outDate = ''
             this.infoData.row.type = 1
             this.infoData.row.screen = 1
             this.infoData.row.camera = "Kinect2.0"
@@ -140,6 +155,7 @@ var mainVue = new Vue({
             this.infoData.row.type = row.type
             this.infoData.row.screen = row.screen
             this.infoData.row.camera = row.camera
+            this.infoData.row.outDate = row.outDate
             this.infoData.row.edit = true
         },
         handleClose(done) {
@@ -164,7 +180,7 @@ var mainVue = new Vue({
                         if (jsonData.isSuccess) {
                             _this.$message.success("保存成功");
                             _this.drawer = false;
-                            _this.loadDataList();
+                            _this.loadFreePcList();
                         } else {
                             _this.$message.error(jsonData.message);
                         }

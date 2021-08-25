@@ -5,7 +5,9 @@ import java.io.Serializable;
 public class DeviceGameNetres implements Serializable {
     private String deviceId;
 
-    private String netresId;
+    private String gameId;
+
+    private String property;
 
     private String resUrl;
 
@@ -19,12 +21,20 @@ public class DeviceGameNetres implements Serializable {
         this.deviceId = deviceId == null ? null : deviceId.trim();
     }
 
-    public String getNetresId() {
-        return netresId;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setNetresId(String netresId) {
-        this.netresId = netresId == null ? null : netresId.trim();
+    public void setGameId(String gameId) {
+        this.gameId = gameId == null ? null : gameId.trim();
+    }
+
+    public String getProperty() {
+        return property;
+    }
+
+    public void setProperty(String property) {
+        this.property = property == null ? null : property.trim();
     }
 
     public String getResUrl() {

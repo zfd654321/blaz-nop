@@ -1,5 +1,7 @@
 package com.bl.nop.bis.api;
 
+import java.util.Map;
+
 import com.alibaba.fastjson.JSONObject;
 
 public interface ApiService {
@@ -18,5 +20,14 @@ public interface ApiService {
 	 * @return
 	 */
 	public JSONObject getDownLoader();
+
+
+	/**
+	 * 获取设备授权日期
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public JSONObject getDeviceOutDate(Map<String, Object> params);
 
 }

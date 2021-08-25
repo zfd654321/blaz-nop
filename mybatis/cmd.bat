@@ -9,5 +9,6 @@ java -jar G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\mybatis-generator
 java -jar G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\mybatis-generator-core-1.4.0.jar -configfile G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\generator-game.xml -overwrite
 java -jar G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\mybatis-generator-core-1.4.0.jar -configfile G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\generator-advert.xml -overwrite
 java -jar G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\mybatis-generator-core-1.4.0.jar -configfile G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\generator-version.xml -overwrite
+java -jar G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\mybatis-generator-core-1.4.0.jar -configfile G:\ServProject\trunk\code_2020\java\blaz-nop\mybatis\generator-wx.xml -overwrite
 
 @pause

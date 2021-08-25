@@ -1,49 +1,51 @@
 <div id="main">
     <div class="titleline">设备新增</div>
-    <el-card class="box-card">
-        <!-- 查询栏 -->
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="设备编号" size="mini">
-                <el-input  v-model.trim="formInline.deviceId" placeholder="设备编号"></el-input>
-            </el-form-item>
-            <el-form-item label="机器码" size="mini">
-                <el-input  v-model.trim="formInline.pcId" placeholder="机器码"></el-input>
-            </el-form-item>
-            <el-form-item label="设备名称" size="mini">
-                <el-input  v-model.trim="formInline.name" placeholder="设备名称"></el-input>
-            </el-form-item>
-            <el-form-item size="mini">
-                <el-button type="primary" @click="doQuery" plain>查询</el-button>
-            </el-form-item>
-        </el-form>
+    <transition name="el-zoom-in-top">
+        <el-card class="box-card" v-show="ready">
+            <!-- 查询栏 -->
+            <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                <el-form-item label="设备编号" size="mini">
+                    <el-input  v-model.trim="formInline.deviceId" placeholder="设备编号"></el-input>
+                </el-form-item>
+                <el-form-item label="机器码" size="mini">
+                    <el-input  v-model.trim="formInline.pcId" placeholder="机器码"></el-input>
+                </el-form-item>
+                <el-form-item label="设备名称" size="mini">
+                    <el-input  v-model.trim="formInline.name" placeholder="设备名称"></el-input>
+                </el-form-item>
+                <el-form-item size="mini">
+                    <el-button type="primary" @click="doQuery" plain>查询</el-button>
+                </el-form-item>
+            </el-form>
 
-        <!-- 按钮栏 -->
-        <el-row>
-            <el-button size="mini" type="primary" @click="openAdd">添加</el-button>
-        </el-row>
+            <!-- 按钮栏 -->
+            <el-row>
+                <el-button size="mini" type="primary" @click="openAdd">添加</el-button>
+            </el-row>
 
-        <!-- 表格栏 -->
-        <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
-            <el-table-column prop="deviceId" width="220" label="设备编号"></el-table-column>
-            <el-table-column prop="pcId" width="220" label="机器码"></el-table-column>
-            <el-table-column prop="name" label="设备名称"></el-table-column>
-            <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
-            <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
-            <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
-            <el-table-column prop="createdAt" label="创建时间"></el-table-column>
-            <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
-            <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
-            <el-table-column label="操作">
-                <template slot-scope="scope">
-                    <el-button @click="openEdit(scope.row)" type="text" size="small">编辑</el-button>
-                    <el-button @click="intoHouse(scope.row)" type="text" size="small">入库</el-button>
-                    <el-button @click="deleteRow(scope.row)" type="text" size="small">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <!-- 翻页 -->
-        <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
-    </el-card>
+            <!-- 表格栏 -->
+            <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
+                <el-table-column prop="deviceId" width="220" label="设备编号"></el-table-column>
+                <el-table-column prop="pcId" width="220" label="机器码"></el-table-column>
+                <el-table-column prop="name" label="设备名称"></el-table-column>
+                <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
+                <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
+                <el-table-column prop="createdName" label="创建用户"></el-table-column>
+                <el-table-column prop="createdAt" label="创建时间"></el-table-column>
+                <el-table-column prop="updatedName" label="更新用户"></el-table-column>
+                <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button @click="openEdit(scope.row)" type="text" size="mini">编辑</el-button>
+                        <el-button @click="intoHouse(scope.row)" type="text" size="mini">入库</el-button>
+                        <el-button @click="deleteRow(scope.row)" type="text" size="mini">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!-- 翻页 -->
+            <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
+        </el-card>
+    </transition>
     <!-- 详情弹出框（新增/修改） -->
     <el-drawer :title="infoData.row.edit?'设备修改':'设备新增'" :visible.sync="drawer" ref="drawer" :before-close="handleClose">
         <el-form :rules="infoData.rules" :model="infoData.row" ref="deviceForm" label-width="80px" style="margin:20">
@@ -51,7 +53,7 @@
                 <el-input placeholder="请输入设备编号" v-model.trim="infoData.row.deviceId" :readonly="infoData.row.edit"></el-input>
             </el-form-item>
             <el-form-item label="机器码" prop="pcId">
-                <el-select v-model="infoData.row.pcId" filterable placeholder="请选择机器码">
+                <el-select v-model="infoData.row.pcId" filterable placeholder="请选择机器码" style="width: 100%;">
                     <el-option v-for="item in infoData.freePc" :key="item.id" :label="item.id" :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
@@ -81,6 +83,9 @@
                     <el-option label="Kinect2.0" value="Kinect2.0"></el-option>
                     <el-option label="Kinect4.0" value="Kinect4.0"></el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="授权日期" prop="outDate">
+                <el-date-picker v-model="infoData.row.outDate" type="date" placeholder="选择授权日期" value-format="yyyy-MM-dd" :picker-options="infoData.pickerOptions"></el-date-picker>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">保存</el-button>

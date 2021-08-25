@@ -1,11 +1,21 @@
 <div id="main">
     <div class="titleline">主页</div>
-    <div>
-        <el-skeleton :rows="6" animated />
-        <el-skeleton :rows="6" animated style="margin-top:20"/>
-    </div>
+    <transition name="el-zoom-in-top">
+        <el-card class="box-card" v-show="ready">
+            <el-skeleton :rows="6" animated/>
+            <el-skeleton :rows="6" animated style="margin-top:20"/>
+        </el-card>
+    </transition>
 </div>
 
 <script>
-    var mainVue = new Vue({el: '#main'})
+    var mainVue = new Vue({
+        el: '#main',
+        data: {
+            ready: false
+        },
+        mounted: function () {
+            this.ready = true;
+        }
+    })
 </script>

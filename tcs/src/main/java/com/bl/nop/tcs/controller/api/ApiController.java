@@ -1,5 +1,7 @@
 package com.bl.nop.tcs.controller.api;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,6 +47,22 @@ public class ApiController extends BaseController {
         log.info("[" + pcId + "]获取最新下载器信息");
         JSONObject oj = apiService.getDownLoader();
         log.info("[" + pcId + "]获取最新下载器信息，返回数据：" + oj.toJSONString());
+        writeResponseByJson(request, response, oj);
+    }
+
+    /**
+     * 获取设备授权日期
+     * 
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "/getDeviceOutDate")
+    public void getDeviceOutDate(HttpServletRequest request, HttpServletResponse response) {
+        String pcId = request.getParameter("pcId");
+        log.info("[" + pcId + "]获取设备授权日期");
+        Map<String, Object> params = buildParamsMap(request);
+        JSONObject oj = apiService.getDeviceOutDate(params);
+        log.info("[" + pcId + "]获取设备授权日期，返回数据：" + oj.toJSONString());
         writeResponseByJson(request, response, oj);
     }
 }

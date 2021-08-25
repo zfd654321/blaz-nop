@@ -1,45 +1,47 @@
 <div id="main">
     <div class="titleline">线上设备</div>
-    <el-card class="box-card">
-        <!-- 查询栏 -->
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="设备编号" size="mini">
-                <el-input  v-model.trim="formInline.deviceId" placeholder="设备编号"></el-input>
-            </el-form-item>
-            <el-form-item label="机器码" size="mini">
-                <el-input  v-model.trim="formInline.pcId" placeholder="机器码"></el-input>
-            </el-form-item>
-            <el-form-item label="设备名称" size="mini">
-                <el-input  v-model.trim="formInline.name" placeholder="设备名称"></el-input>
-            </el-form-item>
-            <el-form-item size="mini">
-                <el-button type="primary" @click="doQuery" plain>查询</el-button>
-            </el-form-item>
-        </el-form>
+    <transition name="el-zoom-in-top">
+        <el-card class="box-card" v-show="ready">
+            <!-- 查询栏 -->
+            <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                <el-form-item label="设备编号" size="mini">
+                    <el-input  v-model.trim="formInline.deviceId" placeholder="设备编号"></el-input>
+                </el-form-item>
+                <el-form-item label="机器码" size="mini">
+                    <el-input  v-model.trim="formInline.pcId" placeholder="机器码"></el-input>
+                </el-form-item>
+                <el-form-item label="设备名称" size="mini">
+                    <el-input  v-model.trim="formInline.name" placeholder="设备名称"></el-input>
+                </el-form-item>
+                <el-form-item size="mini">
+                    <el-button type="primary" @click="doQuery" plain>查询</el-button>
+                </el-form-item>
+            </el-form>
 
-        <!-- 表格栏 -->
-        <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
-            <el-table-column prop="deviceId" label="设备编号"></el-table-column>
-            <el-table-column prop="pcId" width="220" label="机器码"></el-table-column>
-            <el-table-column prop="name" label="设备名称"></el-table-column>
-            <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
-            <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
-            <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
-            <el-table-column prop="createdAt" label="创建时间"></el-table-column>
-            <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
-            <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
-            <el-table-column label="操作" width="220">
-                <template slot-scope="scope">
-                    <el-button @click="openEdit(scope.row)" type="text" size="small">信息</el-button>
-                    <el-button @click="openAdvert(scope.row)" type="text" size="small">广告</el-button>
-                    <el-button @click="openGame(scope.row)" type="text" size="small">游戏</el-button>
-                    <el-button @click="offline(scope.row)" type="text" size="small">下线</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <!-- 翻页 -->
-        <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
-    </el-card>
+            <!-- 表格栏 -->
+            <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
+                <el-table-column prop="deviceId" label="设备编号"></el-table-column>
+                <el-table-column prop="pcId" width="220" label="机器码"></el-table-column>
+                <el-table-column prop="name" label="设备名称"></el-table-column>
+                <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
+                <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
+                <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
+                <el-table-column prop="createdAt" label="创建时间"></el-table-column>
+                <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
+                <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
+                <el-table-column label="操作" width="220">
+                    <template slot-scope="scope">
+                        <el-button @click="openEdit(scope.row)" type="text" size="mini">信息</el-button>
+                        <el-button @click="openAdvert(scope.row)" type="text" size="mini">广告</el-button>
+                        <el-button @click="openGame(scope.row)" type="text" size="mini">游戏</el-button>
+                        <el-button @click="offline(scope.row)" type="text" size="mini">下线</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!-- 翻页 -->
+            <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
+        </el-card>
+    </transition>
     <!-- 详情弹出框（信息） -->
     <el-drawer title="设备信息" :visible.sync="drawer" ref="drawer">
         <el-descriptions :column="1" border style="margin:20px">
@@ -49,15 +51,16 @@
             <el-descriptions-item label="备注">{{infoData.row.remarks}}</el-descriptions-item>
             <el-descriptions-item label="地址">{{infoData.row.address}}</el-descriptions-item>
             <el-descriptions-item label="设备类型">
-                <el-tag size="small">{{checkType(infoData.row)}}</el-tag>
+                <el-tag size="mini">{{checkType(infoData.row)}}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item label="屏幕类型">
-                <el-tag size="small">{{checkScreen(infoData.row)}}</el-tag>
+                <el-tag size="mini">{{checkScreen(infoData.row)}}</el-tag>
             </el-descriptions-item>
 
             <el-descriptions-item label="摄像头版本">
-                <el-tag size="small">{{infoData.row.camera}}</el-tag>
+                <el-tag size="mini">{{infoData.row.camera}}</el-tag>
             </el-descriptions-item>
+            <el-descriptions-item label="授权日期">{{infoData.row.outDate}}</el-descriptions-item>
         </el-descriptions>
     </el-drawer>
 

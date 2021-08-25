@@ -1,6 +1,7 @@
 <div id="main">
     <div class="titleline">游戏列表</div>
-    <el-card class="box-card">
+    <transition name="el-zoom-in-top">
+        <el-card class="box-card" v-show="ready">
         <!-- 查询栏 -->
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="游戏编号" size="mini">
@@ -39,15 +40,16 @@
             <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
             <el-table-column label="操作" width="170">
                 <template slot-scope="scope">
-                    <el-button @click="openEdit(scope.row)" type="text" size="small">更新</el-button>
-                    <el-button @click="showLog(scope.row)" type="text" size="small">日志</el-button>
-                    <el-button @click="showJson(scope.row)" type="text" size="small">查看</el-button>
+                    <el-button @click="openEdit(scope.row)" type="text" size="mini">更新</el-button>
+                    <el-button @click="showLog(scope.row)" type="text" size="mini">日志</el-button>
+                    <el-button @click="showJson(scope.row)" type="text" size="mini">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <!-- 翻页 -->
         <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
     </el-card>
+    </transition>
     <!-- 详情弹出框（新增/修改） -->
     <el-drawer :title="infoData.row.edit?'游戏更新':'游戏新增'" :visible.sync="drawer" ref="drawer" :before-close="handleClose" v-loading="loading" element-loading-text="正在上传，请稍候">
         <el-form :model="infoData.row"  :rules="infoData.rules" ref="pcForm" label-width="80px" style="margin:20">
@@ -89,7 +91,7 @@
         <el-timeline :reverse="logData.reverse" style="margin:20">
             <el-timeline-item v-for="(version, index) in logData.list" :key="index" :timestamp="version.updatedAt" placement="top">
                 <el-card class="box-card" style="line-height: 30px;">
-                    <p>{{version.version}}<el-tag size="small" style="margin-left:10" :type="statusType(version.status)">{{getStatus(version.status)}}</el-tag></p>
+                    <p>{{version.version}}<el-tag size="mini" style="margin-left:10" :type="statusType(version.status)">{{getStatus(version.status)}}</el-tag></p>
                     <p>{{version.versionLog}}</p>
                     <p><i class="el-icon-user"></i>{{getUser(version.updatedBy)}}</p>
                 </el-card>

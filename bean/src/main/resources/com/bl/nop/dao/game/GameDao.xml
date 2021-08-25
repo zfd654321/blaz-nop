@@ -8,13 +8,16 @@
     <result column="screen" jdbcType="INTEGER" property="screen" />
     <result column="camera" jdbcType="VARCHAR" property="camera" />
     <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="rank_type" jdbcType="INTEGER" property="rankType" />
+    <result column="img" jdbcType="VARCHAR" property="img" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
     <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
     <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, version, screen, camera, path, created_at, created_by, updated_at, updated_by
+    id, name, version, screen, camera, path, rank_type, img, created_at, created_by, 
+    updated_at, updated_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -29,12 +32,14 @@
   <insert id="insert" parameterType="com.bl.nop.entity.game.Game">
     insert into bl_game (id, name, version, 
       screen, camera, path, 
-      created_at, created_by, updated_at, 
-      updated_by)
+      rank_type, img, created_at, 
+      created_by, updated_at, updated_by
+      )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
       #{screen,jdbcType=INTEGER}, #{camera,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
-      #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, 
-      #{updatedBy,jdbcType=VARCHAR})
+      #{rankType,jdbcType=INTEGER}, #{img,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, 
+      #{createdBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.game.Game">
     insert into bl_game
@@ -56,6 +61,12 @@
       </if>
       <if test="path != null">
         path,
+      </if>
+      <if test="rankType != null">
+        rank_type,
+      </if>
+      <if test="img != null">
+        img,
       </if>
       <if test="createdAt != null">
         created_at,
@@ -89,6 +100,12 @@
       <if test="path != null">
         #{path,jdbcType=VARCHAR},
       </if>
+      <if test="rankType != null">
+        #{rankType,jdbcType=INTEGER},
+      </if>
+      <if test="img != null">
+        #{img,jdbcType=VARCHAR},
+      </if>
       <if test="createdAt != null">
         #{createdAt,jdbcType=TIMESTAMP},
       </if>
@@ -121,6 +138,12 @@
       <if test="path != null">
         path = #{path,jdbcType=VARCHAR},
       </if>
+      <if test="rankType != null">
+        rank_type = #{rankType,jdbcType=INTEGER},
+      </if>
+      <if test="img != null">
+        img = #{img,jdbcType=VARCHAR},
+      </if>
       <if test="createdAt != null">
         created_at = #{createdAt,jdbcType=TIMESTAMP},
       </if>
@@ -143,6 +166,8 @@
       screen = #{screen,jdbcType=INTEGER},
       camera = #{camera,jdbcType=VARCHAR},
       path = #{path,jdbcType=VARCHAR},
+      rank_type = #{rankType,jdbcType=INTEGER},
+      img = #{img,jdbcType=VARCHAR},
       created_at = #{createdAt,jdbcType=TIMESTAMP},
       created_by = #{createdBy,jdbcType=VARCHAR},
       updated_at = #{updatedAt,jdbcType=TIMESTAMP},

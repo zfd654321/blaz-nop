@@ -117,11 +117,19 @@ public class ConfigServiceImpl implements ConfigService {
 		JSONObject checkoj = this.domainService.handle(params);
 		String deviceId = checkoj.getString("deviceId");
 		List<Game> games = this.configDao.queryDeviceGameList(deviceId);
+		if (games.isEmpty()) {
+			log.info("设备游戏配置出错");
+			return JSONUtils.error(ERROR_CODE + "051", dataContent, "设备游戏配置出错");
+		}
 		JSONArray list = new JSONArray();
 		for (Game game : games) {
 			String pathDir = PropertyUtil.getProperty("filePath") + "forever/game/";
 			String gameJsonPath = pathDir + game.getId() + "/" + game.getVersion() + "/game.json";
 			JSONObject gameJson = FileUtil.getFileJson(gameJsonPath);
+			if(gameJson.isEmpty()){
+				log.info("设备游戏配置表丢失");
+				return JSONUtils.error(ERROR_CODE + "052", dataContent, "设备游戏配置表丢失"+game.getId());
+			}
 			list.add(gameJson);
 		}
 		dataContent.put("list", list);

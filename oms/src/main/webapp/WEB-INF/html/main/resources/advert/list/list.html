@@ -1,6 +1,7 @@
 <div id="main">
     <div class="titleline">广告列表</div>
-    <el-card class="box-card">
+    <transition name="el-zoom-in-top">
+        <el-card class="box-card" v-show="ready">
         <!-- 查询栏 -->
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="名称" size="mini">
@@ -36,14 +37,15 @@
             <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button @click="openEdit(scope.row)" type="text" size="small">编辑</el-button>
-                    <el-button @click="deleteRow(scope.row)" type="text" size="small">删除</el-button>
+                    <el-button @click="openEdit(scope.row)" type="text" size="mini">编辑</el-button>
+                    <el-button @click="deleteRow(scope.row)" type="text" size="mini">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <!-- 翻页 -->
         <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
     </el-card>
+    </transition>
     <!-- 详情弹出框（新增/修改） -->
     <el-drawer :title="infoData.row.edit?'广告修改':'广告新增'" :visible.sync="drawer" ref="drawer" :before-close="handleClose">
         <el-form :model="infoData.row"  :rules="infoData.rules" ref="pcForm" label-width="80px" style="margin:20" size="mini">

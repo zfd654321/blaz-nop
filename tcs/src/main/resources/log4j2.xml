@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <Properties>
-        <Property name="LOG_HOME">${sys:user.dir}/logs</Property>
+        <Property name="LOG_HOME">log</Property>
         <Property name="LOG_FILE">tcs.log</Property>
     </Properties>
     

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <!-- import CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="https://unpkg.zhimg.com/element-ui/lib/theme-chalk/index.css">
     <link rel="stylesheet" href="../plugin/css/main.css">
     <link rel="stylesheet" href="../plugin/css/login.css">
     <title>x-miror</title>
@@ -51,10 +51,9 @@
   </body>
   <script src="../plugin/utils/httpService.js"></script>
   <script src="../plugin/utils/jquery-3.1.0.min.js"></script>
-  <!-- import Vue before Element -->
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="../plugin/utils/vue.min.js"></script>
   <!-- import JavaScript -->
-  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
   <script>
     new Vue({
       el: '#app',
@@ -69,7 +68,7 @@
           this.imgcode = '/oms/imgcode?count=' + Date.parse(new Date());
         },
         login: function (event) {
-          let _this=this
+          let _this = this
           let params = {
             username: this.username,
             password: this.password,
@@ -79,7 +78,9 @@
             if (jsonData.isSuccess) {
               window.location.href = "index.html";
             } else {
-              _this.$message.error(jsonData.message);
+              _this
+                .$message
+                .error(jsonData.message);
               _this.switchImage();
             }
 

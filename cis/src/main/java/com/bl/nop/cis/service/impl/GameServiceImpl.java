@@ -94,31 +94,39 @@ public class GameServiceImpl implements GameService {
 			if (game != null) {
 				return ResResultBean.error(ERROR_CODE + "002", "游戏编号已存在，请更改游戏编号");
 			}
+			game = new Game();
 			log.info("新增游戏>>>>>" + id + ">>>>>" + id);
 		}
-		game = new Game();
 		String jsonUrl = gameDir + "/game.json";
 		JSONObject game_json = FileUtil.getFileJson(jsonUrl);
+		String jsonId = game_json.getString("GameId");
+		if (!id.equals(jsonId)) {
+			return ResResultBean.error(ERROR_CODE + "002", "游戏编号与json文件中的不符，请检测游戏编号");
+		}
 		String name = game_json.getString("GameName");
 		Integer screen = NumberUtil.toInt(game_json.getString("ScreenType"));
+		Integer rankType = NumberUtil.toInt(game_json.getString("RankType"));
 		String camera = game_json.getString("CameraType");
 		String path = game_json.getString("GamePath");
+		String img = PropertyUtil.getProperty("fileUrl") + "forever/game/" + id + "/" + version + "/gameFile/cover.png";
 		// 新增游戏对象
 		game.setId(id);
 		game.setName(name);
 		game.setVersion(version);
 		game.setScreen(screen);
+		game.setRankType(rankType);
+		game.setImg(img);
 		game.setCamera(camera);
 		game.setPath(path);
 		game.setUpdatedAt(now);
 		game.setUpdatedBy(createdBy);
 
 		if (edit) {// 游戏更新
-			game.setCreatedAt(now);
-			game.setCreatedBy(createdBy);
 			this.gameDao.updateByPrimaryKey(game);
 			log.info("更新游戏>>>>>" + id + ">>>>>" + version);
 		} else {// 游戏新增
+			game.setCreatedAt(now);
+			game.setCreatedBy(createdBy);
 			this.gameDao.insert(game);
 			log.info("新增游戏>>>>>" + id + ">>>>>" + version);
 		}
@@ -179,8 +187,8 @@ public class GameServiceImpl implements GameService {
 			JSONArray saveArray = new JSONArray();
 			for (Object object : array) {
 				JSONObject oj = JSONObject.parseObject(StringUtil.toStr(object));
-				String url = PropertyUtil.getProperty("fileUrl") + "forever/game/" + id + "/" + version
-						+"/gameFile"+ oj.getString("path");
+				String url = PropertyUtil.getProperty("fileUrl") + "forever/game/" + id + "/" + version + "/gameFile"
+						+ oj.getString("path");
 				oj.put("url", url);
 				saveArray.add(oj);
 			}
@@ -201,7 +209,7 @@ public class GameServiceImpl implements GameService {
 				ex.printStackTrace();
 			}
 		}
-		//清除zip包
+		// 清除zip包
 		File zipfile = new File(gameDir + "/game.zip");
 		FileUtil.deleteFile(zipfile);
 

@@ -43,11 +43,15 @@ var mainVue = new Vue({
             list: [],
             reverse: false
         },
-        tableData: { list: [], totalCount: 0 }
+        tableData: { list: [], totalCount: 0 },
+        ready: false
 
     },
     created: function() {
         this.loadDataList();
+    },
+    mounted: function() {
+        this.ready = true;
     },
     methods: {
         doQuery() {

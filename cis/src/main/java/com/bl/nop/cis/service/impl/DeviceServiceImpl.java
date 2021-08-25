@@ -10,8 +10,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.bl.nop.cis.api.DeviceService;
 import com.bl.nop.cis.dao.OmsDeviceDao;
 import com.bl.nop.cis.dto.GameNetresDto;
+import com.bl.nop.cis.util.LogUtil;
 import com.bl.nop.cis.util.PropertyUtil;
 import com.bl.nop.common.bean.ResResultBean;
+import com.bl.nop.common.util.DateUtil;
 import com.bl.nop.common.util.NumberUtil;
 import com.bl.nop.common.util.Page;
 import com.bl.nop.common.util.StringUtil;
@@ -20,6 +22,7 @@ import com.bl.nop.dao.device.DeviceConfigDao;
 import com.bl.nop.dao.device.DeviceDao;
 import com.bl.nop.dao.device.DeviceGameDao;
 import com.bl.nop.dao.device.DeviceGameNetresDao;
+import com.bl.nop.dao.device.DeviceLogDao;
 import com.bl.nop.dao.device.DevicePcDao;
 import com.bl.nop.dao.device.DeviceSwitchDao;
 import com.bl.nop.entity.advert.Advert;
@@ -28,6 +31,7 @@ import com.bl.nop.entity.device.DeviceAdvert;
 import com.bl.nop.entity.device.DeviceConfig;
 import com.bl.nop.entity.device.DeviceGame;
 import com.bl.nop.entity.device.DeviceGameNetres;
+import com.bl.nop.entity.device.DeviceLog;
 import com.bl.nop.entity.device.DevicePc;
 import com.bl.nop.entity.device.DeviceSwitch;
 import com.bl.nop.entity.game.Game;
@@ -56,6 +60,8 @@ public class DeviceServiceImpl implements DeviceService {
 	private DeviceGameDao deviceGameDao;
 	@Autowired
 	private DeviceGameNetresDao deviceGameNetresDao;
+	@Autowired
+	private DeviceLogDao deviceLogDao;
 	@Autowired
 	private OmsDeviceDao omsDeviceDao;
 
@@ -100,6 +106,7 @@ public class DeviceServiceImpl implements DeviceService {
 		Integer type = NumberUtil.toInt(params.get("type"));
 		Integer screen = NumberUtil.toInt(params.get("screen"));
 		String camera = StringUtil.toStr(params.get("camera"));
+		String outDate = StringUtil.toStr(params.get("outDate"));
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
 		Date now = new Date();
 		Device reitem = this.deviceDao.selectByPrimaryKey(deviceId);
@@ -111,9 +118,12 @@ public class DeviceServiceImpl implements DeviceService {
 				if (pc.getStatus() != 1) {
 					return ResResultBean.error(ERROR_CODE + "003", "该机器码状态不为空闲，请更换机器码");
 				}
-				repc.setStatus(1);
+				if (repc != null) {
+					repc.setStatus(1);
+					this.devicePcDao.updateByPrimaryKey(repc);
+				}
 				pc.setStatus(2);
-				this.devicePcDao.updateByPrimaryKey(repc);
+				item.setPcId(pcId);
 				this.devicePcDao.updateByPrimaryKey(pc);
 
 			}
@@ -123,9 +133,12 @@ public class DeviceServiceImpl implements DeviceService {
 			item.setType(type);
 			item.setScreen(screen);
 			item.setCamera(camera);
+			item.setOutDate(DateUtil.strToDateShort(outDate));
 			item.setUpdatedAt(now);
 			item.setUpdatedBy(createdBy);
 			this.deviceDao.updateByPrimaryKey(item);
+			DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备信息修改", JSONObject.toJSONString(item), now, createdBy);
+			this.deviceLogDao.insert(devicelog);
 
 		} else {// 新增
 			log.info("新增设备>>>>>deviceId:" + deviceId);
@@ -147,6 +160,7 @@ public class DeviceServiceImpl implements DeviceService {
 			item.setScreen(screen);
 			item.setCamera(camera);
 			item.setStatus(1);
+			item.setOutDate(DateUtil.strToDateShort(outDate));
 			item.setCreatedAt(now);
 			item.setCreatedBy(createdBy);
 			item.setUpdatedAt(now);
@@ -154,7 +168,8 @@ public class DeviceServiceImpl implements DeviceService {
 			this.deviceDao.insert(item);
 			pc.setStatus(2);
 			this.devicePcDao.updateByPrimaryKey(pc);
-
+			DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备新增", JSONObject.toJSONString(item), now, createdBy);
+			this.deviceLogDao.insert(devicelog);
 		}
 		return ResResultBean.success();
 	}
@@ -207,6 +222,8 @@ public class DeviceServiceImpl implements DeviceService {
 			this.deviceSwitchDao.insert(deviceSwitch);
 		}
 
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备入库", "", now, createdBy);
+		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}
 
@@ -233,6 +250,8 @@ public class DeviceServiceImpl implements DeviceService {
 			return ResResultBean.error(ERROR_CODE + "001", "参数为空");
 		}
 		String deviceId = StringUtil.toStr(params.get("deviceId"));
+		String createdBy = StringUtil.toStr(params.get("createdBy"));
+		Date now = new Date();
 		Device device = this.deviceDao.selectByPrimaryKey(deviceId);
 		if (device != null) {
 			DevicePc pc = this.devicePcDao.selectByPrimaryKey(device.getPcId());
@@ -242,7 +261,8 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 			this.deviceDao.deleteByPrimaryKey(deviceId);
 		}
-
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备删除", "", now, createdBy);
+		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}
 
@@ -261,8 +281,14 @@ public class DeviceServiceImpl implements DeviceService {
 		if (null == params || params.isEmpty()) {
 			return ResResultBean.error(ERROR_CODE + "001", "参数为空");
 		}
+		String createdBy = StringUtil.toStr(params.get("createdBy"));
+		Date now = new Date();
 		DeviceConfig deviceConfig = JSON.parseObject(JSON.toJSONString(params), DeviceConfig.class);
 		this.deviceConfigDao.updateByPrimaryKey(deviceConfig);
+		DeviceLog devicelog = LogUtil.buildLog(deviceConfig.getDeviceId(), "设备配置修改",
+				JSONObject.toJSONString(deviceConfig), now, createdBy);
+		this.deviceLogDao.insert(devicelog);
+
 		return ResResultBean.success();
 	}
 
@@ -276,6 +302,8 @@ public class DeviceServiceImpl implements DeviceService {
 	public ResResultBean saveDeviceAdvert(Map<String, Object> params) {
 		String deviceId = StringUtil.toStr(params.get("deviceId"));
 		String adverts = StringUtil.toStr(params.get("adverts"));
+		String createdBy = StringUtil.toStr(params.get("createdBy"));
+		Date now = new Date();
 		this.omsDeviceDao.cleanDeviceAdvert(deviceId);
 		String[] advertList = adverts.split(",");
 		for (int i = 0; i < advertList.length; i++) {
@@ -286,6 +314,9 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceAdvert.setWeight(i);
 			this.deviceAdvertDao.insert(deviceAdvert);
 		}
+
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备广告修改", adverts, now, createdBy);
+		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}
 
@@ -305,6 +336,8 @@ public class DeviceServiceImpl implements DeviceService {
 	public ResResultBean saveDeviceGame(Map<String, Object> params) {
 		String deviceId = StringUtil.toStr(params.get("deviceId"));
 		String gameIds = StringUtil.toStr(params.get("gameIds"));
+		String createdBy = StringUtil.toStr(params.get("createdBy"));
+		Date now = new Date();
 
 		this.omsDeviceDao.cleanDeviceGame(deviceId);
 		this.omsDeviceDao.cleanDeviceGameNetres(deviceId);
@@ -322,14 +355,91 @@ public class DeviceServiceImpl implements DeviceService {
 		JSONArray jsonArray = JSONArray.parseArray(slist);
 		for (Object object : jsonArray) {
 			JSONObject obj = (JSONObject) object;
-			String netresId = obj.getString("netresId");
+			String gameId = obj.getString("gameId");
+			String property = obj.getString("property");
 			String resUrl = obj.getString("resUrl");
 			DeviceGameNetres netres = new DeviceGameNetres();
 			netres.setDeviceId(deviceId);
-			netres.setNetresId(netresId);
+			netres.setGameId(gameId);
+			netres.setProperty(property);
 			netres.setResUrl(resUrl);
 			this.deviceGameNetresDao.insert(netres);
 		}
+		JSONObject logoj = new JSONObject();
+		logoj.put("gameIds", gameIds);
+		logoj.put("netres", jsonArray);
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备游戏修改", JSONObject.toJSONString(logoj), now, createdBy);
+		this.deviceLogDao.insert(devicelog);
+
+		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean deviceCopy(Map<String, Object> params) {
+		String deviceId = StringUtil.toStr(params.get("deviceId"));
+		String[] checkDevices = StringUtil.toStr(params.get("checkDevices[]")).split(",");
+		String[] checkType = StringUtil.toStr(params.get("checkType[]")).split(",");
+		String createdBy = StringUtil.toStr(params.get("createdBy"));
+		Date now = new Date();
+		JSONObject logoj = new JSONObject();
+		logoj.put("fromDeviceId", deviceId);
+		logoj.put("toDeviceIds", checkDevices);
+		logoj.put("copyTypes", checkType);
+		for (String toDeviceId : checkDevices) {
+			for (String type : checkType) {
+				switch (type) {
+					case "1":
+						// 配置平移
+						DeviceConfig config = this.deviceConfigDao.selectByPrimaryKey(deviceId);
+						config.setDeviceId(toDeviceId);
+						this.deviceConfigDao.updateByPrimaryKey(config);
+
+						break;
+					case "2":
+						// 开关平移
+						DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
+						deviceSwitch.setDeviceId(toDeviceId);
+						this.deviceSwitchDao.updateByPrimaryKey(deviceSwitch);
+
+						break;
+					case "3":
+						// 广告平移
+						List<DeviceAdvert> list = this.omsDeviceDao.queryDeviceAdvert(params);
+						this.omsDeviceDao.cleanDeviceAdvert(toDeviceId);
+						for (DeviceAdvert advert : list) {
+							advert.setDeviceId(toDeviceId);
+							this.deviceAdvertDao.insert(advert);
+						}
+
+						break;
+					case "4":
+						// 游戏平移
+						List<DeviceGame> games = this.omsDeviceDao.queryDeviceGame(params);
+						List<DeviceGameNetres> netres = this.omsDeviceDao.queryDeviceGameNetres(params);
+						this.omsDeviceDao.cleanDeviceGame(toDeviceId);
+						this.omsDeviceDao.cleanDeviceGameNetres(toDeviceId);
+						for (DeviceGame game : games) {
+							game.setDeviceId(toDeviceId);
+							this.deviceGameDao.insert(game);
+						}
+						for (DeviceGameNetres netre : netres) {
+							netre.setDeviceId(toDeviceId);
+							this.deviceGameNetresDao.insert(netre);
+						}
+
+						break;
+					default:
+						break;
+				}
+			}
+			DeviceLog devicelog = LogUtil.buildLog(toDeviceId, "设备配置平移-被移入，从[" + deviceId + "]",
+					JSONObject.toJSONString(logoj), now, createdBy);
+			this.deviceLogDao.insert(devicelog);
+
+		}
+
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备配置平移-被移出", JSONObject.toJSONString(logoj), now, createdBy);
+		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}
 
@@ -337,7 +447,6 @@ public class DeviceServiceImpl implements DeviceService {
 	public ResResultBean deviceOnlineCheck(Map<String, Object> params) {
 		List<Advert> advertList = this.omsDeviceDao.deviceAdvertList(params);
 		List<Game> gameList = this.omsDeviceDao.deviceGameList(params);
-		log.info("advertCount"+advertList.size());
 		if (advertList.isEmpty()) {
 			return ResResultBean.error(ERROR_CODE + "011", "设备尚未配置广告位，无法上线");
 		}

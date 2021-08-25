@@ -16,6 +16,10 @@ public class Game implements Serializable {
 
     private String path;
 
+    private Integer rankType;
+
+    private String img;
+
     private Date createdAt;
 
     private String createdBy;
@@ -72,6 +76,22 @@ public class Game implements Serializable {
 
     public void setPath(String path) {
         this.path = path == null ? null : path.trim();
+    }
+
+    public Integer getRankType() {
+        return rankType;
+    }
+
+    public void setRankType(Integer rankType) {
+        this.rankType = rankType;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img == null ? null : img.trim();
     }
 
     public Date getCreatedAt() {

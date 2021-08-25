@@ -69,10 +69,12 @@ public class DownloadServiceImpl implements DownloadService {
 		Version runVersion = this.downloadDao.queryRunVersion(map);
 		if (runVersion == null) {
 			log.info("没有可更新的版本");
-			JSONObject oj = JSONUtils.error(ERROR_CODE + "012", dataContent, "没有可更新的版本");
-			return oj;
+			return JSONUtils.error(ERROR_CODE + "012", dataContent, "没有可更新的版本");
 		}
 		dataContent = FileUtil.getFileJson(runVersion.getFilePath() + "/file.json");
+		if (dataContent.isEmpty()) {
+			return JSONUtils.error(ERROR_CODE + "013", dataContent, "版本资源列表文件丢失" + runVersion.getId());
+		}
 		return JSONUtils.success(dataContent);
 	}
 
@@ -87,6 +89,9 @@ public class DownloadServiceImpl implements DownloadService {
 			String pathDir = PropertyUtil.getProperty("filePath") + "forever/game/";
 			String gameJsonPath = pathDir + game.getId() + "/" + game.getVersion() + "/file.json";
 			JSONObject gameJson = FileUtil.getFileJson(gameJsonPath);
+			if (gameJson.isEmpty()) {
+				return JSONUtils.error(ERROR_CODE + "021", dataContent, "游戏资源列表文件丢失" + game.getId());
+			}
 			list.add(gameJson);
 		}
 		dataContent.put("list", list);
@@ -102,6 +107,9 @@ public class DownloadServiceImpl implements DownloadService {
 		List<String> urlList = new ArrayList<>();
 		// 设备配置中的2d资源
 		DeviceConfig config = this.deviceConfigDao.selectByPrimaryKey(deviceId);
+		if(config==null){
+			return JSONUtils.error(ERROR_CODE + "031", dataContent, "设备配置出错");
+		}
 		if (urlList.indexOf(config.getLogoUrl()) == -1) {
 			urlList.add(config.getLogoUrl());
 		}
@@ -113,6 +121,9 @@ public class DownloadServiceImpl implements DownloadService {
 		}
 		// 广告中的2d资源
 		List<AdvertDto> adverts = this.configDao.queryDeviceAdvertList(deviceId);
+		if(adverts.isEmpty()){
+			return JSONUtils.error(ERROR_CODE + "032", dataContent, "广告配置出错");
+		}
 		for (AdvertDto advertDto : adverts) {
 			String resource = advertDto.getResource();
 			if (!StringUtils.isBlank(resource)) {
@@ -139,7 +150,9 @@ public class DownloadServiceImpl implements DownloadService {
 				JSONObject oj = new JSONObject();
 				String path = url.replace(PropertyUtil.getProperty("fileUrl"), PropertyUtil.getProperty("filePath"));
 				File file = new File(path);
-
+				if (!file.exists()) {
+					return JSONUtils.error(ERROR_CODE + "033", dataContent, "2d资源文件丢失" + url);
+				}
 				oj.put("name", file.getName());
 				oj.put("md5", FileUtil.getMd5ByFile(file));
 				oj.put("length", file.length());

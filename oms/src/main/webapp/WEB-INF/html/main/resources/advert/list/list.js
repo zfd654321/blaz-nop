@@ -53,13 +53,15 @@ var mainVue = new Vue({
                 { value: 2, label: '横屏', children: [] },
             ],
             typeList: []
-        }
-
+        },
+        ready: false
 
     },
     created: function() {
         this.loadTypeList();
-
+    },
+    mounted: function() {
+        this.ready = true;
     },
     methods: {
         doQuery() {

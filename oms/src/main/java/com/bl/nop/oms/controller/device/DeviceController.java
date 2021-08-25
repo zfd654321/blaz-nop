@@ -45,8 +45,6 @@ public class DeviceController extends JsonBaseController {
 	@ResponseBody
 	public ResResultBean freePcList(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> params = this.getParameterMap(request);
-		SysUser user = this.getUser(request);
-		params.put("createdBy", user.getId());
 		ResResultBean resResultBean = this.deviceService.freePcList(params);
 		return resResultBean;
 	}
@@ -93,6 +91,8 @@ public class DeviceController extends JsonBaseController {
 	@ResponseBody
 	public ResResultBean saveDeviceConfig(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> params = this.getParameterMap(request);
+		SysUser user = this.getUser(request);
+		params.put("createdBy", user.getId());
 		ResResultBean resResultBean = this.deviceService.saveDeviceConfig(params);
 		return resResultBean;
 	}
@@ -109,6 +109,8 @@ public class DeviceController extends JsonBaseController {
 	@ResponseBody
 	public ResResultBean saveDeviceAdvert(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> params = this.getParameterMap(request);
+		SysUser user = this.getUser(request);
+		params.put("createdBy", user.getId());
 		ResResultBean resResultBean = this.deviceService.saveDeviceAdvert(params);
 		return resResultBean;
 	}
@@ -133,7 +135,19 @@ public class DeviceController extends JsonBaseController {
 	@ResponseBody
 	public ResResultBean saveDeviceGame(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> params = this.getParameterMap(request);
+		SysUser user = this.getUser(request);
+		params.put("createdBy", user.getId());
 		ResResultBean resResultBean = this.deviceService.saveDeviceGame(params);
+		return resResultBean;
+	}
+
+	@RequestMapping(value = "/deviceCopy", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean deviceCopy(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		SysUser user = this.getUser(request);
+		params.put("createdBy", user.getId());
+		ResResultBean resResultBean = this.deviceService.deviceCopy(params);
 		return resResultBean;
 	}
 

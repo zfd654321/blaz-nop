@@ -23,7 +23,8 @@ var mainVue = new Vue({
                 address: '',
                 type: 1,
                 screen: 1,
-                camera: "Kinect2.0"
+                camera: "Kinect2.0",
+                outDate: "",
             },
             rules: {
                 deviceId: [
@@ -44,8 +45,17 @@ var mainVue = new Vue({
                 address: [
                     { required: true, message: '请输入地址', trigger: 'blur' },
                 ],
+                outDate: [
+                    { required: true, message: '请填写授权日期', trigger: 'blur' },
+                ],
 
-            }
+            },
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now();
+                }
+
+            },
         },
         configDrawer: false,
         configData: {
@@ -80,11 +90,30 @@ var mainVue = new Vue({
             netresList: []
         },
 
-
+        copyDrawer: false,
+        copyData: {
+            row: {
+                deviceId: "",
+                checkDevices: [],
+                checkType: []
+            },
+            rules: {
+                checkDevices: [
+                    { type: 'array', required: true, message: '请至少选择一台设备', trigger: 'change' },
+                ],
+                checkType: [
+                    { type: 'array', required: true, message: '请至少选择一项平移项目', trigger: 'change' },
+                ],
+            }
+        },
+        copyDeviceList: [],
+        ready: false
     },
     created: function() {
-        this.loadDataList();
         this.loadFreePcList();
+    },
+    mounted: function() {
+        this.ready = true;
     },
     methods: {
         doQuery() {
@@ -134,6 +163,7 @@ var mainVue = new Vue({
             sendRequest(url, _this.formInline, function(jsonData) {
                 console.log(jsonData)
                 _this.infoData.freePc = jsonData.data
+                _this.loadDataList();
             })
         },
         handleCurrentChange(pageNo) {
@@ -156,6 +186,7 @@ var mainVue = new Vue({
             this.infoData.row.type = row.type
             this.infoData.row.screen = row.screen
             this.infoData.row.camera = row.camera
+            this.infoData.row.outDate = row.outDate
             this.infoData.row.edit = true
         },
         openConfig(row) {
@@ -256,8 +287,8 @@ var mainVue = new Vue({
                             netre.type = "other"
                             break;
                     }
-                    if (netre.res_url == null && netre.defaulturl != "") {
-                        netre.res_url = netre.defaulturl
+                    if (netre.resUrl == null && netre.defaulturl != "") {
+                        netre.resUrl = netre.defaulturl
                     }
                     netreItem.netres.push(netre)
                 });
@@ -271,6 +302,30 @@ var mainVue = new Vue({
 
         gamePre() {
             this.gameData.active = 0;
+        },
+
+        deviceCopy(row) {
+            console.log(row)
+            let _this = this;
+            _this.copyData.row.deviceId = row.deviceId
+            this.copyData.row.checkDevices = []
+            this.copyData.row.checkType = ["1", "2", "3", "4"]
+            let formName = "copyForm"
+            if (this.$refs[formName]) {
+                this.resetForm(formName)
+            }
+            var copyParams = {
+                screen: row.screen,
+                status: 2,
+                pageSize: 999,
+                pageNo: 1
+            }
+            var url = "/oms/device/list";
+            sendRequest(url, copyParams, function(jsonData) {
+                console.log(jsonData)
+                _this.copyDeviceList = jsonData.data.list
+            })
+            this.copyDrawer = true;
         },
 
         resetForm(formName) {
@@ -295,7 +350,7 @@ var mainVue = new Vue({
                         if (jsonData.isSuccess) {
                             _this.$message.success("保存成功");
                             _this.drawer = false;
-                            _this.loadDataList();
+                            _this.loadFreePcList();
                         } else {
                             _this.$message.error(jsonData.message);
                         }
@@ -309,9 +364,7 @@ var mainVue = new Vue({
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     var url = "/oms/device/saveDeviceConfig";
-                    array.forEach(element => {
-
-                    });
+                    var params = _this.configData.row;
 
                     sendRequest(url, params, function(jsonData) {
                         if (jsonData.isSuccess) {
@@ -338,9 +391,9 @@ var mainVue = new Vue({
                 }
                 adverts += element
             })
+            var params = { deviceId: _this.advertData.deviceId, adverts: adverts }
 
-
-            sendRequest(url, { deviceId: _this.advertData.deviceId, adverts: adverts }, function(jsonData) {
+            sendRequest(url, params, function(jsonData) {
                 if (jsonData.isSuccess) {
                     _this.$message.success("保存成功");
                     _this.advertDrawer = false;
@@ -362,7 +415,8 @@ var mainVue = new Vue({
                 game.netres.forEach(netre => {
                     if (netre.resUrl != "" && netre.resUrl != null) {
                         netresList.push({
-                            netresId: netre.id,
+                            gameId: netre.gameId,
+                            property: netre.property,
                             resUrl: netre.resUrl
                         })
                     }
@@ -413,6 +467,25 @@ var mainVue = new Vue({
                 }
             })
 
+        },
+        onCopySubmit() {
+            let _this = this;
+            let formName = "copyForm"
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    var url = "/oms/device/deviceCopy";
+                    var params = _this.copyData.row;
+
+                    sendRequest(url, params, function(jsonData) {
+                        if (jsonData.isSuccess) {
+                            _this.$message.success("保存成功");
+                            _this.copyDrawer = false;
+                        } else {
+                            _this.$message.error(jsonData.message);
+                        }
+                    })
+                }
+            })
         },
         deleteRow(row) {
             let _this = this

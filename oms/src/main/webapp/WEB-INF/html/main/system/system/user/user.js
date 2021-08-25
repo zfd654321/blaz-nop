@@ -6,7 +6,7 @@ var mainVue = new Vue({
             nickname: '',
             status: '',
             pageSize: 10,
-            pageNo: 1
+            pageNo: 1,
         },
         infoData: {
             row: {
@@ -17,15 +17,36 @@ var mainVue = new Vue({
                 role: '',
                 status: '',
                 edit: false
+            },
+            rules: {
+                nickname: [
+                    { required: true, message: '请输入用户名称', trigger: 'blur' },
+                    { min: 2, max: 10, message: '用户名称长度为2-10个字符', trigger: 'blur' }
+                ],
+                username: [
+                    { required: true, message: '请输入登陆账户', trigger: 'blur' },
+                    { min: 2, max: 10, message: '登陆账户长度为2-10个字符', trigger: 'blur' }
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                    { min: 2, max: 10, message: '密码长度为2-10个字符', trigger: 'blur' }
+                ],
+                role: [
+                    { required: true, message: '请选择角色', trigger: 'change' }
+                ],
+
             }
 
         },
-        tableData: { list: [], totalCount: 0 }
+        tableData: { list: [], totalCount: 0 },
+        ready: false
 
     },
     created: function() {
-        this.loadDataList();
         this.loadRoleList();
+    },
+    mounted: function() {
+        this.ready = true;
     },
     methods: {
         doQuery() {
@@ -37,19 +58,19 @@ var mainVue = new Vue({
                 "可用" :
                 "禁用"
         },
-        getCreater(row, column) {
-            return UserName[row.createdBy]
-        },
-        getUpdater(row, column) {
-            return UserName[row.updatedBy]
-        },
         loadDataList() {
             let _this = this;
             var url = "/oms/user/list";
             sendRequest(url, _this.formInline, function(jsonData) {
-                console.log(jsonData)
-                _this.tableData.list = jsonData.data.list
-                _this.tableData.totalCount = jsonData.data.totalCount
+                var list = jsonData.data.list
+                var count = jsonData.data.totalCount
+                list.forEach(element => {
+                    element.createdName = UserName[element.createdBy]
+                    element.updatedName = UserName[element.updatedBy]
+                });
+                console.log(list)
+                _this.tableData.list = list
+                _this.tableData.totalCount = count
             })
         },
         loadRoleList() {
@@ -59,6 +80,7 @@ var mainVue = new Vue({
                 console.log(jsonData)
                 _this.tableData.list = jsonData.data.list
                 _this.tableData.totalCount = jsonData.data.totalCount
+                _this.loadDataList();
             })
         },
         handleCurrentChange(pageNo) {
@@ -68,6 +90,10 @@ var mainVue = new Vue({
         },
         openAdd() {
             this.drawer = true;
+            let formName = "form"
+            if (this.$refs[formName]) {
+                this.resetForm(formName)
+            }
             this.infoData.row.edit = false
             this.infoData.row.id = ''
             this.infoData.row.nickname = ''
@@ -79,6 +105,10 @@ var mainVue = new Vue({
         openEdit(row) {
             console.log(row)
             this.drawer = true;
+            let formName = "form"
+            if (this.$refs[formName]) {
+                this.resetForm(formName)
+            }
             this.infoData.row.edit = true
             this.infoData.row.id = row.id
             this.infoData.row.nickname = row.nickname
@@ -87,16 +117,31 @@ var mainVue = new Vue({
             this.infoData.row.role = row.role
             this.infoData.row.status = row.status + ""
         },
+        handleClose(done) {
+            this.$confirm('确认关闭(未保存的内容将会丢失)？')
+                .then(_ => {
+                    done();
+                })
+                .catch(_ => {});
+        },
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
         onSubmit() {
             let _this = this;
-            var url = "/oms/user/save";
-            sendRequest(url, _this.infoData.row, function(jsonData) {
-                if (jsonData.isSuccess) {
-                    _this.$message.success("保存成功");
-                    _this.drawer = false;
-                    _this.loadDataList();
-                } else {
-                    _this.$message.error(jsonData.message);
+            let formName = "form"
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    var url = "/oms/user/save";
+                    sendRequest(url, _this.infoData.row, function(jsonData) {
+                        if (jsonData.isSuccess) {
+                            _this.$message.success("保存成功");
+                            _this.drawer = false;
+                            _this.loadDataList();
+                        } else {
+                            _this.$message.error(jsonData.message);
+                        }
+                    })
                 }
             })
         },

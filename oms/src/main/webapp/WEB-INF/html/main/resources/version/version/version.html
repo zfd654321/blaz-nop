@@ -1,6 +1,7 @@
 <div id="main">
     <div class="titleline">版本管理</div>
-    <el-card class="box-card">
+    <transition name="el-zoom-in-top">
+        <el-card class="box-card" v-show="ready">
         <!-- 查询栏 -->
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="屏幕" size="mini">
@@ -36,20 +37,21 @@
             <el-table-column prop="screen" label="屏幕" :formatter="checkScreen"></el-table-column>
             <el-table-column prop="status" label="状态" :formatter="checkStatus">
                 <template slot-scope="scope">
-                    <el-tag size="small" style="margin-left:10" :type="statusType(scope.row.status)">{{getStatus(scope.row.status)}}</el-tag>
+                    <el-tag size="mini" style="margin-left:10" :type="statusType(scope.row.status)">{{getStatus(scope.row.status)}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column prop="createdBy" label="更新用户" :formatter="getCreater"></el-table-column>
             <el-table-column prop="createdAt" label="更新时间"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status==1" @click="deleteRow(scope.row)" type="text" size="small">版本回滚</el-button>
+                    <el-button v-if="scope.row.status==1" @click="deleteRow(scope.row)" type="text" size="mini">版本回滚</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <!-- 翻页 -->
         <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
     </el-card>
+    </transition>
 
     <!-- 新增弹出框 -->
     <el-drawer title="版本新增" :visible.sync="drawer" ref="drawer" :before-close="handleClose">
@@ -101,7 +103,7 @@
                 <el-timeline-item v-for="(version, index) in logData.list" :key="index" :timestamp="version.createdAt" placement="top">
                     <el-card class="box-card" style="line-height: 30px;">
                         <p>{{version.id}}
-                            <el-tag size="small" style="margin-left:10" :type="statusType(version.status)">{{getStatus(version.status)}}</el-tag>
+                            <el-tag size="mini" style="margin-left:10" :type="statusType(version.status)">{{getStatus(version.status)}}</el-tag>
                         </p>
                         <p>{{version.versionLog}}</p>
                         <p>

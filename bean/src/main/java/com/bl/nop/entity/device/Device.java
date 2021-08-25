@@ -22,6 +22,8 @@ public class Device implements Serializable {
 
     private String camera;
 
+    private Date outDate;
+
     private Date createdAt;
 
     private String createdBy;
@@ -102,6 +104,14 @@ public class Device implements Serializable {
 
     public void setCamera(String camera) {
         this.camera = camera == null ? null : camera.trim();
+    }
+
+    public Date getOutDate() {
+        return outDate;
+    }
+
+    public void setOutDate(Date outDate) {
+        this.outDate = outDate;
     }
 
     public Date getCreatedAt() {

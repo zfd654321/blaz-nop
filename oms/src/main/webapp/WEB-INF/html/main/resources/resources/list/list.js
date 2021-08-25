@@ -46,11 +46,14 @@ var mainVue = new Vue({
         dialogImageUrl: '',
         dialogVisible: false,
         disabled: false,
-        loading: false
-
+        loading: false,
+        ready: false,
     },
     created: function() {
         this.loadDataList();
+    },
+    mounted: function() {
+        this.ready = true;
     },
     methods: {
         doQuery() {

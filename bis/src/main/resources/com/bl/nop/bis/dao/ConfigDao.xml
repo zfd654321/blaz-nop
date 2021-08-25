@@ -37,7 +37,8 @@
 		d.`res_url` url
 		FROM bl_device_game_netres d
 		LEFT JOIN bl_game_netres n
-		ON d.`netres_id`=n.`id`
+		ON n.`game_id`=d.`game_id`
+		AND n.`property`=d.`property`
 		WHERE d.`device_id`=#{deviceId}  
 		ORDER BY n.`game_id`
   	</select>

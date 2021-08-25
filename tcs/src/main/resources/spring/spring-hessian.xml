@@ -29,4 +29,13 @@
         <property name="overloadEnabled" value="true" />
     </bean>
 
+
+    <!-- 照片/排行榜接口 -->
+    <bean id="photoService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${hessian.bis.serviceUrl}/photoService" />
+        <property name="serviceInterface" value="com.bl.nop.bis.api.PhotoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+
 </beans>

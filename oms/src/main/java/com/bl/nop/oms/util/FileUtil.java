@@ -21,13 +21,20 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
+import com.bl.nop.common.util.DateUtil;
+import com.bl.nop.common.util.Md5Util;
+import com.bl.nop.common.util.StringUtil;
+
 import org.apache.commons.io.IOUtils;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 public class FileUtil {
 	public static String getMd5ByFile(File file) throws FileNotFoundException {
@@ -212,6 +219,44 @@ public class FileUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static Map<String, Object> saveResourceFile(MultipartFile file, Map<String, Object> params) throws IOException {
+		String type = StringUtil.toStr(params.get("type"));
+		Integer size = Integer.valueOf("" + file.getSize());// 文件大小
+		String filename = file.getOriginalFilename();
+		String extName = filename.substring(filename.lastIndexOf(".")).toLowerCase();// 文件后缀
+		String fileId = "CMSFile" + DateUtil.getStringYMDHMS();
+		String pathDir = PropertyUtil.getProperty("filePath") + "forever/resouces/";
+		String urlDir = PropertyUtil.getProperty("fileUrl") + "forever/resouces/";
+		String path = pathDir + type + "/" + fileId + extName;
+		String url = urlDir + type + "/" + fileId + extName;
+		FileCopyUtils.copy(file.getBytes(), new File(path));
+		File fileL = new File(path);
+		String md5 = Md5Util.getMd5ByFile(fileL);
+		String thumbnailpath = pathDir + type + "/" + fileId + "_cut.png";
+		String thumbnailurl = urlDir + type + "/" + fileId + "_cut.png";
+		params.put("md5", md5);
+		params.put("path", path);
+		params.put("url", url);
+		params.put("size", size);
+		params.put("ext", extName);
+		switch (type) {
+			case "img": {
+				FileUtil.getImageResourcesCutImage(path, thumbnailpath);
+				break;
+			}
+			case "video": {
+				FileUtil.getVideoResourcesCutImage(path, thumbnailpath);
+				break;
+			}
+			case "other": {
+				thumbnailurl = urlDir + "/file_default.jpg";
+				break;
+			}
+		}
+		params.put("thumbnail", thumbnailurl);
+		return params;
 	}
 
 }

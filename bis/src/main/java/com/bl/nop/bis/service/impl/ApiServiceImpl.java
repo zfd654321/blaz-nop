@@ -1,10 +1,15 @@
 package com.bl.nop.bis.service.impl;
 
+import java.util.Map;
+
 import com.alibaba.fastjson.JSONObject;
 import com.bl.nop.bis.api.ApiService;
+import com.bl.nop.bis.api.DomainService;
 import com.bl.nop.bis.dao.ApiDao;
+import com.bl.nop.common.util.DateUtil;
 import com.bl.nop.common.util.JSONUtils;
 import com.bl.nop.common.util.Md5Util;
+import com.bl.nop.dao.device.DeviceDao;
 import com.bl.nop.entity.device.Device;
 import com.bl.nop.entity.device.DevicePc;
 import com.bl.nop.entity.version.VersionDownloader;
@@ -23,6 +28,10 @@ public class ApiServiceImpl implements ApiService {
 
 	@Autowired
 	private ApiDao apiDao;
+	@Autowired
+	private DomainService domainService;
+	@Autowired
+	private DeviceDao deviceDao;
 
 	@Override
 	public JSONObject getOnlineDeviceByPcId(String pcId) {
@@ -57,6 +66,16 @@ public class ApiServiceImpl implements ApiService {
 		dataContent.put("url", downloader.getUrl());
 		dataContent.put("md5", downloader.getMd5());
 
+		return JSONUtils.success(dataContent);
+	}
+
+	@Override
+	public JSONObject getDeviceOutDate(Map<String, Object> params) {
+		JSONObject dataContent = new JSONObject();
+		JSONObject checkoj = this.domainService.handle(params);
+		String deviceId = checkoj.getString("deviceId");
+		Device device = this.deviceDao.selectByPrimaryKey(deviceId);
+		dataContent.put("outDate", DateUtil.dateToStrShort(device.getOutDate()));
 		return JSONUtils.success(dataContent);
 	}
 
