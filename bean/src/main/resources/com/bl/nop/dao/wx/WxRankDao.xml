@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bl.nop.dao.wx.GameRankDao">
-  <resultMap id="BaseResultMap" type="com.bl.nop.entity.wx.GameRank">
+<mapper namespace="com.bl.nop.dao.wx.WxRankDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.wx.WxRank">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="game_id" jdbcType="VARCHAR" property="gameId" />
     <result column="score" jdbcType="INTEGER" property="score" />
-    <result column="headimg" jdbcType="VARCHAR" property="headimg" />
-    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, game_id, score, headimg, nickname, created_at
+    id, game_id, score, open_id, created_at
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from bl_game_rank
+    from bl_wx_rank
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from bl_game_rank
+    delete from bl_wx_rank
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.bl.nop.entity.wx.GameRank">
-    insert into bl_game_rank (id, game_id, score, 
-      headimg, nickname, created_at
-      )
+  <insert id="insert" parameterType="com.bl.nop.entity.wx.WxRank">
+    insert into bl_wx_rank (id, game_id, score, 
+      open_id, created_at)
     values (#{id,jdbcType=INTEGER}, #{gameId,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, 
-      #{headimg,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}
-      )
+      #{openId,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.bl.nop.entity.wx.GameRank">
-    insert into bl_game_rank
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.wx.WxRank">
+    insert into bl_wx_rank
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -42,11 +39,8 @@
       <if test="score != null">
         score,
       </if>
-      <if test="headimg != null">
-        headimg,
-      </if>
-      <if test="nickname != null">
-        nickname,
+      <if test="openId != null">
+        open_id,
       </if>
       <if test="createdAt != null">
         created_at,
@@ -62,19 +56,16 @@
       <if test="score != null">
         #{score,jdbcType=INTEGER},
       </if>
-      <if test="headimg != null">
-        #{headimg,jdbcType=VARCHAR},
-      </if>
-      <if test="nickname != null">
-        #{nickname,jdbcType=VARCHAR},
+      <if test="openId != null">
+        #{openId,jdbcType=VARCHAR},
       </if>
       <if test="createdAt != null">
         #{createdAt,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.wx.GameRank">
-    update bl_game_rank
+  <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.wx.WxRank">
+    update bl_wx_rank
     <set>
       <if test="gameId != null">
         game_id = #{gameId,jdbcType=VARCHAR},
@@ -82,11 +73,8 @@
       <if test="score != null">
         score = #{score,jdbcType=INTEGER},
       </if>
-      <if test="headimg != null">
-        headimg = #{headimg,jdbcType=VARCHAR},
-      </if>
-      <if test="nickname != null">
-        nickname = #{nickname,jdbcType=VARCHAR},
+      <if test="openId != null">
+        open_id = #{openId,jdbcType=VARCHAR},
       </if>
       <if test="createdAt != null">
         created_at = #{createdAt,jdbcType=TIMESTAMP},
@@ -94,12 +82,11 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.wx.GameRank">
-    update bl_game_rank
+  <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.wx.WxRank">
+    update bl_wx_rank
     set game_id = #{gameId,jdbcType=VARCHAR},
       score = #{score,jdbcType=INTEGER},
-      headimg = #{headimg,jdbcType=VARCHAR},
-      nickname = #{nickname,jdbcType=VARCHAR},
+      open_id = #{openId,jdbcType=VARCHAR},
       created_at = #{createdAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

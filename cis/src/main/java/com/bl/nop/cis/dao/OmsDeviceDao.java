@@ -9,6 +9,7 @@ import com.bl.nop.entity.device.Device;
 import com.bl.nop.entity.device.DeviceAdvert;
 import com.bl.nop.entity.device.DeviceGame;
 import com.bl.nop.entity.device.DeviceGameNetres;
+import com.bl.nop.entity.device.DeviceLog;
 import com.bl.nop.entity.device.DevicePc;
 import com.bl.nop.entity.game.Game;
 
@@ -36,5 +37,7 @@ public interface OmsDeviceDao {
     List<DeviceGame> queryDeviceGame(Map<String, Object> params);
 
     List<DeviceGameNetres> queryDeviceGameNetres(Map<String, Object> params);
+
+    List<DeviceLog> deviceLogList(Map<String, Object> params);
 
 }

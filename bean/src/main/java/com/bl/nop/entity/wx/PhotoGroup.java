@@ -14,7 +14,7 @@ public class PhotoGroup implements Serializable {
 
     private Integer score;
 
-    private Date createdTime;
+    private Date createdAt;
 
     private static final long serialVersionUID = 1L;
 
@@ -58,11 +58,11 @@ public class PhotoGroup implements Serializable {
         this.score = score;
     }
 
-    public Date getCreatedTime() {
-        return createdTime;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

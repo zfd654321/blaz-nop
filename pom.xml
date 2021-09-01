@@ -37,14 +37,28 @@
 	</repositories>
 
 	<modules>
+		<!-- 实体类包 -->
 		<module>bean</module>
+		<!-- 基础包 -->
 		<module>common</module>
+		<!-- 大屏数据服务 -->
 		<module>bis</module>
-		<module>cis</module>
 		<module>bis-api</module>
+		<!-- 后台数据服务 -->
+		<module>cis</module>
 		<module>cis-api</module>
+		<!-- 微信数据服务 -->
+		<module>nis</module>
+		<module>nis-api</module>
+		<!-- 定时任务服务 
+		<module>tts</module>
+	-->
+		<!-- 大屏接口 -->
 		<module>tcs</module>
+		<!-- 后台接口 -->
 		<module>oms</module>
+		<!-- 微信接口 -->
+		<module>wxs</module>
 	</modules>
 
 
@@ -72,6 +86,12 @@
 			<dependency>
 				<groupId>com.bl.nop</groupId>
 				<artifactId>cis-api</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.bl.nop</groupId>
+				<artifactId>nis-api</artifactId>
 				<version>1.0.0</version>
 			</dependency>
 

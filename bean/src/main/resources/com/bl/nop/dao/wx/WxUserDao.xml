@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.wx.WxUserDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.wx.WxUser">
+    <id column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="gender" jdbcType="INTEGER" property="gender" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="language" jdbcType="VARCHAR" property="language" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    open_id, nick_name, avatar_url, gender, country, province, city, language, status, 
+    created_at, updated_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bl_wx_user
+    where open_id = #{openId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bl_wx_user
+    where open_id = #{openId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bl.nop.entity.wx.WxUser">
+    insert into bl_wx_user (open_id, nick_name, avatar_url, 
+      gender, country, province, 
+      city, language, status, 
+      created_at, updated_at)
+    values (#{openId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=INTEGER}, #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{language,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.wx.WxUser">
+    insert into bl_wx_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="openId != null">
+        open_id,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="avatarUrl != null">
+        avatar_url,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="language != null">
+        language,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="openId != null">
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarUrl != null">
+        #{avatarUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.wx.WxUser">
+    update bl_wx_user
+    <set>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarUrl != null">
+        avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where open_id = #{openId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.wx.WxUser">
+    update bl_wx_user
+    set nick_name = #{nickName,jdbcType=VARCHAR},
+      avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=INTEGER},
+      country = #{country,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      language = #{language,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+    where open_id = #{openId,jdbcType=VARCHAR}
+  </update>
+</mapper>

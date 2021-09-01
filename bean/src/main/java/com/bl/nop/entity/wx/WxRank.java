@@ -3,16 +3,14 @@ package com.bl.nop.entity.wx;
 import java.io.Serializable;
 import java.util.Date;
 
-public class GameRank implements Serializable {
+public class WxRank implements Serializable {
     private Integer id;
 
     private String gameId;
 
     private Integer score;
 
-    private String headimg;
-
-    private String nickname;
+    private String openId;
 
     private Date createdAt;
 
@@ -42,20 +40,12 @@ public class GameRank implements Serializable {
         this.score = score;
     }
 
-    public String getHeadimg() {
-        return headimg;
+    public String getOpenId() {
+        return openId;
     }
 
-    public void setHeadimg(String headimg) {
-        this.headimg = headimg == null ? null : headimg.trim();
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname == null ? null : nickname.trim();
+    public void setOpenId(String openId) {
+        this.openId = openId == null ? null : openId.trim();
     }
 
     public Date getCreatedAt() {

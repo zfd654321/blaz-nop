@@ -65,7 +65,7 @@ public class PhotoServiceImpl implements PhotoService {
 			PhotoGroup photoGroup = new PhotoGroup();
 			photoGroup.setId(group);
 			photoGroup.setDeviceId(deviceId);
-			photoGroup.setCreatedTime(now);
+			photoGroup.setCreatedAt(now);
 			this.photoGroupDao.insert(photoGroup);
 		}else{
 			PhotoGroup photoGroup=this.photoGroupDao.selectByPrimaryKey(group);
@@ -102,14 +102,14 @@ public class PhotoServiceImpl implements PhotoService {
 			group = deviceId + DateUtil.getStringYMDHMS();
 			photoGroup.setId(group);
 			photoGroup.setDeviceId(deviceId);
-			photoGroup.setCreatedTime(now);
+			photoGroup.setCreatedAt(now);
 			photoGroup.setGameId(gameId);
 			photoGroup.setScore(score);
 			this.photoGroupDao.insert(photoGroup);
 		}else{
 			photoGroup=this.photoGroupDao.selectByPrimaryKey(group);
 			if(photoGroup==null){
-				return JSONUtils.error(ERROR_CODE + "012", dataContent, "图片组编号出错");
+				return JSONUtils.error(ERROR_CODE + "021", dataContent, "图片组编号出错");
 			}
 			photoGroup.setGameId(gameId);
 			photoGroup.setScore(score);
@@ -117,6 +117,9 @@ public class PhotoServiceImpl implements PhotoService {
 		}
 		String qrCodeUrl=MessageFormat.format(PropertyUtil.getProperty("PhotoQrCodeUrl"), group);
 		Game game=this.gameDao.selectByPrimaryKey(gameId);
+		if(game==null){
+			return JSONUtils.error(ERROR_CODE + "022", dataContent, "游戏编号出错");
+		}
 		List<GameRankDto> topList=new ArrayList<>();
 		Integer rankNum=0;
 		if(game.getRankType()==1){

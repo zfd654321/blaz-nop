@@ -159,4 +159,13 @@ public class DeviceController extends JsonBaseController {
 		return resResultBean;
 	}
 
+
+	@RequestMapping(value = "/loglist", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean loglist(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		ResResultBean resResultBean = this.deviceService.loglist(params);
+		return resResultBean;
+	}
+
 }

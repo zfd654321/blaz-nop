@@ -103,4 +103,10 @@
 		WHERE d.`device_id`=#{deviceId} 
 	</select>
 
+	<select id="deviceLogList" parameterType="java.util.Map" resultType="com.bl.nop.entity.device.DeviceLog">
+		SELECT * FROM bl_device_log d 
+		WHERE d.`device_id`=#{deviceId} 
+		ORDER BY created_at DESC
+	</select>
+	
 </mapper>

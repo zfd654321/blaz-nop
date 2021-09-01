@@ -35,6 +35,7 @@
         <!-- 要生成那些表（更改 tableName 和 domainObjectName 就可以） -->
         <table tableName="bl_photo_img" domainObjectName="PhotoImg" mapperName="PhotoImgDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_photo_group" domainObjectName="PhotoGroup" mapperName="PhotoGroupDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
-        <table tableName="bl_game_rank" domainObjectName="GameRank" mapperName="GameRankDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+        <table tableName="bl_wx_user" domainObjectName="WxUser" mapperName="WxUserDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+        <table tableName="bl_wx_rank" domainObjectName="WxRank" mapperName="WxRankDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
     </context>
 </generatorConfiguration>

@@ -110,7 +110,6 @@ public interface DeviceService {
 	 */
 	public ResResultBean saveDeviceGame(Map<String, Object> params);
 
-
 	/**
 	 * 设备配置平移
 	 * 
@@ -126,5 +125,13 @@ public interface DeviceService {
 	 * @return
 	 */
 	public ResResultBean deviceOnlineCheck(Map<String, Object> params);
+
+	/**
+	 * 设备日志列表
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public ResResultBean loglist(Map<String, Object> params);
 
 }

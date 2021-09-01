@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.nis.dao.PhotoDao">
+	<select id="getPhotoList" parameterType="java.util.Map" resultType="com.bl.nop.nis.dto.PhotoDto">
+		SELECT * FROM (
+			SELECT g.id,
+			g.`device_id`,
+			GROUP_CONCAT(DISTINCT i.`url`) urls,
+			g.`created_at`,COUNT(i.id) photo_count 
+			FROM `bl_photo_group` g
+			LEFT JOIN `bl_photo_img` i
+			ON g.`id`=i.`group`
+			WHERE open_id = #{openId} 
+			GROUP BY g.`id`)t
+		WHERE t.photo_count>0
+  	</select>
+
+	<select id="getRankList" parameterType="java.util.Map" resultType="com.bl.nop.nis.dto.RankDto">
+		SELECT 
+		r.`game_id`,
+		g.`name`,
+		g.`img`,
+		(SELECT COUNT(1) FROM bl_wx_rank s 
+		WHERE s.`game_id`=r.`game_id` 
+		AND (s.`score`>r.`score` 
+		OR (s.`score`=r.`score` AND r.`created_at`>s.`created_at`)
+		))+1 rank_num,
+		r.`score`,
+		r.`created_at`
+
+
+		FROM `bl_wx_rank` r
+		LEFT JOIN bl_game g
+		ON r.`game_id`=g.`id`
+
+		WHERE r.`open_id` = #{openId} 
+		ORDER BY r.`created_at` DESC
+  	</select>
+
+	<select id="getRankGame" parameterType="java.util.Map" resultType="com.bl.nop.nis.dto.RankDto">
+		SELECT 
+		r.`game_id`,
+		g.`name`,
+		g.`img`,
+		(SELECT COUNT(1) FROM bl_wx_rank s 
+		WHERE s.`game_id`=r.`game_id` 
+		AND (s.`score`>r.`score` 
+		OR (s.`score`=r.`score` AND r.`created_at`>s.`created_at`)
+		))+1 rank_num,
+		r.`score`,
+		r.`created_at`
+
+
+		FROM `bl_wx_rank` r
+		LEFT JOIN bl_game g
+		ON r.`game_id`=g.`id`
+
+		WHERE r.`open_id` = #{openId} 
+		AND r.`game_id`=#{gameId} 
+  	</select>
+
+	<select id="getRankInfoList" parameterType="java.util.Map" resultType="com.bl.nop.nis.dto.RankInfoDto">
+		SELECT r.`score`,r.`open_id`,u.`nick_name`,u.`avatar_url`,r.`created_at` 
+		FROM `bl_wx_rank` r
+		LEFT JOIN bl_wx_user u
+		ON r.`open_id`=u.`open_id`
+		WHERE r.`game_id`=#{gameId} 
+		ORDER BY score DESC,created_at
+		LIMIT 0,10
+  	</select>
+
+
+	<select id="getWxRankById" parameterType="java.util.Map" resultType="com.bl.nop.entity.wx.WxRank">
+		SELECT * FROM bl_wx_rank 
+		WHERE `game_id`=#{gameId} 
+		AND `open_id` = #{openId} 
+  	</select>
+
+</mapper>

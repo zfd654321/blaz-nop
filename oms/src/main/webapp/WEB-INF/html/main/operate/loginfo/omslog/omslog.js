@@ -3,35 +3,27 @@ var mainVue = new Vue({
     data: {
         drawer: false,
         formInline: {
-            id: '',
-            remarks: '',
-            status: '',
+            deviceId: '',
+            pcId: '',
+            name: '',
             pageSize: 10,
             pageNo: 1
         },
         infoData: {
             row: {
-                id: '',
-                remarks: '',
-                edit: false
+                deviceId: '',
+                pcId: '',
+                name: '',
             },
-            rules: {
-                id: [
-                    { required: true, message: '请输入机器码', trigger: 'blur' },
-                    { min: 24, max: 24, message: '机器码格式错误', trigger: 'blur' },
-                    { pattern: /^[a-zA-Z0-9-]+$/, message: '机器码可使用英文、数字和横线', trigger: 'blur' }
-                ],
-                remarks: [
-                    { required: true, message: '请输入备注', trigger: 'blur' }
-                ],
-
-            }
+            loglist: [],
+            reverse: false
         },
         tableData: { list: [], totalCount: 0 },
         ready: false
+
     },
     created: function() {
-        this.loadDataList();
+        this.doQuery();
     },
     mounted: function() {
         this.ready = true;
@@ -41,28 +33,32 @@ var mainVue = new Vue({
             this.formInline.pageNo = 1
             this.loadDataList()
         },
-        checkStatus(row, column) {
-            switch (row.status) {
+        checkType(row, column) {
+            switch (row.type) {
                 case 1:
-                    return "空闲"
+                    return "自营"
                 case 2:
-                    return "占用"
-                case 3:
-                    return "已坏"
+                    return "商家"
 
                 default:
                     return "未知"
             }
         },
-        getCreater(row, column) {
-            return UserName[row.createdBy]
-        },
-        getUpdater(row, column) {
-            return UserName[row.updatedBy]
+
+        checkScreen(row, column) {
+            switch (row.screen) {
+                case 1:
+                    return "竖屏"
+                case 2:
+                    return "横屏"
+
+                default:
+                    return "未知"
+            }
         },
         loadDataList() {
             let _this = this;
-            var url = "/oms/pc/list";
+            var url = "/oms/device/list";
             sendRequest(url, _this.formInline, function(jsonData) {
                 var list = jsonData.data.list
                 var count = jsonData.data.totalCount
@@ -80,58 +76,27 @@ var mainVue = new Vue({
             _this.formInline.pageNo = pageNo
             _this.loadDataList();
         },
-        openAdd() {
-            this.drawer = true;
-            let formName = "pcForm"
-            if (this.$refs[formName]) {
-                this.resetForm(formName)
-            }
-            this.infoData.row.edit = false
-            this.infoData.row.id = ''
-            this.infoData.row.remarks = ''
-        },
-        openEdit(row) {
-            console.log(row)
-            this.drawer = true;
-            let formName = "pcForm"
-            if (this.$refs[formName]) {
-                this.resetForm(formName)
-            }
-            this.infoData.row.edit = true
-            this.infoData.row.id = row.id
-            this.infoData.row.remarks = row.remarks
-        },
-        handleClose(done) {
-            this.$confirm('确认关闭(未保存的内容将会丢失)？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => {});
-        },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
-        },
-        onSubmit() {
+        openLogs(row) {
             let _this = this;
-            let formName = "pcForm"
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    var url = "/oms/pc/save";
-                    var params = _this.infoData.row;
-                    sendRequest(url, params, function(jsonData) {
-                        if (jsonData.isSuccess) {
-                            _this.$message.success("保存成功");
-                            _this.drawer = false;
-                            _this.loadDataList();
-                        } else {
-                            _this.$message.error(jsonData.message);
-                        }
-                    })
-                }
+            var url = "/oms/device/loglist";
+            sendRequest(url, { deviceId: row.deviceId }, function(jsonData) {
+                var list = jsonData.data
+                list.forEach(element => {
+                    element.createdName = UserName[element.createdBy]
+                    if (element.info != "") {
+                        element.infoStr = JSON.stringify(JSON.parse(element.info), null, '\t');
+                    } else {
+                        element.infoStr = ""
+                    }
+                });
+                console.log(list)
+                _this.infoData.loglist = list
+                _this.drawer = true
             })
         },
-        delete(row) {
-            console.log(row)
+        getUser(id) {
+            return UserName[id]
         },
+
     }
 })

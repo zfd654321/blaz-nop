@@ -314,8 +314,9 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceAdvert.setWeight(i);
 			this.deviceAdvertDao.insert(deviceAdvert);
 		}
-
-		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备广告修改", adverts, now, createdBy);
+		JSONObject jsonoj=new JSONObject();
+		jsonoj.put("adverts", adverts);
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备广告修改", JSONObject.toJSONString(jsonoj), now, createdBy);
 		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}
@@ -454,6 +455,12 @@ public class DeviceServiceImpl implements DeviceService {
 			return ResResultBean.error(ERROR_CODE + "012", "设备尚未配置游戏，无法上线");
 		}
 		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean loglist(Map<String, Object> params) {
+		List<DeviceLog> list=this.omsDeviceDao.deviceLogList(params);
+		return ResResultBean.success(list);
 	}
 
 }

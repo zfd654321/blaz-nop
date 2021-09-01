@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <context:property-placeholder location="classpath:config/config.properties" />
+    <!-- 设备接口 -->
+    <bean id="domainService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${hessian.nis.serviceUrl}/domainService" />
+        <property name="serviceInterface" value="com.bl.nop.nis.api.DomainService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+
+    <bean id="photoService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${hessian.nis.serviceUrl}/photoService" />
+        <property name="serviceInterface" value="com.bl.nop.nis.api.PhotoService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+
+
+</beans>

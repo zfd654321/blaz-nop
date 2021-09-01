@@ -3,12 +3,12 @@
 <mapper namespace="com.bl.nop.bis.dao.PhotoDao">
 	<select id="qeuryTopList" parameterType="java.lang.String" resultType="com.bl.nop.bis.dto.GameRankDto">
 		SELECT @rank:=@rank+1 AS rank_num,r.score,r.`headimg`,r.`nickname`,r.`created_at` 
-        FROM bl_game_rank r,(SELECT @rank:=0) s 
+        FROM bl_wx_rank r,(SELECT @rank:=0) s 
         WHERE game_id= #{gameId}  
         ORDER BY score DESC
         LIMIT 0,10
   	</select>
 	<select id="queryGameRank" parameterType="java.lang.String" resultType="int">
-		SELECT COUNT(1)+1 FROM `bl_game_rank` WHERE game_id= #{gameId}   AND score>=#{score}
+		SELECT COUNT(1)+1 FROM `bl_wx_rank` WHERE game_id= #{gameId}   AND score>=#{score}
 	</select>
 </mapper>

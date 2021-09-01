@@ -7,10 +7,10 @@
     <result column="open_id" jdbcType="VARCHAR" property="openId" />
     <result column="game_id" jdbcType="VARCHAR" property="gameId" />
     <result column="score" jdbcType="INTEGER" property="score" />
-    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, device_id, open_id, game_id, score, created_time
+    id, device_id, open_id, game_id, score, created_at
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -24,10 +24,10 @@
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.wx.PhotoGroup">
     insert into bl_photo_group (id, device_id, open_id, 
-      game_id, score, created_time
+      game_id, score, created_at
       )
     values (#{id,jdbcType=VARCHAR}, #{deviceId,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}, 
-      #{gameId,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}
+      #{gameId,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, #{createdAt,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.wx.PhotoGroup">
@@ -48,8 +48,8 @@
       <if test="score != null">
         score,
       </if>
-      <if test="createdTime != null">
-        created_time,
+      <if test="createdAt != null">
+        created_at,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -68,8 +68,8 @@
       <if test="score != null">
         #{score,jdbcType=INTEGER},
       </if>
-      <if test="createdTime != null">
-        #{createdTime,jdbcType=TIMESTAMP},
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -88,8 +88,8 @@
       <if test="score != null">
         score = #{score,jdbcType=INTEGER},
       </if>
-      <if test="createdTime != null">
-        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
@@ -100,7 +100,7 @@
       open_id = #{openId,jdbcType=VARCHAR},
       game_id = #{gameId,jdbcType=VARCHAR},
       score = #{score,jdbcType=INTEGER},
-      created_time = #{createdTime,jdbcType=TIMESTAMP}
+      created_at = #{createdAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
