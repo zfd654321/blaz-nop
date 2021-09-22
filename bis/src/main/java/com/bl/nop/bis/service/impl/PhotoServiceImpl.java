@@ -44,8 +44,6 @@ public class PhotoServiceImpl implements PhotoService {
 	@Autowired
 	private PhotoDao photoDao;
 
-
-
 	private final static Logger log = LoggerFactory.getLogger(PhotoServiceImpl.class);
 
 	private final static String ERROR_CODE = "15";
@@ -55,34 +53,38 @@ public class PhotoServiceImpl implements PhotoService {
 		JSONObject dataContent = new JSONObject();
 		JSONObject checkoj = this.domainService.handle(params);
 		String deviceId = checkoj.getString("deviceId");
-		String group = StringUtil.toStr(params.get("group"));
+		String groupId = StringUtil.toStr(params.get("groupId"));
 		String md5 = StringUtil.toStr(params.get("md5"));
 		String url = StringUtil.toStr(params.get("url"));
 		Integer size = NumberUtil.toInt(params.get("md5"));
 		Date now = new Date();
-		if (StringUtils.isBlank(group)) {
-			group = deviceId + DateUtil.getStringYMDHMS();
-			PhotoGroup photoGroup = new PhotoGroup();
-			photoGroup.setId(group);
+		if (StringUtils.isBlank(groupId)) {
+			groupId = deviceId + DateUtil.getStringYMDHMS();
+			PhotoGroup photoGroup=this.photoGroupDao.selectByPrimaryKey(groupId);
+			if(photoGroup!=null){
+				return JSONUtils.error(ERROR_CODE + "013", dataContent, "照片上传接口调用过于频繁");
+			}
+			photoGroup = new PhotoGroup();
+			photoGroup.setId(groupId);
 			photoGroup.setDeviceId(deviceId);
 			photoGroup.setCreatedAt(now);
 			this.photoGroupDao.insert(photoGroup);
-		}else{
-			PhotoGroup photoGroup=this.photoGroupDao.selectByPrimaryKey(group);
-			if(photoGroup==null){
+		} else {
+			PhotoGroup photoGroup = this.photoGroupDao.selectByPrimaryKey(groupId);
+			if (photoGroup == null) {
 				return JSONUtils.error(ERROR_CODE + "012", dataContent, "图片组编号出错");
 			}
 		}
-		log.info("上传拍照文件"+url);
-		PhotoImg photoImg=new PhotoImg();
+		log.info("上传拍照文件" + url);
+		PhotoImg photoImg = new PhotoImg();
 		photoImg.setDeviceId(deviceId);
-		photoImg.setGroup(group);
+		photoImg.setGroupId(groupId);
 		photoImg.setUrl(url);
 		photoImg.setSize(size);
 		photoImg.setMd5(md5);
 		this.photoImgDao.insert(photoImg);
 
-		dataContent.put("group", group);
+		dataContent.put("groupId", groupId);
 		dataContent.put("url", url);
 
 		return JSONUtils.success(dataContent);
@@ -93,41 +95,49 @@ public class PhotoServiceImpl implements PhotoService {
 		JSONObject dataContent = new JSONObject();
 		JSONObject checkoj = this.domainService.handle(params);
 		String deviceId = checkoj.getString("deviceId");
-		String group = StringUtil.toStr(params.get("group"));
+		String groupId = StringUtil.toStr(params.get("groupId"));
 		String gameId = StringUtil.toStr(params.get("gameId"));
 		Integer score = NumberUtil.toInt(params.get("score"));
 		Date now = new Date();
 		PhotoGroup photoGroup = new PhotoGroup();
-		if (StringUtils.isBlank(group)) {
-			group = deviceId + DateUtil.getStringYMDHMS();
-			photoGroup.setId(group);
+		Game game = this.gameDao.selectByPrimaryKey(gameId);
+		if (game == null) {
+			return JSONUtils.error(ERROR_CODE + "022", dataContent, "游戏编号出错");
+		}
+		if (StringUtils.isBlank(groupId)) {
+			groupId = deviceId + DateUtil.getStringYMDHMS();
+			log.info("新增group,获取照片二维码" + groupId);
+			PhotoGroup photoGrouphs=this.photoGroupDao.selectByPrimaryKey(groupId);
+			if(photoGrouphs!=null){
+				return JSONUtils.error(ERROR_CODE + "023", dataContent, "接口调用过于频繁");
+			}
+			photoGroup.setId(groupId);
 			photoGroup.setDeviceId(deviceId);
 			photoGroup.setCreatedAt(now);
 			photoGroup.setGameId(gameId);
 			photoGroup.setScore(score);
 			this.photoGroupDao.insert(photoGroup);
-		}else{
-			photoGroup=this.photoGroupDao.selectByPrimaryKey(group);
-			if(photoGroup==null){
+		} else {
+			log.info("已有group,获取照片二维码" + groupId);
+			photoGroup = this.photoGroupDao.selectByPrimaryKey(groupId);
+			if (photoGroup == null) {
 				return JSONUtils.error(ERROR_CODE + "021", dataContent, "图片组编号出错");
 			}
 			photoGroup.setGameId(gameId);
 			photoGroup.setScore(score);
 			this.photoGroupDao.updateByPrimaryKey(photoGroup);
 		}
-		String qrCodeUrl=MessageFormat.format(PropertyUtil.getProperty("PhotoQrCodeUrl"), group);
-		Game game=this.gameDao.selectByPrimaryKey(gameId);
-		if(game==null){
-			return JSONUtils.error(ERROR_CODE + "022", dataContent, "游戏编号出错");
-		}
-		List<GameRankDto> topList=new ArrayList<>();
-		Integer rankNum=0;
-		if(game.getRankType()==1){
-			Map<String,Object> qparams=new HashMap<>();
+		log.info("group:" + groupId);
+		String qrCodeUrl = MessageFormat.format(PropertyUtil.getProperty("PhotoQrCodeUrl"), groupId);
+
+		List<GameRankDto> topList = new ArrayList<>();
+		Integer rankNum = 0;
+		if (game.getRankType() == 1) {
+			Map<String, Object> qparams = new HashMap<>();
 			qparams.put("gameId", gameId);
-			qparams.put("score", score+"");
-			topList=this.photoDao.qeuryTopList(qparams);
-			rankNum=this.photoDao.queryGameRank(qparams);
+			qparams.put("score", score + "");
+			topList = this.photoDao.qeuryTopList(qparams);
+			rankNum = this.photoDao.queryGameRank(qparams);
 
 		}
 		dataContent.put("qrCodeUrl", qrCodeUrl);

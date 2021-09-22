@@ -14,7 +14,9 @@ import com.bl.nop.bis.util.FileUtil;
 import com.bl.nop.bis.util.PropertyUtil;
 import com.bl.nop.common.util.JSONUtils;
 import com.bl.nop.dao.device.DeviceConfigDao;
+import com.bl.nop.dao.device.DeviceDao;
 import com.bl.nop.dao.device.DeviceSwitchDao;
+import com.bl.nop.entity.device.Device;
 import com.bl.nop.entity.device.DeviceConfig;
 import com.bl.nop.entity.device.DeviceRequest;
 import com.bl.nop.entity.device.DeviceSwitch;
@@ -33,6 +35,8 @@ public class ConfigServiceImpl implements ConfigService {
 
 	@Autowired
 	private DomainService domainService;
+	@Autowired
+	private DeviceDao deviceDao;
 	@Autowired
 	private DeviceSwitchDao deviceSwitchDao;
 	@Autowired
@@ -62,11 +66,13 @@ public class ConfigServiceImpl implements ConfigService {
 		JSONObject dataContent = new JSONObject();
 		JSONObject checkoj = this.domainService.handle(params);
 		String deviceId = checkoj.getString("deviceId");
+		Device device = this.deviceDao.selectByPrimaryKey(deviceId);
 		DeviceConfig config = this.deviceConfigDao.selectByPrimaryKey(deviceId);
 		if (config == null) {
 			log.info("设备配置出错");
 			return JSONUtils.error(ERROR_CODE + "021", dataContent, "设备配置出错");
 		}
+		dataContent.put("screen", device.getScreen());
 		dataContent.put("kinectLeftAndRightDis", config.getKinectLeftAndRightDis());
 		dataContent.put("kinectMinDis", config.getKinectMinDis());
 		dataContent.put("kinectMaxDis", config.getKinectMaxDis());
@@ -126,9 +132,9 @@ public class ConfigServiceImpl implements ConfigService {
 			String pathDir = PropertyUtil.getProperty("filePath") + "forever/game/";
 			String gameJsonPath = pathDir + game.getId() + "/" + game.getVersion() + "/game.json";
 			JSONObject gameJson = FileUtil.getFileJson(gameJsonPath);
-			if(gameJson.isEmpty()){
+			if (gameJson.isEmpty()) {
 				log.info("设备游戏配置表丢失");
-				return JSONUtils.error(ERROR_CODE + "052", dataContent, "设备游戏配置表丢失"+game.getId());
+				return JSONUtils.error(ERROR_CODE + "052", dataContent, "设备游戏配置表丢失" + game.getId());
 			}
 			list.add(gameJson);
 		}

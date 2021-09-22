@@ -14,8 +14,7 @@ public class FileUtil {
 	public static Map<String, Object> saveUploadPhoto(MultipartFile file, Map<String, Object> params)
 			throws IOException {
 		Integer size = Integer.valueOf("" + file.getSize());// 文件大小
-		String filename = file.getOriginalFilename();
-		String extName = filename.substring(filename.lastIndexOf(".")).toLowerCase();// 文件后缀
+		String extName = ".jpg";// 文件后缀
 		String fileId = "PHOTO" + DateUtil.getStringYMDHMS();
 		String pathDir = PropertyUtil.getProperty("filePath") + "interim/" + DateUtil.getStringDateShortYMD()
 				+ "/photo/";

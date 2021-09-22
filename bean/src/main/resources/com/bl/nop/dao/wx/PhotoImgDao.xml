@@ -4,14 +4,14 @@
   <resultMap id="BaseResultMap" type="com.bl.nop.entity.wx.PhotoImg">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
-    <result column="group" jdbcType="VARCHAR" property="group" />
+    <result column="group_id" jdbcType="VARCHAR" property="groupId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="md5" jdbcType="VARCHAR" property="md5" />
     <result column="size" jdbcType="INTEGER" property="size" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, device_id, group, url, md5, size, created_at
+    id, device_id, group_id, url, md5, size, created_at
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,10 +24,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.wx.PhotoImg">
-    insert into bl_photo_img (id, device_id, group, 
+    insert into bl_photo_img (id, device_id, group_id, 
       url, md5, size, created_at
       )
-    values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=VARCHAR}, #{group,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}, 
       #{url,jdbcType=VARCHAR}, #{md5,jdbcType=VARCHAR}, #{size,jdbcType=INTEGER}, #{createdAt,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -40,8 +40,8 @@
       <if test="deviceId != null">
         device_id,
       </if>
-      <if test="group != null">
-        group,
+      <if test="groupId != null">
+        group_id,
       </if>
       <if test="url != null">
         url,
@@ -63,8 +63,8 @@
       <if test="deviceId != null">
         #{deviceId,jdbcType=VARCHAR},
       </if>
-      <if test="group != null">
-        #{group,jdbcType=VARCHAR},
+      <if test="groupId != null">
+        #{groupId,jdbcType=VARCHAR},
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
@@ -86,8 +86,8 @@
       <if test="deviceId != null">
         device_id = #{deviceId,jdbcType=VARCHAR},
       </if>
-      <if test="group != null">
-        group = #{group,jdbcType=VARCHAR},
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=VARCHAR},
       </if>
       <if test="url != null">
         url = #{url,jdbcType=VARCHAR},
@@ -107,7 +107,7 @@
   <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.wx.PhotoImg">
     update bl_photo_img
     set device_id = #{deviceId,jdbcType=VARCHAR},
-      group = #{group,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
       md5 = #{md5,jdbcType=VARCHAR},
       size = #{size,jdbcType=INTEGER},

@@ -8,7 +8,7 @@ public class PhotoImg implements Serializable {
 
     private String deviceId;
 
-    private String group;
+    private String groupId;
 
     private String url;
 
@@ -36,12 +36,12 @@ public class PhotoImg implements Serializable {
         this.deviceId = deviceId == null ? null : deviceId.trim();
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setGroup(String group) {
-        this.group = group == null ? null : group.trim();
+    public void setGroupId(String groupId) {
+        this.groupId = groupId == null ? null : groupId.trim();
     }
 
     public String getUrl() {

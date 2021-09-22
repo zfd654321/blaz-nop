@@ -9,7 +9,7 @@
 			g.`created_at`,COUNT(i.id) photo_count 
 			FROM `bl_photo_group` g
 			LEFT JOIN `bl_photo_img` i
-			ON g.`id`=i.`group`
+			ON g.`id`=i.`group_id`
 			WHERE open_id = #{openId} 
 			GROUP BY g.`id`)t
 		WHERE t.photo_count>0
