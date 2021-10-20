@@ -66,7 +66,7 @@
                 <el-input placeholder="请输入模型文件名称" v-model.trim="infoData.row.assetName"></el-input>
             </el-form-item>
             <el-form-item label="模板时长" prop="time">
-                <el-input placeholder="请输入模板时长" v-model.trim="infoData.row.time"></el-input>
+                <el-input-number placeholder="请输入模板时长" v-model.trim="infoData.row.time"></el-input-number>
             </el-form-item>
             <el-form-item label="模板类别" prop="type">
                 <el-select v-model="infoData.row.type" filterable placeholder="请选择模板类别">

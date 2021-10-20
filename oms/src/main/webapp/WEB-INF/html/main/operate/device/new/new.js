@@ -53,7 +53,13 @@ var mainVue = new Vue({
                 }
 
             },
-            freePc: []
+            freePc: [],
+            cityform: {
+                city: '',
+                erae: '',
+                minerae: '',
+                selectedOptions: [], //地区筛选数组
+            },
         },
         tableData: { list: [], totalCount: 0 },
         ready: false
@@ -134,7 +140,8 @@ var mainVue = new Vue({
             this.infoData.row.pcId = ''
             this.infoData.row.name = ''
             this.infoData.row.remarks = ''
-            this.infoData.row.address = ''
+            this.infoData.row.address = '19, 199, 1770'
+            this.infoData.cityform.selectedOptions = [19, 199, 1770]
             this.infoData.row.outDate = ''
             this.infoData.row.type = 1
             this.infoData.row.screen = 1
@@ -152,6 +159,12 @@ var mainVue = new Vue({
             this.infoData.row.name = row.name
             this.infoData.row.remarks = row.remarks
             this.infoData.row.address = row.address
+            var cityList = row.address.split(",")
+            if (cityList.length == 3) {
+                this.infoData.cityform.selectedOptions = [parseInt(cityList[0]), parseInt(cityList[1]), parseInt(cityList[2])]
+            } else {
+                this.infoData.cityform.selectedOptions = [19, 199, 1770]
+            }
             this.infoData.row.type = row.type
             this.infoData.row.screen = row.screen
             this.infoData.row.camera = row.camera
@@ -239,6 +252,9 @@ var mainVue = new Vue({
                     message: '已取消删除'
                 });
             });
+        },
+        handleChange(value) {
+            this.infoData.row.address = this.infoData.cityform.selectedOptions.toString()
         },
     }
 })

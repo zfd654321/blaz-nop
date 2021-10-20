@@ -24,27 +24,7 @@ var mainVue = new Vue({
                 screen: 1,
                 camera: "Kinect2.0"
             },
-            rules: {
-                deviceId: [
-                    { required: true, message: '请输入设备编号', trigger: 'blur' },
-                    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' },
-                    { pattern: /^[a-zA-Z0-9_]+$/, message: '编号可使用英文、数字和下划线', trigger: 'blur' }
-                ],
-                pcId: [
-                    { required: true, message: '请选择机器码', trigger: 'change' }
-                ],
-                name: [
-                    { required: true, message: '请输入设备名称', trigger: 'blur' },
-                    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' },
-                ],
-                remarks: [
-                    { required: true, message: '请输入设备备注', trigger: 'blur' },
-                ],
-                address: [
-                    { required: true, message: '请输入地址', trigger: 'blur' },
-                ],
-
-            }
+            city: [0, 0, 0]
         },
         advertData: {
             deviceId: "",
@@ -116,6 +96,8 @@ var mainVue = new Vue({
             console.log(row)
             this.drawer = true;
             this.infoData.row = row
+            var cityList = row.address.split(",")
+            this.infoData.city = [parseInt(cityList[0]), parseInt(cityList[1]), parseInt(cityList[2])]
         },
         openAdvert(row) {
             console.log(row)
@@ -164,5 +146,34 @@ var mainVue = new Vue({
                 });
             });
         },
-    }
+    },
+    filters: {
+        myAddressCity: function(value) {
+            for (y in this.CityInfo) {
+                if (this.CityInfo[y].value == value) {
+                    return value = this.CityInfo[y].label
+                }
+            }
+        },
+        myAddressErae: function(value) {
+            for (y in this.CityInfo) {
+                for (z in this.CityInfo[y].children) {
+                    if (this.CityInfo[y].children[z].value == value && value != undefined) {
+                        return value = this.CityInfo[y].children[z].label;
+                    }
+                }
+            }
+        },
+        myAddressMinerae: function(value) {
+            for (y in this.CityInfo) {
+                for (z in this.CityInfo[y].children) {
+                    for (i in this.CityInfo[y].children[z].children) {
+                        if (this.CityInfo[y].children[z].children[i].value == value && value != undefined) {
+                            return value = this.CityInfo[y].children[z].children[i].label
+                        }
+                    }
+                }
+            }
+        },
+    },
 })

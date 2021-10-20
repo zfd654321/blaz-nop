@@ -49,7 +49,7 @@
             <el-descriptions-item label="机器码">{{infoData.row.pcId}}</el-descriptions-item>
             <el-descriptions-item label="设备名称">{{infoData.row.name}}</el-descriptions-item>
             <el-descriptions-item label="备注">{{infoData.row.remarks}}</el-descriptions-item>
-            <el-descriptions-item label="地址">{{infoData.row.address}}</el-descriptions-item>
+            <el-descriptions-item label="地址">{{infoData.city[0] | myAddressCity}}/{{infoData.city[1] | myAddressErae}}/{{infoData.city[2] | myAddressMinerae}}</el-descriptions-item>
             <el-descriptions-item label="设备类型">
                 <el-tag size="mini">{{checkType(infoData.row)}}</el-tag>
             </el-descriptions-item>

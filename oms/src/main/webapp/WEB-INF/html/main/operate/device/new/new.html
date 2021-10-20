@@ -64,7 +64,7 @@
                 <el-input placeholder="请输入备注" v-model.trim="infoData.row.remarks"></el-input>
             </el-form-item>
             <el-form-item label="地址" prop="address">
-                <el-input placeholder="请输入地址" v-model.trim="infoData.row.address"></el-input>
+                <el-cascader :options="CityInfo" v-model="infoData.cityform.selectedOptions" :filterable="true" @change="handleChange"></el-cascader>
             </el-form-item>
             <el-form-item label="设备类型" prop="type">
                 <el-select v-model="infoData.row.type" filterable placeholder="请选择设备类型">

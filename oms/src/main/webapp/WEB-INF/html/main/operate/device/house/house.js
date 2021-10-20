@@ -54,16 +54,22 @@ var mainVue = new Vue({
                 disabledDate(time) {
                     return time.getTime() < Date.now();
                 }
+            },
 
+            cityform: {
+                city: '',
+                erae: '',
+                minerae: '',
+                selectedOptions: [], //地区筛选数组
             },
         },
         configDrawer: false,
         configData: {
             row: {
                 deviceId: '',
-                kinectLeftAndRightDis: '',
-                kinectMinDis: '',
-                kinectMaxDis: '',
+                kinectLeftAndRightDis: 0,
+                kinectMinDis: 0,
+                kinectMaxDis: 0,
                 hostUrl: '',
                 qrcodeUrl: '',
                 logoUrl: '',
@@ -183,6 +189,12 @@ var mainVue = new Vue({
             this.infoData.row.name = row.name
             this.infoData.row.remarks = row.remarks
             this.infoData.row.address = row.address
+            var cityList = row.address.split(",")
+            if (cityList.length == 3) {
+                this.infoData.cityform.selectedOptions = [parseInt(cityList[0]), parseInt(cityList[1]), parseInt(cityList[2])]
+            } else {
+                this.infoData.cityform.selectedOptions = [19, 199, 1770]
+            }
             this.infoData.row.type = row.type
             this.infoData.row.screen = row.screen
             this.infoData.row.camera = row.camera
@@ -220,6 +232,7 @@ var mainVue = new Vue({
                 jsonData.data.forEach(element => {
                     _this.advertData.advertChecked.push(element.id)
                 });
+                _this.sortable("adverttransfer", "advertData", "advertChecked");
             })
             this.advertDrawer = true;
         },
@@ -244,6 +257,8 @@ var mainVue = new Vue({
                 jsonData.data.forEach(element => {
                     _this.gameData.gameChecked.push(element.id)
                 });
+
+                _this.sortable("gametransfer", "gameData", "gameChecked");
             })
             _this.gameData.active = 0;
             this.gameDrawer = true;
@@ -302,6 +317,9 @@ var mainVue = new Vue({
 
         gamePre() {
             this.gameData.active = 0;
+            setTimeout(() => {
+                this.sortable("gametransfer", "gameData", "gameChecked");
+            }, 1000);
         },
 
         deviceCopy(row) {
@@ -515,6 +533,41 @@ var mainVue = new Vue({
         },
         checkResource(url, element, type) {
             resourceVue.loadResources(url, element, type)
+        },
+        handleChange(value) {
+            this.infoData.row.address = this.infoData.cityform.selectedOptions.toString()
+        },
+        sortable(str, group, datastr) {
+            let el = document
+                .querySelector("#" + str)
+                .querySelectorAll(".el-checkbox-group")[1];
+            new Sortable(el, {
+                forceFallback: false,
+                onUpdate: event => {
+                    let box = this.$el
+                        .querySelector("#" + str)
+                        .querySelectorAll(".el-checkbox-group")[1];
+                    let nums = this.$el
+                        .querySelector("#" + str)
+                        .querySelectorAll(".el-checkbox-group")[1].childNodes.length;
+                    console.log(nums, event.newIndex);
+                    if (event.newIndex >= nums) {
+                        return;
+                    }
+                    let newIndex = event.newIndex;
+                    let oldIndex = event.oldIndex;
+                    let $label = box.children[newIndex];
+                    let $oldLabel = box.children[oldIndex];
+                    box.removeChild($label);
+                    if (newIndex < oldIndex) {
+                        box.insertBefore($label, $oldLabel);
+                    } else {
+                        box.insertBefore($label, $oldLabel.nextSibling);
+                    }
+                    let item = this[group][datastr].splice(oldIndex, 1);
+                    this[group][datastr].splice(newIndex, 0, item[0]);
+                }
+            });
         }
     }
 })

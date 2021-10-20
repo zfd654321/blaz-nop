@@ -63,7 +63,7 @@
                 <el-input placeholder="请输入备注" v-model.trim="infoData.row.remarks"></el-input>
             </el-form-item>
             <el-form-item label="地址" prop="address">
-                <el-input placeholder="请输入地址" v-model.trim="infoData.row.address"></el-input>
+                <el-cascader :options="CityInfo" v-model="infoData.cityform.selectedOptions" :filterable="true" @change="handleChange"></el-cascader>
             </el-form-item>
             <el-form-item label="设备类型" prop="type">
                 <el-select v-model="infoData.row.type" filterable placeholder="请选择设备类型">
@@ -99,13 +99,13 @@
                 <el-input placeholder="请输入设备编号" v-model.trim="configData.row.deviceId" readonly></el-input>
             </el-form-item>
             <el-form-item label="kinect左右边距" prop="kinectLeftAndRightDis">
-                <el-input placeholder="请输入kinect左右边距" v-model.trim="configData.row.kinectLeftAndRightDis"></el-input>
+                <el-input-number placeholder="请输入kinect左右边距" v-model.trim="configData.row.kinectLeftAndRightDis"></el-input-number>
             </el-form-item>
             <el-form-item label="kinect最近距离" prop="kinectMinDis">
-                <el-input placeholder="请输入kinect最近距离" v-model.trim="configData.row.kinectMinDis"></el-input>
+                <el-input-number placeholder="请输入kinect最近距离" v-model.trim="configData.row.kinectMinDis"></el-input-number>
             </el-form-item>
             <el-form-item label="kinect最远距离" prop="kinectMaxDis">
-                <el-input placeholder="请输入kinect最远距离" v-model.trim="configData.row.kinectMaxDis"></el-input>
+                <el-input-number placeholder="请输入kinect最远距离" v-model.trim="configData.row.kinectMaxDis"></el-input-number>
             </el-form-item>
             <el-form-item label="API地址" prop="hostUrl">
                 <el-input placeholder="请输入API地址" v-model.trim="configData.row.hostUrl"></el-input>
@@ -129,7 +129,7 @@
                 <el-input placeholder="请输入主题名称" v-model.trim="configData.row.themeName"></el-input>
             </el-form-item>
             <el-form-item label="自动进入游戏时间" prop="gameEnterTime">
-                <el-input placeholder="请输入自动进入游戏时间" v-model.trim="configData.row.gameEnterTime"></el-input>
+                <el-input-number placeholder="请输入自动进入游戏时间" v-model.trim="configData.row.gameEnterTime"></el-input-number>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onConfigSubmit">保存</el-button>
@@ -141,7 +141,7 @@
     <el-drawer title="广告配置" :visible.sync="advertDrawer" ref="advertDrawer" :before-close="handleClose" size="640">
         <el-form :model="advertData.row" ref="advertForm" label-width="auto" style="margin:20">
             <el-form-item>
-                <el-transfer filterable v-model="advertData.advertChecked" :data="advertData.advertList" :titles="['可选广告', '已选广告']" :button-texts="['移出', '移入']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
+                <el-transfer id="adverttransfer" filterable v-model="advertData.advertChecked" :data="advertData.advertList" :titles="['可选广告', '已选广告']" :button-texts="['移出', '移入']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onAdvertSubmit">保存</el-button>
@@ -158,7 +158,7 @@
         <el-form :rules="gameData.rules" :model="gameData.row" ref="gameForm" label-width="auto" style="margin:20">
             <template v-if="gameData.active==0">
                 <el-form-item>
-                    <el-transfer filterable v-model="gameData.gameChecked" :data="gameData.gameList" :titles="['可选游戏', '已选游戏']" :button-texts="['移出', '移入']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
+                    <el-transfer id="gametransfer" filterable v-model="gameData.gameChecked" :data="gameData.gameList" :titles="['可选游戏', '已选游戏']" :button-texts="['移出', '移入']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="gameNext" style="margin-left: 250px;">下一步</el-button>
@@ -167,7 +167,7 @@
 
             <template v-if="gameData.active==1">
                 <el-collapse v-model="gameData.collapseActive" accordion style="margin:20 0">
-                    <el-collapse-item :title="item.gameId+'['+item.gameName+']'" :name="index" v-for="(item,index) in gameData.netresList">
+                    <el-collapse-item :title="item.gameId+'['+item.gameName+']'" :name="index" v-for="(item,index) in gameData.netresList" v-if="item.netres.length>0">
                         <el-form-item :label="netreItem.name" v-for="(netreItem,index) in item.netres">
                             <el-input placeholder="默认资源" readonly v-model.trim="netreItem.resUrl" :id="'netre'+netreItem.id">
                                 <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(netreItem.resUrl,'netre'+netreItem.id,netreItem.type)"></el-button>
