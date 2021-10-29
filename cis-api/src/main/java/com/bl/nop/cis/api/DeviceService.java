@@ -134,4 +134,6 @@ public interface DeviceService {
 	 */
 	public ResResultBean loglist(Map<String, Object> params);
 
+    public ResResultBean saveFileJson(Map<String, Object> params);
+
 }

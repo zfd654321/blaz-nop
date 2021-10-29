@@ -1,5 +1,7 @@
 package com.bl.nop.cis.service.impl;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -314,7 +316,7 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceAdvert.setWeight(i);
 			this.deviceAdvertDao.insert(deviceAdvert);
 		}
-		JSONObject jsonoj=new JSONObject();
+		JSONObject jsonoj = new JSONObject();
 		jsonoj.put("adverts", adverts);
 		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备广告修改", JSONObject.toJSONString(jsonoj), now, createdBy);
 		this.deviceLogDao.insert(devicelog);
@@ -389,48 +391,48 @@ public class DeviceServiceImpl implements DeviceService {
 		for (String toDeviceId : checkDevices) {
 			for (String type : checkType) {
 				switch (type) {
-					case "1":
-						// 配置平移
-						DeviceConfig config = this.deviceConfigDao.selectByPrimaryKey(deviceId);
-						config.setDeviceId(toDeviceId);
-						this.deviceConfigDao.updateByPrimaryKey(config);
+				case "1":
+					// 配置平移
+					DeviceConfig config = this.deviceConfigDao.selectByPrimaryKey(deviceId);
+					config.setDeviceId(toDeviceId);
+					this.deviceConfigDao.updateByPrimaryKey(config);
 
-						break;
-					case "2":
-						// 开关平移
-						DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
-						deviceSwitch.setDeviceId(toDeviceId);
-						this.deviceSwitchDao.updateByPrimaryKey(deviceSwitch);
+					break;
+				case "2":
+					// 开关平移
+					DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
+					deviceSwitch.setDeviceId(toDeviceId);
+					this.deviceSwitchDao.updateByPrimaryKey(deviceSwitch);
 
-						break;
-					case "3":
-						// 广告平移
-						List<DeviceAdvert> list = this.omsDeviceDao.queryDeviceAdvert(params);
-						this.omsDeviceDao.cleanDeviceAdvert(toDeviceId);
-						for (DeviceAdvert advert : list) {
-							advert.setDeviceId(toDeviceId);
-							this.deviceAdvertDao.insert(advert);
-						}
+					break;
+				case "3":
+					// 广告平移
+					List<DeviceAdvert> list = this.omsDeviceDao.queryDeviceAdvert(params);
+					this.omsDeviceDao.cleanDeviceAdvert(toDeviceId);
+					for (DeviceAdvert advert : list) {
+						advert.setDeviceId(toDeviceId);
+						this.deviceAdvertDao.insert(advert);
+					}
 
-						break;
-					case "4":
-						// 游戏平移
-						List<DeviceGame> games = this.omsDeviceDao.queryDeviceGame(params);
-						List<DeviceGameNetres> netres = this.omsDeviceDao.queryDeviceGameNetres(params);
-						this.omsDeviceDao.cleanDeviceGame(toDeviceId);
-						this.omsDeviceDao.cleanDeviceGameNetres(toDeviceId);
-						for (DeviceGame game : games) {
-							game.setDeviceId(toDeviceId);
-							this.deviceGameDao.insert(game);
-						}
-						for (DeviceGameNetres netre : netres) {
-							netre.setDeviceId(toDeviceId);
-							this.deviceGameNetresDao.insert(netre);
-						}
+					break;
+				case "4":
+					// 游戏平移
+					List<DeviceGame> games = this.omsDeviceDao.queryDeviceGame(params);
+					List<DeviceGameNetres> netres = this.omsDeviceDao.queryDeviceGameNetres(params);
+					this.omsDeviceDao.cleanDeviceGame(toDeviceId);
+					this.omsDeviceDao.cleanDeviceGameNetres(toDeviceId);
+					for (DeviceGame game : games) {
+						game.setDeviceId(toDeviceId);
+						this.deviceGameDao.insert(game);
+					}
+					for (DeviceGameNetres netre : netres) {
+						netre.setDeviceId(toDeviceId);
+						this.deviceGameNetresDao.insert(netre);
+					}
 
-						break;
-					default:
-						break;
+					break;
+				default:
+					break;
 				}
 			}
 			DeviceLog devicelog = LogUtil.buildLog(toDeviceId, "设备配置平移-被移入，从[" + deviceId + "]",
@@ -459,8 +461,34 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Override
 	public ResResultBean loglist(Map<String, Object> params) {
-		List<DeviceLog> list=this.omsDeviceDao.deviceLogList(params);
+		List<DeviceLog> list = this.omsDeviceDao.deviceLogList(params);
 		return ResResultBean.success(list);
+	}
+
+	@Override
+	public ResResultBean saveFileJson(Map<String, Object> params) {
+		String jsonStr = StringUtil.toStr(params.get("jsonStr"));
+		System.out.println(jsonStr);
+		String fileName = DateUtil.getStringYMDHMS() + ".json";
+		String saveDir = PropertyUtil.getProperty("filePath") + "forever/filejson/" + fileName;// 初始化一个FileOutputStream对象。
+
+		String pathDir = PropertyUtil.getProperty("fileUrl") + "forever/filejson/" + fileName;
+
+		FileWriter fwriter = null;
+		try {
+			fwriter = new FileWriter(saveDir);
+			fwriter.write(jsonStr);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				fwriter.flush();
+				fwriter.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return ResResultBean.success(pathDir);
 	}
 
 }

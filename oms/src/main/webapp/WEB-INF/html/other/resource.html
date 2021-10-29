@@ -18,7 +18,7 @@
         </el-form>
         <el-col :span="6" v-for="item in tableData.list" :key="item.id">
             <el-card :body-style="{ padding: '0px' }" style="width: 100px;height:150px;margin: 10px auto;font-size: 14;text-align: center;cursor:pointer">
-                <el-image :src="item.thumbnail" class="image" style="width: 100px; height: 100px;background:#eee" fit="contain" @click="checkResource(item.url)"></el-image>
+                <el-image :src="item.thumbnail" class="image" style="width: 100px; height: 100px;background:#eee" fit="contain" @click="checkResource(item)"></el-image>
                 <div style="padding: 4px;  ">
                     <p style="white-space: nowrap;text-overflow:ellipsis;">{{item.name}}</p>
                     <p class="size">{{ getFileSize(item) }}</p>
@@ -43,14 +43,15 @@
             tableData: {
                 list: [],
                 totalCount: 0
-            }
+            },
+            returnFun: function (item) {}
         },
         methods: {
-            loadResources(url, element, type) {
+            loadResources(url, type, returnFun) {
                 this.resourcesDrawer = true;
-                this.resourceElement = element;
                 this.resourceUrl = url;
                 this.formInline.type = type;
+                this.returnFun = returnFun
                 this.loadDataList()
             },
             loadDataList() {
@@ -79,10 +80,9 @@
                     fileSizeMsg = "文件超过1TB";
                 return fileSizeMsg;
             },
-            checkResource(url) {
-                $("#" + this.resourceElement).val(url);
-                $("#" + this.resourceElement)[0].dispatchEvent(new Event('input'))
+            checkResource(item) {
                 this.resourcesDrawer = false;
+                this.returnFun(item)
             }
         }
 

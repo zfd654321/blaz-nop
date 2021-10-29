@@ -2,8 +2,7 @@
     <div class="titleline">主页</div>
     <transition name="el-zoom-in-top">
         <el-card class="box-card" v-show="ready">
-            <el-skeleton :rows="6" animated/>
-            <el-skeleton :rows="6" animated style="margin-top:20"/>
+            <el-calendar v-model="value"></el-calendar>
         </el-card>
     </transition>
 </div>
@@ -12,7 +11,8 @@
     var mainVue = new Vue({
         el: '#main',
         data: {
-            ready: false
+            ready: false,
+            value: new Date()
         },
         mounted: function () {
             this.ready = true;

@@ -168,4 +168,12 @@ public class DeviceController extends JsonBaseController {
 		return resResultBean;
 	}
 
+	@RequestMapping(value = "/saveFileJson", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean saveFileJson(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		ResResultBean resResultBean = this.deviceService.saveFileJson(params);
+		return resResultBean;
+	}
+
 }

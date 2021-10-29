@@ -265,7 +265,10 @@ var mainVue = new Vue({
             });
         },
         checkResource(url, element, type) {
-            resourceVue.loadResources(url, element, type)
+            resourceVue.loadResources(url, type, function(item) {
+                $("#" + element).val(item.url);
+                $("#" + element)[0].dispatchEvent(new Event('input'))
+            })
         }
     }
 })

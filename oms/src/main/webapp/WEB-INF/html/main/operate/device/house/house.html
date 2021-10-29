@@ -1,211 +1,28 @@
 <div id="main">
     <div class="titleline">设备仓库</div>
-
-    <transition name="el-zoom-in-top">
-        <el-card class="box-card" v-show="ready">
-            <!-- 查询栏 -->
-            <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                <el-form-item label="设备编号" size="mini">
-                    <el-input  v-model.trim="formInline.deviceId" placeholder="设备编号"></el-input>
-                </el-form-item>
-                <el-form-item label="机器码" size="mini">
-                    <el-input  v-model.trim="formInline.pcId" placeholder="机器码"></el-input>
-                </el-form-item>
-                <el-form-item label="设备名称" size="mini">
-                    <el-input  v-model.trim="formInline.name" placeholder="设备名称"></el-input>
-                </el-form-item>
-                <el-form-item size="mini">
-                    <el-button type="primary" @click="doQuery" plain>查询</el-button>
-                </el-form-item>
-            </el-form>
-            <!-- 表格栏 -->
-            <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
-                <el-table-column prop="deviceId" label="设备编号"></el-table-column>
-                <el-table-column prop="pcId" width="220" label="机器码"></el-table-column>
-                <el-table-column prop="name" label="设备名称"></el-table-column>
-                <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
-                <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
-                <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
-                <el-table-column prop="createdAt" label="创建时间"></el-table-column>
-                <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
-                <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
-                <el-table-column label="操作" width="170">
-                    <template slot-scope="scope">
-                        <el-button @click="openEdit(scope.row)" type="text" size="mini">信息</el-button>
-                        <el-button @click="openConfig(scope.row)" type="text" size="mini">配置</el-button>
-                        <el-button @click="openAdvert(scope.row)" type="text" size="mini">广告</el-button>
-                        <el-button @click="openGame(scope.row)" type="text" size="mini">游戏</el-button>
-                        <el-button @click="online(scope.row)" type="text" size="mini">上线</el-button>
-                        <el-button @click="deviceCopy(scope.row)" type="text" size="mini">平移</el-button>
-                        <el-button @click="deleteRow(scope.row)" type="text" size="mini">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <!-- 翻页 -->
-            <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
-        </el-card>
-    </transition>
-    <!-- 设备信息弹出框 -->
-    <el-drawer title="设备信息" :visible.sync="drawer" ref="drawer" :before-close="handleClose">
-        <el-form :rules="infoData.rules" :model="infoData.row" ref="deviceForm" label-width="80px" style="margin:20">
-            <el-form-item label="设备编号" prop="deviceId">
-                <el-input placeholder="请输入设备编号" v-model.trim="infoData.row.deviceId" readonly></el-input>
-            </el-form-item>
-            <el-form-item label="机器码" prop="pcId">
-                <el-select v-model="infoData.row.pcId" filterable placeholder="请选择机器码" style="width: 100%;">
-                    <el-option v-for="item in infoData.freePc" :key="item.id" :label="item.id" :value="item.id"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="设备名称" prop="name">
-                <el-input placeholder="请输入设备名称" v-model.trim="infoData.row.name"></el-input>
-            </el-form-item>
-            <el-form-item label="备注" prop="remarks">
-                <el-input placeholder="请输入备注" v-model.trim="infoData.row.remarks"></el-input>
-            </el-form-item>
-            <el-form-item label="地址" prop="address">
-                <el-cascader :options="CityInfo" v-model="infoData.cityform.selectedOptions" :filterable="true" @change="handleChange"></el-cascader>
-            </el-form-item>
-            <el-form-item label="设备类型" prop="type">
-                <el-select v-model="infoData.row.type" filterable placeholder="请选择设备类型">
-                    <el-option label="自营" :value="1"></el-option>
-                    <el-option label="商家" :value="2"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="屏幕版本" prop="screen">
-                <el-select v-model="infoData.row.screen" filterable placeholder="请选择屏幕版本">
-                    <el-option label="竖屏" :value="1"></el-option>
-                    <el-option label="横屏" :value="2"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="摄像头" prop="camera">
-                <el-select v-model="infoData.row.camera" filterable placeholder="请选择摄像头版本">
-                    <el-option label="Kinect2.0" value="Kinect2.0"></el-option>
-                    <el-option label="Kinect4.0" value="Kinect4.0"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="授权日期" prop="outDate">
-                <el-date-picker v-model="infoData.row.outDate" type="date" placeholder="选择授权日期" value-format="yyyy-MM-dd" :picker-options="infoData.pickerOptions"></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onSubmit">保存</el-button>
-            </el-form-item>
-        </el-form>
-    </el-drawer>
-
-    <!-- 设备配置弹出框 -->
-    <el-drawer title="设备配置" :visible.sync="configDrawer" ref="configDrawer" :before-close="handleClose">
-        <el-form :rules="configData.rules" :model="configData.row" ref="configForm" label-width="auto" style="margin:20">
-            <el-form-item label="设备编号" prop="deviceId">
-                <el-input placeholder="请输入设备编号" v-model.trim="configData.row.deviceId" readonly></el-input>
-            </el-form-item>
-            <el-form-item label="kinect左右边距" prop="kinectLeftAndRightDis">
-                <el-input-number placeholder="请输入kinect左右边距" v-model.trim="configData.row.kinectLeftAndRightDis"></el-input-number>
-            </el-form-item>
-            <el-form-item label="kinect最近距离" prop="kinectMinDis">
-                <el-input-number placeholder="请输入kinect最近距离" v-model.trim="configData.row.kinectMinDis"></el-input-number>
-            </el-form-item>
-            <el-form-item label="kinect最远距离" prop="kinectMaxDis">
-                <el-input-number placeholder="请输入kinect最远距离" v-model.trim="configData.row.kinectMaxDis"></el-input-number>
-            </el-form-item>
-            <el-form-item label="API地址" prop="hostUrl">
-                <el-input placeholder="请输入API地址" v-model.trim="configData.row.hostUrl"></el-input>
-            </el-form-item>
-            <el-form-item label="离线二维码" prop="qrcodeUrl">
-                <el-input placeholder="请选择离线二维码" readonly v-model.trim="configData.row.qrcodeUrl" id="qrcodeUrl">
-                    <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(configData.row.qrcodeUrl,'qrcodeUrl','img')"></el-button>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="大屏Logo地址" prop="logoUrl">
-                <el-input placeholder="请选择大屏Logo" readonly v-model.trim="configData.row.logoUrl" id="logoUrl">
-                    <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(configData.row.logoUrl,'logoUrl','img')"></el-button>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="照片水印地址" prop="watermarkUrl">
-                <el-input placeholder="请选择照片水印" readonly v-model.trim="configData.row.watermarkUrl" id="watermarkUrl">
-                    <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(configData.row.watermarkUrl,'watermarkUrl','img')"></el-button>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="主题名称" prop="themeName">
-                <el-input placeholder="请输入主题名称" v-model.trim="configData.row.themeName"></el-input>
-            </el-form-item>
-            <el-form-item label="自动进入游戏时间" prop="gameEnterTime">
-                <el-input-number placeholder="请输入自动进入游戏时间" v-model.trim="configData.row.gameEnterTime"></el-input-number>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onConfigSubmit">保存</el-button>
-            </el-form-item>
-        </el-form>
-    </el-drawer>
-
-    <!-- 广告配置弹出框 -->
-    <el-drawer title="广告配置" :visible.sync="advertDrawer" ref="advertDrawer" :before-close="handleClose" size="640">
-        <el-form :model="advertData.row" ref="advertForm" label-width="auto" style="margin:20">
-            <el-form-item>
-                <el-transfer id="adverttransfer" filterable v-model="advertData.advertChecked" :data="advertData.advertList" :titles="['可选广告', '已选广告']" :button-texts="['移出', '移入']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onAdvertSubmit">保存</el-button>
-            </el-form-item>
-        </el-form>
-    </el-drawer>
-
-    <!-- 游戏配置弹出框 -->
-    <el-drawer title="游戏配置" :visible.sync="gameDrawer" ref="gameDrawer" :before-close="handleClose" size="640">
-        <el-steps :active="gameData.active" finish-status="success" align-center simple>
-            <el-step title="游戏选择"></el-step>
-            <el-step title="2d资源配置"></el-step>
-        </el-steps>
-        <el-form :rules="gameData.rules" :model="gameData.row" ref="gameForm" label-width="auto" style="margin:20">
-            <template v-if="gameData.active==0">
-                <el-form-item>
-                    <el-transfer id="gametransfer" filterable v-model="gameData.gameChecked" :data="gameData.gameList" :titles="['可选游戏', '已选游戏']" :button-texts="['移出', '移入']" :props="{key: 'id',label: 'name'}" target-order="push"></el-transfer>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="gameNext" style="margin-left: 250px;">下一步</el-button>
-                </el-form-item>
-            </template>
-
-            <template v-if="gameData.active==1">
-                <el-collapse v-model="gameData.collapseActive" accordion style="margin:20 0">
-                    <el-collapse-item :title="item.gameId+'['+item.gameName+']'" :name="index" v-for="(item,index) in gameData.netresList" v-if="item.netres.length>0">
-                        <el-form-item :label="netreItem.name" v-for="(netreItem,index) in item.netres">
-                            <el-input placeholder="默认资源" readonly v-model.trim="netreItem.resUrl" :id="'netre'+netreItem.id">
-                                <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(netreItem.resUrl,'netre'+netreItem.id,netreItem.type)"></el-button>
-                            </el-input>
-                        </el-form-item>
-                        <el-empty description="该游戏没有可配置项" v-if="item.netres.length<1" style="height:150"></el-empty>
-                    </el-collapse-item>
-                </el-collapse>
-                <el-form-item>
-                    <el-button type="primary" @click="gamePre">上一步</el-button>
-                    <el-button type="primary" @click="onGameSubmit">保存</el-button>
-                </el-form-item>
-            </template>
-        </el-form>
-    </el-drawer>
-
-    <!-- 配置平移弹出框 -->
-    <el-drawer title="配置平移" :visible.sync="copyDrawer" ref="copyDrawer" :before-close="handleClose">
-        <el-form :rules="copyData.rules" :model="copyData.row" ref="copyForm" label-width="auto" style="margin:20">
-            <el-form-item label="移出配置设备编号">{{copyData.row.deviceId}}</el-form-item>
-            <el-form-item label="移入配置设备编号" prop="checkDevices">
-                <el-select v-model="copyData.row.checkDevices" filterable multiple placeholder="请选择移入设备（可多选）" style="width: 100%;">
-                    <el-option v-for="item in copyDeviceList" v-if="item.deviceId!=copyData.row.deviceId" :key="item.deviceId" :label="item.name" :value="item.deviceId"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="平移项目" prop="checkType">
-                <el-checkbox-group v-model="copyData.row.checkType">
-                    <el-checkbox-button label="1" key="1">配置</el-checkbox-button>
-                    <el-checkbox-button label="2" key="2">开关</el-checkbox-button>
-                    <el-checkbox-button label="3" key="3">广告</el-checkbox-button>
-                    <el-checkbox-button label="4" key="4">游戏</el-checkbox-button>
-                </el-checkbox-group>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onCopySubmit">保存</el-button>
-            </el-form-item>
-        </el-form>
-    </el-drawer>
-
+    <!-- 数据列表 -->
+    <data-list ref="dataList"></data-list>
+    <!-- 信息弹出框 -->
+    <data-edit ref="dataEdit"></data-edit>
+    <!-- 配置弹出框 -->
+    <config-edit ref="configEdit"></config-edit>
+    <!-- 广告弹出框 -->
+    <advert-edit ref="advertEdit"></advert-edit>
+    <!-- 游戏弹出框 -->
+    <game-edit ref="gameEdit"></game-edit>
+    <!-- 平移弹出框 -->
+    <device-copy ref="deviceCopy"></device-copy>
 </div>
-<script src="main/operate/device/house/house.js"></script>
+<script>
+    var mainVue = new Vue({
+        el: '#main',
+        components: {
+            'data-list': httpVueLoader('main/operate/device/house/components/dataList.vue'),
+            'data-edit': httpVueLoader('main/operate/device/house/components/dataEdit.vue'),
+            'config-edit': httpVueLoader('main/operate/device/house/components/configEdit.vue'),
+            'advert-edit': httpVueLoader('main/operate/device/house/components/advertEdit.vue'),
+            'game-edit': httpVueLoader('main/operate/device/house/components/gameEdit.vue'),
+            'device-copy': httpVueLoader('main/operate/device/house/components/deviceCopy.vue')
+        }
+    })
+</script>
