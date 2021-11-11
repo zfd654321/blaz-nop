@@ -16,6 +16,8 @@ public class DeviceSwitch implements Serializable {
 
     private Integer filecheck;
 
+    private Integer video;
+
     private Date shutdown;
 
     private Date restart;
@@ -68,6 +70,14 @@ public class DeviceSwitch implements Serializable {
 
     public void setFilecheck(Integer filecheck) {
         this.filecheck = filecheck;
+    }
+
+    public Integer getVideo() {
+        return video;
+    }
+
+    public void setVideo(Integer video) {
+        this.video = video;
     }
 
     public Date getShutdown() {

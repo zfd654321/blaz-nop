@@ -56,12 +56,13 @@ public class PhotoServiceImpl implements PhotoService {
 		String groupId = StringUtil.toStr(params.get("groupId"));
 		String md5 = StringUtil.toStr(params.get("md5"));
 		String url = StringUtil.toStr(params.get("url"));
-		Integer size = NumberUtil.toInt(params.get("md5"));
+		Integer size = NumberUtil.toInt(params.get("size"));
+		Integer type = NumberUtil.toInt(params.get("type"));
 		Date now = new Date();
 		if (StringUtils.isBlank(groupId)) {
 			groupId = deviceId + DateUtil.getStringYMDHMS();
-			PhotoGroup photoGroup=this.photoGroupDao.selectByPrimaryKey(groupId);
-			if(photoGroup!=null){
+			PhotoGroup photoGroup = this.photoGroupDao.selectByPrimaryKey(groupId);
+			if (photoGroup != null) {
 				return JSONUtils.error(ERROR_CODE + "013", dataContent, "照片上传接口调用过于频繁");
 			}
 			photoGroup = new PhotoGroup();
@@ -82,6 +83,8 @@ public class PhotoServiceImpl implements PhotoService {
 		photoImg.setUrl(url);
 		photoImg.setSize(size);
 		photoImg.setMd5(md5);
+		photoImg.setType(type);
+		photoImg.setCreatedAt(now);
 		this.photoImgDao.insert(photoImg);
 
 		dataContent.put("groupId", groupId);
@@ -107,8 +110,8 @@ public class PhotoServiceImpl implements PhotoService {
 		if (StringUtils.isBlank(groupId)) {
 			groupId = deviceId + DateUtil.getStringYMDHMS();
 			log.info("新增group,获取照片二维码" + groupId);
-			PhotoGroup photoGrouphs=this.photoGroupDao.selectByPrimaryKey(groupId);
-			if(photoGrouphs!=null){
+			PhotoGroup photoGrouphs = this.photoGroupDao.selectByPrimaryKey(groupId);
+			if (photoGrouphs != null) {
 				return JSONUtils.error(ERROR_CODE + "023", dataContent, "接口调用过于频繁");
 			}
 			photoGroup.setId(groupId);

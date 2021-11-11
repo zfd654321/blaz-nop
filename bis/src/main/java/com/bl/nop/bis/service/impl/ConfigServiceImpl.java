@@ -100,6 +100,7 @@ public class ConfigServiceImpl implements ConfigService {
 		dataContent.put("statistics", deviceSwitch.getStatistics());
 		dataContent.put("filecheck", deviceSwitch.getFilecheck());
 		dataContent.put("onlinecheck", deviceSwitch.getOnlinecheck());
+		dataContent.put("video", deviceSwitch.getVideo());
 		return JSONUtils.success(dataContent);
 	}
 

@@ -8,6 +8,7 @@ public class PhotoDto implements Serializable {
     private String urls;
     private String photoCount;
     private String createdAt;
+    private Integer type;
 
     public String getId() {
         return id;
@@ -47,6 +48,14 @@ public class PhotoDto implements Serializable {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
 }

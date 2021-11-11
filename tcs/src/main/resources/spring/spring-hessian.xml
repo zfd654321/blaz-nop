@@ -37,5 +37,12 @@
         <property name="chunkedPost" value="false" />
         <property name="overloadEnabled" value="true" />
     </bean>
+    <!-- 数据统计接口 -->
+    <bean id="dataService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${hessian.bis.serviceUrl}/dataService" />
+        <property name="serviceInterface" value="com.bl.nop.bis.api.DataService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
 
 </beans>

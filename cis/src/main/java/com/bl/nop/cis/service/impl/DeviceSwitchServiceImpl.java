@@ -78,26 +78,33 @@ public class DeviceSwitchServiceImpl implements DeviceSwitchService {
 		DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
 
 		switch (type) {
-			case "software":
-				deviceSwitch.setSoftware(value);
-				break;
-			case "pay":
-				deviceSwitch.setPay(value);
-				break;
-			case "statistics":
-				deviceSwitch.setStatistics(value);
-				break;
-			case "onlinecheck":
-				deviceSwitch.setOnlinecheck(value);
-				break;
-			case "filecheck":
-				deviceSwitch.setFilecheck(value);
-				break;
-			default:
-				break;
+		case "software":
+			deviceSwitch.setSoftware(value);
+			break;
+		case "pay":
+			deviceSwitch.setPay(value);
+			break;
+		case "statistics":
+			deviceSwitch.setStatistics(value);
+			break;
+		case "onlinecheck":
+			deviceSwitch.setOnlinecheck(value);
+			break;
+		case "filecheck":
+			deviceSwitch.setFilecheck(value);
+			break;
+		case "video":
+			deviceSwitch.setVideo(value);
+			break;
+		default:
+			break;
 		}
 		this.deviceSwitchDao.updateByPrimaryKey(deviceSwitch);
-		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备开关操作", JSONObject.toJSONString(deviceSwitch), now, createdBy);
+		JSONObject logoj = new JSONObject();
+		logoj.put("type", type);
+		logoj.put("value", value);
+
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备开关操作", JSONObject.toJSONString(logoj), now, createdBy);
 		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}

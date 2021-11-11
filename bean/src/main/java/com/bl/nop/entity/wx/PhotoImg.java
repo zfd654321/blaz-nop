@@ -16,6 +16,8 @@ public class PhotoImg implements Serializable {
 
     private Integer size;
 
+    private Integer type;
+
     private Date createdAt;
 
     private static final long serialVersionUID = 1L;
@@ -66,6 +68,14 @@ public class PhotoImg implements Serializable {
 
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Date getCreatedAt() {

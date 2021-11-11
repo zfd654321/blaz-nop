@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.data.DataDeviceHourDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.data.DataDeviceHour">
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="stats_date" jdbcType="DATE" property="statsDate" />
+    <result column="stats_hour" jdbcType="INTEGER" property="statsHour" />
+    <result column="used_duration" jdbcType="INTEGER" property="usedDuration" />
+    <result column="stand_duration" jdbcType="INTEGER" property="standDuration" />
+    <result column="person_time" jdbcType="INTEGER" property="personTime" />
+    <result column="depth_time" jdbcType="INTEGER" property="depthTime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.bl.nop.entity.data.DataDeviceHour">
+    insert into bl_data_device_hour (device_id, stats_date, stats_hour, 
+      used_duration, stand_duration, person_time, 
+      depth_time)
+    values (#{deviceId,jdbcType=VARCHAR}, #{statsDate,jdbcType=DATE}, #{statsHour,jdbcType=INTEGER}, 
+      #{usedDuration,jdbcType=INTEGER}, #{standDuration,jdbcType=INTEGER}, #{personTime,jdbcType=INTEGER}, 
+      #{depthTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.data.DataDeviceHour">
+    insert into bl_data_device_hour
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="statsDate != null">
+        stats_date,
+      </if>
+      <if test="statsHour != null">
+        stats_hour,
+      </if>
+      <if test="usedDuration != null">
+        used_duration,
+      </if>
+      <if test="standDuration != null">
+        stand_duration,
+      </if>
+      <if test="personTime != null">
+        person_time,
+      </if>
+      <if test="depthTime != null">
+        depth_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="statsDate != null">
+        #{statsDate,jdbcType=DATE},
+      </if>
+      <if test="statsHour != null">
+        #{statsHour,jdbcType=INTEGER},
+      </if>
+      <if test="usedDuration != null">
+        #{usedDuration,jdbcType=INTEGER},
+      </if>
+      <if test="standDuration != null">
+        #{standDuration,jdbcType=INTEGER},
+      </if>
+      <if test="personTime != null">
+        #{personTime,jdbcType=INTEGER},
+      </if>
+      <if test="depthTime != null">
+        #{depthTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

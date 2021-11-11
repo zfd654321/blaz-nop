@@ -52,9 +52,9 @@
 		<!-- 微信数据服务 -->
 		<module>nis</module>
 		<module>nis-api</module>
-		<!-- 定时任务服务 
+		<!-- 定时任务服务 -->
 		<module>tts</module>
-	-->
+
 		<!-- 大屏接口 -->
 		<module>tcs</module>
 		<!-- 后台接口 -->
@@ -222,7 +222,7 @@
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
-				<version>8.0.22</version>
+				<version>8.0.27</version>
 			</dependency>
 
 			<!-- DBCP -->

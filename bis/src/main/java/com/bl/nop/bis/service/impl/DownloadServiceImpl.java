@@ -1,7 +1,11 @@
 package com.bl.nop.bis.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +111,7 @@ public class DownloadServiceImpl implements DownloadService {
 		List<String> urlList = new ArrayList<>();
 		// 设备配置中的2d资源
 		DeviceConfig config = this.deviceConfigDao.selectByPrimaryKey(deviceId);
-		if(config==null){
+		if (config == null) {
 			return JSONUtils.error(ERROR_CODE + "031", dataContent, "设备配置出错");
 		}
 		if (urlList.indexOf(config.getLogoUrl()) == -1) {
@@ -121,7 +125,7 @@ public class DownloadServiceImpl implements DownloadService {
 		}
 		// 广告中的2d资源
 		List<AdvertDto> adverts = this.configDao.queryDeviceAdvertList(deviceId);
-		if(adverts.isEmpty()){
+		if (adverts.isEmpty()) {
 			return JSONUtils.error(ERROR_CODE + "032", dataContent, "广告配置出错");
 		}
 		for (AdvertDto advertDto : adverts) {
@@ -137,10 +141,14 @@ public class DownloadServiceImpl implements DownloadService {
 		}
 		// 游戏中的2d资源
 		List<NetresDto> netres = this.configDao.queryDeviceGameNetresList(deviceId);
+		List<String> batchFile = new ArrayList<>();
 		for (NetresDto netresDto : netres) {
 			String url = netresDto.getUrl();
 			if (!StringUtils.isBlank(url) && urlList.indexOf(url) == -1) {
 				urlList.add(url);
+				if ("filejson".equals(netresDto.getType())) {
+					batchFile.add(url);
+				}
 			}
 		}
 		// 读取资源列表md5
@@ -158,6 +166,42 @@ public class DownloadServiceImpl implements DownloadService {
 				oj.put("length", file.length());
 				oj.put("url", url);
 				fileList.add(oj);
+			}
+			//载入filejson内资源
+			String savePath = PropertyUtil.getValue("saveDir");
+			String showUrl = PropertyUtil.getValue("fileDir");
+			for (String urlPath : batchFile) {
+				File jsonFile = new File(urlPath.replace(showUrl, savePath));
+				String jsonStr = "";
+				try {
+					FileReader fileReader = new FileReader(jsonFile);
+					Reader reader = new InputStreamReader(new FileInputStream(jsonFile), "utf-8");
+					int ch = 0;
+					StringBuffer sb = new StringBuffer();
+					while ((ch = reader.read()) != -1) {
+						sb.append((char) ch);
+					}
+					fileReader.close();
+					reader.close();
+					jsonStr = sb.toString();
+					log.info("————读取" + urlPath + "文件结束!————");
+				} catch (Exception e) {
+					log.info("————读取" + urlPath + "文件出现异常，读取失败!————");
+					e.printStackTrace();
+				}
+				JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+				JSONArray jsonArray = jsonObject.getJSONArray("fileList");
+				if (jsonArray != null) {
+					for (int i = 0; i < jsonArray.size(); i++) {
+						JSONObject reoj = jsonArray.getJSONObject(i);
+						JSONObject oj = new JSONObject();
+						oj.put("name", reoj.getString("name"));
+						oj.put("md5", reoj.getString("md5"));
+						oj.put("length", reoj.getString("file_length"));
+						oj.put("url", reoj.getString("network_url"));
+						fileList.add(oj);
+					}
+				}
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

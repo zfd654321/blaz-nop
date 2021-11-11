@@ -6,13 +6,20 @@
 			SELECT g.id,
 			g.`device_id`,
 			GROUP_CONCAT(DISTINCT i.`url`) urls,
-			g.`created_at`,COUNT(i.id) photo_count 
+			COUNT(i.id) photo_count,
+			g.`created_at`,
+			i.`type`
 			FROM `bl_photo_group` g
 			LEFT JOIN `bl_photo_img` i
 			ON g.`id`=i.`group_id`
 			WHERE open_id = #{openId} 
-			GROUP BY g.`id`)t
+			<if test="type!=null and type!=''">
+				AND i.type =#{type}
+			</if>
+			GROUP BY g.`id`,i.`type`)t
 		WHERE t.photo_count>0
+		AND created_at>DATE_SUB(CURDATE(),INTERVAL 30 DAY)
+		ORDER BY created_at DESC;
   	</select>
 
 	<select id="getRankList" parameterType="java.util.Map" resultType="com.bl.nop.nis.dto.RankDto">

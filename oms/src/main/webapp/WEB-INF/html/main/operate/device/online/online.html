@@ -1,84 +1,27 @@
 <div id="main">
     <div class="titleline">线上设备</div>
-    <transition name="el-zoom-in-top">
-        <el-card class="box-card" v-show="ready">
-            <!-- 查询栏 -->
-            <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                <el-form-item label="设备编号" size="mini">
-                    <el-input  v-model.trim="formInline.deviceId" placeholder="设备编号"></el-input>
-                </el-form-item>
-                <el-form-item label="机器码" size="mini">
-                    <el-input  v-model.trim="formInline.pcId" placeholder="机器码"></el-input>
-                </el-form-item>
-                <el-form-item label="设备名称" size="mini">
-                    <el-input  v-model.trim="formInline.name" placeholder="设备名称"></el-input>
-                </el-form-item>
-                <el-form-item size="mini">
-                    <el-button type="primary" @click="doQuery" plain>查询</el-button>
-                </el-form-item>
-            </el-form>
-
-            <!-- 表格栏 -->
-            <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
-                <el-table-column prop="deviceId" label="设备编号"></el-table-column>
-                <el-table-column prop="pcId" width="220" label="机器码"></el-table-column>
-                <el-table-column prop="name" label="设备名称"></el-table-column>
-                <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
-                <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
-                <el-table-column prop="createdBy" label="创建用户" :formatter="getCreater"></el-table-column>
-                <el-table-column prop="createdAt" label="创建时间"></el-table-column>
-                <el-table-column prop="updatedBy" label="更新用户" :formatter="getUpdater"></el-table-column>
-                <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
-                <el-table-column label="操作" width="220">
-                    <template slot-scope="scope">
-                        <el-button @click="openEdit(scope.row)" type="text" size="mini">信息</el-button>
-                        <el-button @click="openAdvert(scope.row)" type="text" size="mini">广告</el-button>
-                        <el-button @click="openGame(scope.row)" type="text" size="mini">游戏</el-button>
-                        <el-button @click="offline(scope.row)" type="text" size="mini">下线</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <!-- 翻页 -->
-            <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
-        </el-card>
-    </transition>
-    <!-- 详情弹出框（信息） -->
-    <el-drawer title="设备信息" :visible.sync="drawer" ref="drawer">
-        <el-descriptions :column="1" border style="margin:20px">
-            <el-descriptions-item label="设备编号">{{infoData.row.deviceId}}</el-descriptions-item>
-            <el-descriptions-item label="机器码">{{infoData.row.pcId}}</el-descriptions-item>
-            <el-descriptions-item label="设备名称">{{infoData.row.name}}</el-descriptions-item>
-            <el-descriptions-item label="备注">{{infoData.row.remarks}}</el-descriptions-item>
-            <el-descriptions-item label="地址">{{infoData.city[0] | myAddressCity}}/{{infoData.city[1] | myAddressErae}}/{{infoData.city[2] | myAddressMinerae}}</el-descriptions-item>
-            <el-descriptions-item label="设备类型">
-                <el-tag size="mini">{{checkType(infoData.row)}}</el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="屏幕类型">
-                <el-tag size="mini">{{checkScreen(infoData.row)}}</el-tag>
-            </el-descriptions-item>
-
-            <el-descriptions-item label="摄像头版本">
-                <el-tag size="mini">{{infoData.row.camera}}</el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="授权日期">{{infoData.row.outDate}}</el-descriptions-item>
-        </el-descriptions>
-    </el-drawer>
-
-    <el-drawer title="广告信息" :visible.sync="advertDrawer" ref="advertDrawer">
-        <el-table :data="advertData.list" style="width:540;margin:20" header-cell-class-name="tableheader" size="mini">
-            <el-table-column prop="id" label="广告编号" ></el-table-column>
-            <el-table-column prop="name" label="广告名称" ></el-table-column>
-            <el-table-column prop="remarks" label="广告备注"></el-table-column>
-        </el-table>
-    </el-drawer>
-
-    <el-drawer title="游戏信息" :visible.sync="gameDrawer" ref="gameDrawer" >
-        <el-table :data="gameData.list" style="width:540;margin:20" header-cell-class-name="tableheader" size="mini">
-            <el-table-column prop="id" label="游戏编号" ></el-table-column>
-            <el-table-column prop="name" label="游戏名称" ></el-table-column>
-            <el-table-column prop="version" label="最新版本"></el-table-column>
-        </el-table>
-    </el-drawer>
-
+    <!-- 数据列表 -->
+    <data-list ref="dataList"></data-list>
+    <!-- 信息弹出框 -->
+    <data-edit ref="dataEdit"></data-edit>
+    <!-- 配置弹出框 -->
+    <config-edit ref="configEdit"></config-edit>
+    <!-- 广告弹出框 -->
+    <advert-edit ref="advertEdit"></advert-edit>
+    <!-- 游戏弹出框 -->
+    <game-edit ref="gameEdit"></game-edit>
+    <!-- 平移弹出框 -->
+    <device-copy ref="deviceCopy"></device-copy>
 </div>
-<script src="main/operate/device/online/online.js"></script>
+<script>
+    var mainVue = new Vue({
+        el: '#main',
+        components: {
+            'data-list': httpVueLoader('main/operate/device/online/components/dataList.vue'),
+            'data-edit': httpVueLoader('main/operate/device/online/components/dataEdit.vue'),
+            'config-edit': httpVueLoader('main/operate/device/online/components/configEdit.vue'),
+            'advert-edit': httpVueLoader('main/operate/device/online/components/advertEdit.vue'),
+            'game-edit': httpVueLoader('main/operate/device/online/components/gameEdit.vue')
+        }
+    })
+</script>

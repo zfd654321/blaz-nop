@@ -22,4 +22,6 @@ public interface DevicePcService {
 	 */
 	public ResResultBean save(Map<String, Object> params);
 
+    public ResResultBean delete(Map<String, Object> params);
+
 }

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd ">
+
+
+    <!-- 每小时执行的任务 -->
+    <bean id="hourJob" class="com.bl.nop.tts.quartz.HourJob"></bean>
+    <!-- 定义调用对象和调用对象的方法 -->
+    <bean id="hourJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject">
+            <ref bean="hourJob" />
+        </property>
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod">
+            <value>doJob</value>
+        </property>
+    </bean>
+    <!-- 调度触发器 -->
+    <bean id="hourJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="hourJobDetail" />
+        </property>
+        <!-- cron表达式 -->
+        <property name="cronExpression">
+            <!-- 每小时15分触发 秒 分 时 日 月 周-->
+            <value>0 15 * * * ?</value>
+        </property>
+    </bean>
+    <!-- 调度工厂  如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+    <bean id="startHourQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="hourJobTrigger" />
+            </list>
+        </property>
+        <!--必须的设置 QuartzScheduler 延时启动，应用启动完后 QuartzScheduler 再启动 -->
+        <property name="startupDelay" value="5" />
+    </bean>
+
+    <!-- 每日执行的任务 -->
+    <bean id="dayJob" class="com.bl.nop.tts.quartz.DayJob"></bean>
+    <!-- 定义调用对象和调用对象的方法 -->
+    <bean id="dayJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject">
+            <ref bean="dayJob" />
+        </property>
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod">
+            <value>doJob</value>
+        </property>
+    </bean>
+    <!-- 调度触发器 -->
+    <bean id="dayJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="dayJobDetail" />
+        </property>
+        <!-- cron表达式 -->
+        <property name="cronExpression">
+            <!-- 每天0点30触发-->
+            <value>0 30 0 * * ?</value>
+        </property>
+    </bean>
+    <!-- 调度工厂  如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+    <bean id="startDayQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="dayJobTrigger" />
+            </list>
+        </property>
+        <!--必须的设置 QuartzScheduler 延时启动，应用启动完后 QuartzScheduler 再启动 -->
+        <property name="startupDelay" value="5" />
+    </bean>
+
+    <!-- 每月执行的任务 -->
+    <bean id="monthJob" class="com.bl.nop.tts.quartz.MonthJob"></bean>
+    <!-- 定义调用对象和调用对象的方法 -->
+    <bean id="monthJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject">
+            <ref bean="monthJob" />
+        </property>
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod">
+            <value>doJob</value>
+        </property>
+    </bean>
+    <!-- 调度触发器 -->
+    <bean id="monthJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="monthJobDetail" />
+        </property>
+        <!-- 每月1号0点45触发-->
+        <property name="cronExpression">
+            <value>0 45 0 1 * ?</value>
+        </property>
+    </bean>
+    <!-- 调度工厂  如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+    <bean id="startMonthQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="monthJobTrigger" />
+            </list>
+        </property>
+        <!--必须的设置 QuartzScheduler 延时启动，应用启动完后 QuartzScheduler 再启动 -->
+        <property name="startupDelay" value="5" />
+    </bean>
+
+
+</beans>

@@ -8,10 +8,11 @@
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="md5" jdbcType="VARCHAR" property="md5" />
     <result column="size" jdbcType="INTEGER" property="size" />
+    <result column="type" jdbcType="INTEGER" property="type" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, device_id, group_id, url, md5, size, created_at
+    id, device_id, group_id, url, md5, size, type, created_at
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -25,11 +26,11 @@
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.wx.PhotoImg">
     insert into bl_photo_img (id, device_id, group_id, 
-      url, md5, size, created_at
-      )
+      url, md5, size, type, 
+      created_at)
     values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}, 
-      #{url,jdbcType=VARCHAR}, #{md5,jdbcType=VARCHAR}, #{size,jdbcType=INTEGER}, #{createdAt,jdbcType=TIMESTAMP}
-      )
+      #{url,jdbcType=VARCHAR}, #{md5,jdbcType=VARCHAR}, #{size,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+      #{createdAt,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.wx.PhotoImg">
     insert into bl_photo_img
@@ -51,6 +52,9 @@
       </if>
       <if test="size != null">
         size,
+      </if>
+      <if test="type != null">
+        type,
       </if>
       <if test="createdAt != null">
         created_at,
@@ -75,6 +79,9 @@
       <if test="size != null">
         #{size,jdbcType=INTEGER},
       </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
       <if test="createdAt != null">
         #{createdAt,jdbcType=TIMESTAMP},
       </if>
@@ -98,6 +105,9 @@
       <if test="size != null">
         size = #{size,jdbcType=INTEGER},
       </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
       <if test="createdAt != null">
         created_at = #{createdAt,jdbcType=TIMESTAMP},
       </if>
@@ -111,6 +121,7 @@
       url = #{url,jdbcType=VARCHAR},
       md5 = #{md5,jdbcType=VARCHAR},
       size = #{size,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
       created_at = #{createdAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

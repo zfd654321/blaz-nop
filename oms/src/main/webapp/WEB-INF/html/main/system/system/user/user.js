@@ -25,11 +25,11 @@ var mainVue = new Vue({
                 ],
                 username: [
                     { required: true, message: '请输入登陆账户', trigger: 'blur' },
-                    { min: 2, max: 10, message: '登陆账户长度为2-10个字符', trigger: 'blur' }
+                    { min: 2, max: 20, message: '登陆账户长度为2-20个字符', trigger: 'blur' }
                 ],
                 password: [
                     { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 2, max: 10, message: '密码长度为2-10个字符', trigger: 'blur' }
+                    { min: 2, max: 20, message: '密码长度为2-20个字符', trigger: 'blur' }
                 ],
                 role: [
                     { required: true, message: '请选择角色', trigger: 'change' }

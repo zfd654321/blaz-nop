@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.data.DataErrorDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.data.DataError">
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="error_time" jdbcType="TIMESTAMP" property="errorTime" />
+    <result column="error_message" jdbcType="VARCHAR" property="errorMessage" />
+  </resultMap>
+  <insert id="insert" parameterType="com.bl.nop.entity.data.DataError">
+    insert into bl_data_error (device_id, error_time, error_message
+      )
+    values (#{deviceId,jdbcType=VARCHAR}, #{errorTime,jdbcType=TIMESTAMP}, #{errorMessage,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.data.DataError">
+    insert into bl_data_error
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="errorTime != null">
+        error_time,
+      </if>
+      <if test="errorMessage != null">
+        error_message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="errorTime != null">
+        #{errorTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="errorMessage != null">
+        #{errorMessage,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

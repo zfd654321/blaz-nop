@@ -1,64 +1,16 @@
 <div id="main">
     <div class="titleline">设备日志</div>
-    <transition name="el-zoom-in-top">
-        <el-card class="box-card" v-show="ready">
-            <!-- 查询栏 -->
-            <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                <el-form-item label="设备编号" size="mini">
-                    <el-input  v-model.trim="formInline.deviceId" placeholder="设备编号"></el-input>
-                </el-form-item>
-                <el-form-item label="机器码" size="mini">
-                    <el-input  v-model.trim="formInline.pcId" placeholder="机器码"></el-input>
-                </el-form-item>
-                <el-form-item label="设备名称" size="mini">
-                    <el-input  v-model.trim="formInline.name" placeholder="设备名称"></el-input>
-                </el-form-item>
-                <el-form-item size="mini">
-                    <el-button type="primary" @click="doQuery" plain>查询</el-button>
-                </el-form-item>
-            </el-form>
-
-            <!-- 表格栏 -->
-            <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
-                <el-table-column prop="deviceId" width="220" label="设备编号"></el-table-column>
-                <el-table-column prop="pcId" width="220" label="机器码"></el-table-column>
-                <el-table-column prop="name" label="设备名称"></el-table-column>
-                <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
-                <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
-                <el-table-column prop="createdName" label="创建用户"></el-table-column>
-                <el-table-column prop="createdAt" label="创建时间"></el-table-column>
-                <el-table-column prop="updatedName" label="更新用户"></el-table-column>
-                <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
-                <el-table-column label="操作">
-                    <template slot-scope="scope">
-                        <el-button @click="openLogs(scope.row)" type="text" size="mini">查看日志</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <!-- 翻页 -->
-            <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>
-        </el-card>
-    </transition>
-    <!-- 日志弹出框 -->
-    <el-drawer title="设备日志" :visible.sync="drawer" ref="drawer">
-        <el-radio-group v-model="infoData.reverse" size="mini" style="margin: 0 20">
-            <el-radio-button :label="true">正序</el-radio-button>
-            <el-radio-button :label="false">倒序</el-radio-button>
-        </el-radio-group>
-        <el-timeline :reverse="infoData.reverse" style="margin:20">
-            <el-timeline-item v-for="(item, index) in infoData.loglist" :key="index" :timestamp="item.createdAt" placement="top">
-                <el-card class="box-card" style="line-height: 30px;">
-                    <p>{{item.operate}}</p>
-                    <el-popover v-if="item.info!=''" placement="top-start" title="详细" width="400" trigger="hover">
-                        <pre v-html='item.infoStr'></pre>
-                        <el-button slot="reference" size="mini">详细</el-button>
-                    </el-popover>
-                    <p>
-                        <i class="el-icon-user"></i>{{getUser(item.createdBy)}}</p>
-                </el-card>
-            </el-timeline-item>
-        </el-timeline>
-    </el-drawer>
-
+    <!-- 数据列表 -->
+    <data-list ref="dataList"></data-list>
+    <!-- 信息弹出框 -->
+    <data-edit ref="dataEdit"></data-edit>
 </div>
-<script src="main/operate/loginfo/omslog/omslog.js"></script>
+<script>
+    var mainVue = new Vue({
+        el: '#main',
+        components: {
+            'data-list': httpVueLoader('main/operate/loginfo/omslog/components/dataList.vue'),
+            'data-edit': httpVueLoader('main/operate/loginfo/omslog/components/dataEdit.vue'),
+        }
+    })
+</script>

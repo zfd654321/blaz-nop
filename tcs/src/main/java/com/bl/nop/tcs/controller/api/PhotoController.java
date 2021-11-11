@@ -57,6 +57,34 @@ public class PhotoController extends BaseController {
         writeResponseByJson(request, response, oj);
     }
 
+    @RequestMapping(value = "/uploadPhoto")
+    public void uploadVideo(HttpServletRequest request, HttpServletResponse response) {
+        String pcId = request.getParameter("pcId");
+        log.info("[" + pcId + "]上传录屏文件");
+        Map<String, Object> params = buildParamsMap(request);
+
+        try {
+			MultipartHttpServletRequest multipartRequest = null;
+			multipartRequest = (MultipartHttpServletRequest) request;
+			List<MultipartFile> files = multipartRequest.getFiles("file");
+			if (files != null && files.size() > 0) {
+				MultipartFile file = files.get(0);
+				params=FileUtil.saveUploadVideo(file,params);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+            JSONObject oj = new JSONObject();
+            oj.put("returnCode", "15011");
+            oj.put("errorMsg", "文件不存在或格式有误");
+            writeResponseByJson(request, response, oj);
+            return;
+		}
+
+        JSONObject oj = photoService.uploadPhoto(params);
+        log.info("[" + pcId + "]上传录屏文件，返回数据：" + oj.toJSONString());
+        writeResponseByJson(request, response, oj);
+    }
+
     @RequestMapping(value = "/getQrCode")
     public void getQrCode(HttpServletRequest request, HttpServletResponse response) {
         String pcId = request.getParameter("pcId");

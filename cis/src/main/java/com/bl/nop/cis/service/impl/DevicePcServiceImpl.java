@@ -101,4 +101,11 @@ public class DevicePcServiceImpl implements DevicePcService {
 		return ResResultBean.success();
 	}
 
+	@Override
+	public ResResultBean delete(Map<String, Object> params) {
+		String id = StringUtil.toStr(params.get("id"));
+		this.devicePcDao.deleteByPrimaryKey(id);
+		return ResResultBean.success();
+	}
+
 }

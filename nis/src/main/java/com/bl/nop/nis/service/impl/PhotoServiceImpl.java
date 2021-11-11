@@ -46,6 +46,7 @@ public class PhotoServiceImpl implements PhotoService {
 	@Override
 	public JSONObject indexData(Map<String, Object> params) {
 		JSONObject dataContent = new JSONObject();
+		params.put("type", 1);
 		List<PhotoDto> photos = this.photoDao.getPhotoList(params);
 		List<RankDto> ranks = this.photoDao.getRankList(params);
 		if(!photos.isEmpty()){

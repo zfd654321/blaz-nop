@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.data.DataOnlineDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.data.DataOnline">
+    <id column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="last_heart" jdbcType="TIMESTAMP" property="lastHeart" />
+    <result column="last_game" jdbcType="TIMESTAMP" property="lastGame" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    device_id, last_heart, last_game
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bl_data_online
+    where device_id = #{deviceId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bl_data_online
+    where device_id = #{deviceId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bl.nop.entity.data.DataOnline">
+    insert into bl_data_online (device_id, last_heart, last_game
+      )
+    values (#{deviceId,jdbcType=VARCHAR}, #{lastHeart,jdbcType=TIMESTAMP}, #{lastGame,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.data.DataOnline">
+    insert into bl_data_online
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="lastHeart != null">
+        last_heart,
+      </if>
+      <if test="lastGame != null">
+        last_game,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastHeart != null">
+        #{lastHeart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastGame != null">
+        #{lastGame,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.data.DataOnline">
+    update bl_data_online
+    <set>
+      <if test="lastHeart != null">
+        last_heart = #{lastHeart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastGame != null">
+        last_game = #{lastGame,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where device_id = #{deviceId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.data.DataOnline">
+    update bl_data_online
+    set last_heart = #{lastHeart,jdbcType=TIMESTAMP},
+      last_game = #{lastGame,jdbcType=TIMESTAMP}
+    where device_id = #{deviceId,jdbcType=VARCHAR}
+  </update>
+</mapper>

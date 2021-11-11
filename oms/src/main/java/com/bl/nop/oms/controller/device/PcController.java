@@ -40,5 +40,15 @@ public class PcController extends JsonBaseController {
 		ResResultBean resResultBean = this.pcService.save(params);
 		return resResultBean;
 	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean delete(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		SysUser user = this.getUser(request);
+		params.put("createdBy", user.getId());
+		ResResultBean resResultBean = this.pcService.delete(params);
+		return resResultBean;
+	}
 	
 }

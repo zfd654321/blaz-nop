@@ -22,13 +22,6 @@ module.exports = {
         deviceId: '',
         advertList: [],
         advertChecked: [],
-        cityform: {
-          city: '',
-          erae: '',
-          minerae: '',
-          selectedOptions: [], //地区筛选数组
-        },
-        freePc: []
       },
 
     };
