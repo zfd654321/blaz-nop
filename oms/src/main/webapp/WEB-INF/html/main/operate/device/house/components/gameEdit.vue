@@ -81,7 +81,12 @@ module.exports = {
       var adurl = "/oms/game/list";
       sendRequest(adurl, gameParams, function (jsonData) {
         console.log(jsonData)
-        _this.gameData.gameList = jsonData.data.list
+        let gameList = jsonData.data.list
+        gameList.forEach(gameEntity => {
+          gameEntity.name = "[" + gameEntity.id + "] " + gameEntity.name
+        });
+
+        _this.gameData.gameList = gameList
       })
       var url = "/oms/device/loadDeviceGame";
       sendRequest(url, { deviceId: row.deviceId, }, function (jsonData) {

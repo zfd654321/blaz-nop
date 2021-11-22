@@ -121,8 +121,9 @@ public class FileUtil {
 			StringBuffer ffmpegStr = new StringBuffer();
 			ffmpegStr.append("time ffmpeg -ss 00:00:05 -i ");
 			ffmpegStr.append(imgSrc);
-			ffmpegStr.append(" -f image2 -y -s 100*100 ");
+			ffmpegStr.append(" -f image2 -frames:v 1 -y -s 100*100 ");
 			ffmpegStr.append(imgdist);
+			System.out.println(ffmpegStr.toString());
 			Runtime.getRuntime().exec(ffmpegStr.toString());
 		} catch (IOException e) {
 			e.printStackTrace();

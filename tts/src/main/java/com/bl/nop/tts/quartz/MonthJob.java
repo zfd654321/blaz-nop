@@ -1,9 +1,13 @@
 package com.bl.nop.tts.quartz;
 
 import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.bl.nop.common.bean.ResResultBean;
-import com.bl.nop.tts.service.HourJobService;
+import com.bl.nop.common.util.DateUtil;
+import com.bl.nop.tts.service.DeviceJobService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MonthJob {
 
 	@Autowired
-	private HourJobService hourJobService;
+	private DeviceJobService deviceJobService;
 	private static Logger log = LoggerFactory.getLogger(MonthJob.class);
 
 	/**
@@ -24,14 +28,16 @@ public class MonthJob {
 	 * @throws ParseException
 	 */
 	public void doJob() throws ParseException {
-		log.info(">>>>>>>>>>>>>HourJob 执行...");
-
+		log.info(">>>>>>>>>>>>>DayJob 执行...");
+		Date now=new Date();
+        Date statsTime=DateUtil.addDay(now, -1);
+        String statsDate=DateUtil.dateToStrShort(statsTime);
+		Map<String,Object> params=new HashMap<>();
+		params.put("statsDate", statsDate);
 		// 执行每小时设备统计任务
-		ResResultBean result=this.hourJobService.deviceHourStatic();
+		ResResultBean result=this.deviceJobService.deviceMonthStatic(params);
 		log.info(result.toString());
-
-
-		log.info(">>>>>>>>>>>>>HourJob 结束...");
+		log.info(">>>>>>>>>>>>>DayJob 结束...");
 	}
 
 

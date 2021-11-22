@@ -96,6 +96,9 @@ public class DeviceSwitchServiceImpl implements DeviceSwitchService {
 		case "video":
 			deviceSwitch.setVideo(value);
 			break;
+		case "clip":
+			deviceSwitch.setClip(value);
+			break;
 		default:
 			break;
 		}

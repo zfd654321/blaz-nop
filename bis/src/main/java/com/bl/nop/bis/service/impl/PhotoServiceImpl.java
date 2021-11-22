@@ -135,10 +135,12 @@ public class PhotoServiceImpl implements PhotoService {
 
 		List<GameRankDto> topList = new ArrayList<>();
 		Integer rankNum = 0;
+		String defaultHead=PropertyUtil.getProperty("DefaultHeadImg");
 		if (game.getRankType() == 1) {
 			Map<String, Object> qparams = new HashMap<>();
 			qparams.put("gameId", gameId);
 			qparams.put("score", score + "");
+			qparams.put("defaultHead",defaultHead);
 			topList = this.photoDao.qeuryTopList(qparams);
 			rankNum = this.photoDao.queryGameRank(qparams);
 

@@ -14,10 +14,12 @@ import com.bl.nop.dao.data.DataErrorDao;
 import com.bl.nop.dao.data.DataGameDao;
 import com.bl.nop.dao.data.DataInfoDao;
 import com.bl.nop.dao.data.DataOnlineDao;
+import com.bl.nop.dao.device.DeviceSwitchDao;
 import com.bl.nop.entity.data.DataError;
 import com.bl.nop.entity.data.DataGame;
 import com.bl.nop.entity.data.DataInfo;
 import com.bl.nop.entity.data.DataOnline;
+import com.bl.nop.entity.device.DeviceSwitch;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -41,6 +43,8 @@ public class DataServiceImpl implements DataService {
 	private DataErrorDao dataErrorDao;
 	@Autowired
 	private DataOnlineDao dataOnlineDao;
+	@Autowired
+	private DeviceSwitchDao deviceSwitchDao;
 
 	@Override
 	public JSONObject heartData(Map<String, Object> params) {
@@ -75,11 +79,22 @@ public class DataServiceImpl implements DataService {
 		long interval = (now.getTime() - dataTime.getTime()) / 1000;
 		if (interval > 3600 || interval < -3600) {
 			log.info("统计时间参数于服务器时间相差过大");
-			JSONObject oj = JSONUtils.error(ERROR_CODE + "013", dataContent, "统计时间参数于服务器时间相差过大，请重新校验服务器时间");
+			JSONObject oj = JSONUtils.error(ERROR_CODE + "014", dataContent, "统计时间参数于服务器时间相差过大，请重新校验服务器时间");
+			return oj;
+		}
+		// 保存最近在线信息
+		dataOnline.setLastHeart(dataTime);
+		this.dataOnlineDao.updateByPrimaryKey(dataOnline);
+
+		// 判断统计开关是否打开
+		DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
+		if (deviceSwitch.getStatistics() == 0) {
+			log.info("统计开关关闭，不进行相关统计");
+			JSONObject oj = JSONUtils.error(ERROR_CODE + "015", dataContent, "统计开关关闭，不进行相关统计");
 			return oj;
 		}
 
-		Integer statsHour=DateUtil.getHourOfDay(dataTime);
+		Integer statsHour = DateUtil.getHourOfDay(dataTime);
 		Integer usedDuration = NumberUtil.toInt(params.get("usedDuration"));
 		Integer standDuration = NumberUtil.toInt(params.get("standDuration"));
 		Integer personTime = NumberUtil.toInt(params.get("personTime"));
@@ -94,8 +109,6 @@ public class DataServiceImpl implements DataService {
 		dataInfo.setPersonTime(personTime);
 		dataInfo.setDepthTime(depthTime);
 		this.dataInfoDao.insert(dataInfo);
-		dataOnline.setLastHeart(dataTime);
-		this.dataOnlineDao.updateByPrimaryKey(dataOnline);
 		return JSONUtils.success(dataContent);
 	}
 
@@ -125,7 +138,7 @@ public class DataServiceImpl implements DataService {
 			JSONObject oj = JSONUtils.error(ERROR_CODE + "021", dataContent, "游戏时间参数格式有误");
 			return oj;
 		}
-		if(beginTime.getTime()>=endTime.getTime()){
+		if (beginTime.getTime() >= endTime.getTime()) {
 			log.info("游戏结束时间需在开始时间之后");
 			JSONObject oj = JSONUtils.error(ERROR_CODE + "022", dataContent, "游戏结束时间需在开始时间之后");
 			return oj;
@@ -136,16 +149,26 @@ public class DataServiceImpl implements DataService {
 			JSONObject oj = JSONUtils.error(ERROR_CODE + "023", dataContent, "开始时间需晚于上一次游戏结束时间");
 			return oj;
 		}
+		// 判断统计开关是否打开
+		DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
+		if (deviceSwitch.getStatistics() == 0) {
+			log.info("统计开关关闭，不进行相关统计");
+			JSONObject oj = JSONUtils.error(ERROR_CODE + "024", dataContent, "统计开关关闭，不进行相关统计");
+			return oj;
+		}
 		Integer type = NumberUtil.toInt(params.get("type"));
+		Integer statsHour = DateUtil.getHourOfDay(endTime);
 		DataGame dataGame = new DataGame();
 		dataGame.setDeviceId(deviceId);
+		dataGame.setStatsDate(endTime);
+		dataGame.setStatsHour(statsHour);
 		dataGame.setGameId(gameId);
 		dataGame.setBeginTime(beginTime);
 		dataGame.setEndTime(endTime);
 		dataGame.setType(type);
-		dataGame.setDuration(NumberUtil.toInt(endTime.getTime()-beginTime.getTime())/1000);
+		dataGame.setDuration(NumberUtil.toInt(endTime.getTime() - beginTime.getTime()) / 1000);
 		this.dataGameDao.insert(dataGame);
-		
+
 		dataOnline.setLastGame(endTime);
 		this.dataOnlineDao.updateByPrimaryKey(dataOnline);
 		return JSONUtils.success(dataContent);

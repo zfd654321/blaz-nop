@@ -57,7 +57,7 @@ public class PhotoController extends BaseController {
         writeResponseByJson(request, response, oj);
     }
 
-    @RequestMapping(value = "/uploadPhoto")
+    @RequestMapping(value = "/uploadVideo")
     public void uploadVideo(HttpServletRequest request, HttpServletResponse response) {
         String pcId = request.getParameter("pcId");
         log.info("[" + pcId + "]上传录屏文件");

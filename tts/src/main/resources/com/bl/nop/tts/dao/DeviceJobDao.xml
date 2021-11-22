@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.tts.dao.HourJobDao">
+	<select id="queryDataDeviceHours" parameterType="java.util.Map" resultType="com.bl.nop.entity.data.DataDeviceHour">
+		SELECT device_id,
+		stats_date,
+		stats_hour,
+		SUM(used_duration) used_duration,
+		SUM(stand_duration) stand_duration,
+		SUM(person_time) person_time,
+		SUM(depth_time) depth_time 
+		FROM `bl_data_info` 
+		WHERE stats_date=#{statsDate}  
+		AND stats_hour =#{statsHour}  
+		GROUP BY device_id
+  	</select>
+
+	<select id="queryDataDeviceDay" parameterType="java.util.Map" resultType="com.bl.nop.entity.data.DataDeviceDay">
+		SELECT device_id,
+		stats_date,
+		SUM(used_duration) used_duration,
+		SUM(stand_duration) stand_duration,
+		SUM(person_time) person_time,
+		SUM(depth_time) depth_time 
+		FROM `bl_data_device_hour` 
+		WHERE stats_date=#{statsDate}
+		GROUP BY device_id
+  	</select>
+
+	<select id="queryDataDeviceMonth" parameterType="java.util.Map" resultType="com.bl.nop.entity.data.DataDeviceMonth">
+		SELECT device_id,
+		stats_date,
+		SUM(used_duration) used_duration,
+		SUM(stand_duration) stand_duration,
+		SUM(person_time) person_time,
+		SUM(depth_time) depth_time 
+		FROM `bl_data_device_day` 
+		WHERE DATE_FORMAT(stats_date,'%Y-%m') = DATE_FORMAT(#{statsDate} ,'%Y-%m')
+		GROUP BY device_id
+  	</select>
+
+	<delete id="cleanDataDeviceHours">
+		DELETE 
+		FROM `bl_data_device_hour` 
+		WHERE stats_date=#{statsDate}  
+		AND stats_hour =#{statsHour}  
+	</delete>
+
+	<delete id="cleanDataDeviceDay">
+		DELETE 
+		FROM `bl_data_device_day` 
+		WHERE stats_date=#{statsDate}  
+	</delete>
+
+	<delete id="cleanDataDeviceMonth">
+		DELETE 
+		FROM `bl_data_device_month` 
+		WHERE DATE_FORMAT(stats_date,'%Y-%m') = DATE_FORMAT(#{statsDate} ,'%Y-%m')
+		GROUP BY device_id
+	</delete>
+
+
+</mapper>

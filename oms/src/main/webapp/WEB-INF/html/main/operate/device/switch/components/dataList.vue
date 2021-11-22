@@ -53,6 +53,11 @@
             <el-switch v-model="scope.row.video" :active-value="1" :inactive-value="0" @change='changeStatus($event,scope.row.deviceId,"video")'></el-switch>
           </template>
         </el-table-column>
+        <el-table-column label="抠像功能开关">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.clip" :active-value="1" :inactive-value="0" @change='changeStatus($event,scope.row.deviceId,"clip")'></el-switch>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- 翻页 -->
       <el-pagination small background hide-on-single-page style="margin-top: 10;" @current-change="handleCurrentChange" layout="prev, pager, next, jumper" :total="tableData.totalCount"></el-pagination>

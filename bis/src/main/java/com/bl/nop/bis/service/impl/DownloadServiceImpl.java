@@ -153,10 +153,14 @@ public class DownloadServiceImpl implements DownloadService {
 		}
 		// 读取资源列表md5
 		JSONArray fileList = new JSONArray();
+		String fileUrl=PropertyUtil.getProperty("fileUrl");
+		String filePath=PropertyUtil.getProperty("filePath");
 		try {
+			log.info("resourceCount:"+urlList.size());
 			for (String url : urlList) {
+				log.info("url:"+url);
 				JSONObject oj = new JSONObject();
-				String path = url.replace(PropertyUtil.getProperty("fileUrl"), PropertyUtil.getProperty("filePath"));
+				String path = url.replace(fileUrl, filePath);
 				File file = new File(path);
 				if (!file.exists()) {
 					return JSONUtils.error(ERROR_CODE + "033", dataContent, "2d资源文件丢失" + url);
@@ -168,10 +172,8 @@ public class DownloadServiceImpl implements DownloadService {
 				fileList.add(oj);
 			}
 			//载入filejson内资源
-			String savePath = PropertyUtil.getValue("saveDir");
-			String showUrl = PropertyUtil.getValue("fileDir");
 			for (String urlPath : batchFile) {
-				File jsonFile = new File(urlPath.replace(showUrl, savePath));
+				File jsonFile = new File(urlPath.replace(fileUrl, filePath));
 				String jsonStr = "";
 				try {
 					FileReader fileReader = new FileReader(jsonFile);
@@ -195,6 +197,8 @@ public class DownloadServiceImpl implements DownloadService {
 					for (int i = 0; i < jsonArray.size(); i++) {
 						JSONObject reoj = jsonArray.getJSONObject(i);
 						JSONObject oj = new JSONObject();
+						
+						log.info("filejson-url:"+reoj.getString("network_url"));
 						oj.put("name", reoj.getString("name"));
 						oj.put("md5", reoj.getString("md5"));
 						oj.put("length", reoj.getString("file_length"));

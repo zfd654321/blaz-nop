@@ -3,6 +3,8 @@
 <mapper namespace="com.bl.nop.dao.data.DataGameDao">
   <resultMap id="BaseResultMap" type="com.bl.nop.entity.data.DataGame">
     <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="stats_date" jdbcType="DATE" property="statsDate" />
+    <result column="stats_hour" jdbcType="INTEGER" property="statsHour" />
     <result column="game_id" jdbcType="VARCHAR" property="gameId" />
     <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
@@ -10,18 +12,24 @@
     <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <insert id="insert" parameterType="com.bl.nop.entity.data.DataGame">
-    insert into bl_data_game (device_id, game_id, begin_time, 
-      end_time, duration, type
-      )
-    values (#{deviceId,jdbcType=VARCHAR}, #{gameId,jdbcType=VARCHAR}, #{beginTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{duration,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}
-      )
+    insert into bl_data_game (device_id, stats_date, stats_hour, 
+      game_id, begin_time, end_time, 
+      duration, type)
+    values (#{deviceId,jdbcType=VARCHAR}, #{statsDate,jdbcType=DATE}, #{statsHour,jdbcType=INTEGER}, 
+      #{gameId,jdbcType=VARCHAR}, #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{duration,jdbcType=INTEGER}, #{type,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.data.DataGame">
     insert into bl_data_game
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="deviceId != null">
         device_id,
+      </if>
+      <if test="statsDate != null">
+        stats_date,
+      </if>
+      <if test="statsHour != null">
+        stats_hour,
       </if>
       <if test="gameId != null">
         game_id,
@@ -42,6 +50,12 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="deviceId != null">
         #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="statsDate != null">
+        #{statsDate,jdbcType=DATE},
+      </if>
+      <if test="statsHour != null">
+        #{statsHour,jdbcType=INTEGER},
       </if>
       <if test="gameId != null">
         #{gameId,jdbcType=VARCHAR},

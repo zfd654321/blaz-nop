@@ -18,6 +18,8 @@ public class DeviceSwitch implements Serializable {
 
     private Integer video;
 
+    private Integer clip;
+
     private Date shutdown;
 
     private Date restart;
@@ -78,6 +80,14 @@ public class DeviceSwitch implements Serializable {
 
     public void setVideo(Integer video) {
         this.video = video;
+    }
+
+    public Integer getClip() {
+        return clip;
+    }
+
+    public void setClip(Integer clip) {
+        this.clip = clip;
     }
 
     public Date getShutdown() {

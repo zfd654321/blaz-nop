@@ -6,6 +6,10 @@ import java.util.Date;
 public class DataGame implements Serializable {
     private String deviceId;
 
+    private Date statsDate;
+
+    private Integer statsHour;
+
     private String gameId;
 
     private Date beginTime;
@@ -24,6 +28,22 @@ public class DataGame implements Serializable {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId == null ? null : deviceId.trim();
+    }
+
+    public Date getStatsDate() {
+        return statsDate;
+    }
+
+    public void setStatsDate(Date statsDate) {
+        this.statsDate = statsDate;
+    }
+
+    public Integer getStatsHour() {
+        return statsHour;
+    }
+
+    public void setStatsHour(Integer statsHour) {
+        this.statsHour = statsHour;
     }
 
     public String getGameId() {

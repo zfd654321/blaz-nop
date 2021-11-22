@@ -147,6 +147,7 @@ public class GameServiceImpl implements GameService {
 				netres.setProperty(netresProperty);
 				netres.setType(type);
 				if (!StringUtils.isBlank(defaulturl)) {
+					defaulturl=PropertyUtil.getProperty("fileUrl")+defaulturl;
 					netres.setDefaulturl(defaulturl);
 				}
 				this.gameNetresDao.insert(netres);
