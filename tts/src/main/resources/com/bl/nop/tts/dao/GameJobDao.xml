@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.tts.dao.GameJobDao">
+	<select id="queryGameDayData" parameterType="java.util.Map" resultType="com.bl.nop.entity.data.DataGame">
+		SELECT device_id,
+		stats_date,
+		stats_hour,
+		SUM(used_duration) used_duration,
+		SUM(stand_duration) stand_duration,
+		SUM(person_time) person_time,
+		SUM(depth_time) depth_time 
+		FROM `bl_data_info` 
+		WHERE stats_date=#{statsDate}  
+		AND stats_hour =#{statsHour}  
+		GROUP BY device_id
+  	</select>
+
+
+	<delete id="cleanGameDayData">
+		DELETE 
+		FROM `bl_data_game_day` 
+		WHERE stats_date=#{statsDate}  
+	</delete>
+
+
+</mapper>

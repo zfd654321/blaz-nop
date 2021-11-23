@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.data.DataGameDayDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.data.DataGameDay">
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="game_id" jdbcType="VARCHAR" property="gameId" />
+    <result column="stats_date" jdbcType="DATE" property="statsDate" />
+    <result column="finish_time" jdbcType="INTEGER" property="finishTime" />
+    <result column="lost_time" jdbcType="INTEGER" property="lostTime" />
+    <result column="break_time" jdbcType="INTEGER" property="breakTime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.bl.nop.entity.data.DataGameDay">
+    insert into bl_data_game_day (device_id, game_id, stats_date, 
+      finish_time, lost_time, break_time
+      )
+    values (#{deviceId,jdbcType=VARCHAR}, #{gameId,jdbcType=VARCHAR}, #{statsDate,jdbcType=DATE}, 
+      #{finishTime,jdbcType=INTEGER}, #{lostTime,jdbcType=INTEGER}, #{breakTime,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.data.DataGameDay">
+    insert into bl_data_game_day
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="gameId != null">
+        game_id,
+      </if>
+      <if test="statsDate != null">
+        stats_date,
+      </if>
+      <if test="finishTime != null">
+        finish_time,
+      </if>
+      <if test="lostTime != null">
+        lost_time,
+      </if>
+      <if test="breakTime != null">
+        break_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="gameId != null">
+        #{gameId,jdbcType=VARCHAR},
+      </if>
+      <if test="statsDate != null">
+        #{statsDate,jdbcType=DATE},
+      </if>
+      <if test="finishTime != null">
+        #{finishTime,jdbcType=INTEGER},
+      </if>
+      <if test="lostTime != null">
+        #{lostTime,jdbcType=INTEGER},
+      </if>
+      <if test="breakTime != null">
+        #{breakTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

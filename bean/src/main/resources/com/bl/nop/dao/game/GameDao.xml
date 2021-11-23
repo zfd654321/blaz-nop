@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.bl.nop.entity.game.Game">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     <result column="version" jdbcType="VARCHAR" property="version" />
     <result column="screen" jdbcType="INTEGER" property="screen" />
     <result column="camera" jdbcType="VARCHAR" property="camera" />
@@ -16,7 +17,7 @@
     <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, version, screen, camera, path, rank_type, img, created_at, created_by, 
+    id, name, remarks, version, screen, camera, path, rank_type, img, created_at, created_by, 
     updated_at, updated_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -30,16 +31,16 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.game.Game">
-    insert into bl_game (id, name, version, 
-      screen, camera, path, 
-      rank_type, img, created_at, 
-      created_by, updated_at, updated_by
-      )
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
-      #{screen,jdbcType=INTEGER}, #{camera,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
-      #{rankType,jdbcType=INTEGER}, #{img,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, 
-      #{createdBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR}
-      )
+    insert into bl_game (id, name, remarks, 
+      version, screen, camera, 
+      path, rank_type, img, 
+      created_at, created_by, updated_at, 
+      updated_by)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR}, #{screen,jdbcType=INTEGER}, #{camera,jdbcType=VARCHAR}, 
+      #{path,jdbcType=VARCHAR}, #{rankType,jdbcType=INTEGER}, #{img,jdbcType=VARCHAR}, 
+      #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, 
+      #{updatedBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.game.Game">
     insert into bl_game
@@ -49,6 +50,9 @@
       </if>
       <if test="name != null">
         name,
+      </if>
+      <if test="remarks != null">
+        remarks,
       </if>
       <if test="version != null">
         version,
@@ -88,6 +92,9 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
       <if test="version != null">
         #{version,jdbcType=VARCHAR},
       </if>
@@ -126,6 +133,9 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
       <if test="version != null">
         version = #{version,jdbcType=VARCHAR},
       </if>
@@ -162,6 +172,7 @@
   <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.game.Game">
     update bl_game
     set name = #{name,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
       version = #{version,jdbcType=VARCHAR},
       screen = #{screen,jdbcType=INTEGER},
       camera = #{camera,jdbcType=VARCHAR},

@@ -21,12 +21,12 @@
       <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
         <el-table-column prop="deviceId" label="设备编号"></el-table-column>
         <el-table-column prop="pcId" width="220" label="机器码"></el-table-column>
-        <el-table-column prop="name" label="设备名称"></el-table-column>
-        <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
-        <el-table-column prop="type" label="屏幕" :formatter="checkScreen"></el-table-column>
-        <el-table-column prop="createdName" label="创建用户"></el-table-column>
+        <el-table-column prop="name" width="220" label="设备名称"></el-table-column>
+        <el-table-column prop="type" width="100" label="类型" :formatter="checkType"></el-table-column>
+        <el-table-column prop="type" width="100" label="屏幕" :formatter="checkScreen"></el-table-column>
+        <el-table-column prop="createdName" width="100" label="创建用户"></el-table-column>
         <el-table-column prop="createdAt" label="创建时间"></el-table-column>
-        <el-table-column prop="updatedName" label="更新用户"></el-table-column>
+        <el-table-column prop="updatedName" width="100" label="更新用户"></el-table-column>
         <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
         <el-table-column label="操作" width="220">
           <template slot-scope="scope">

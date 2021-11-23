@@ -77,6 +77,7 @@ public class GameServiceImpl implements GameService {
 			return ResResultBean.error(ERROR_CODE + "001", "参数为空");
 		}
 		String id = StringUtil.toStr(params.get("id"));
+		String remarks = StringUtil.toStr(params.get("remarks"));
 		String version = StringUtil.toStr(params.get("version"));
 		String gameDir = PropertyUtil.getProperty("filePath") + "forever/game/" + id + "/" + version;
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
@@ -111,6 +112,7 @@ public class GameServiceImpl implements GameService {
 		String img = PropertyUtil.getProperty("fileUrl") + "forever/game/" + id + "/" + version + "/gameFile/cover.png";
 		// 新增游戏对象
 		game.setId(id);
+		game.setRemarks(remarks);
 		game.setName(name);
 		game.setVersion(version);
 		game.setScreen(screen);

@@ -83,7 +83,9 @@ module.exports = {
         console.log(jsonData)
         let gameList = jsonData.data.list
         gameList.forEach(gameEntity => {
-          gameEntity.name = "[" + gameEntity.id + "] " + gameEntity.name
+          if (gameEntity.remarks != null && gameEntity.remarks != "") {
+            gameEntity.name = gameEntity.name + "  [" + gameEntity.remarks + "] "
+          }
         });
 
         _this.gameData.gameList = gameList

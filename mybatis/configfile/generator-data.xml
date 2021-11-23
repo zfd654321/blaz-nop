@@ -35,6 +35,7 @@
         <!-- 要生成那些表（更改 tableName 和 domainObjectName 就可以） -->
         <table tableName="bl_data_info" domainObjectName="DataInfo" mapperName="DataInfoDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_data_game" domainObjectName="DataGame" mapperName="DataGameDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+        <table tableName="bl_data_game_day" domainObjectName="DataGameDay" mapperName="DataGameDayDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_data_error" domainObjectName="DataError" mapperName="DataErrorDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_data_online" domainObjectName="DataOnline" mapperName="DataOnlineDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_data_device_hour" domainObjectName="DataDeviceHour" mapperName="DataDeviceHourDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />

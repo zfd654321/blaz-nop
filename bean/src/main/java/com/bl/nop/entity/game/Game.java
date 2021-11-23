@@ -8,6 +8,8 @@ public class Game implements Serializable {
 
     private String name;
 
+    private String remarks;
+
     private String version;
 
     private Integer screen;
@@ -44,6 +46,14 @@ public class Game implements Serializable {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
     }
 
     public String getVersion() {

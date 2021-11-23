@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bl.nop.tts.dao.HourJobDao">
+<mapper namespace="com.bl.nop.tts.dao.DeviceJobDao">
 	<select id="queryDataDeviceHours" parameterType="java.util.Map" resultType="com.bl.nop.entity.data.DataDeviceHour">
-		SELECT device_id,
-		stats_date,
-		stats_hour,
+		SELECT MIN(device_id) device_id,
+		MIN(stats_date) stats_date,
+		MIN(stats_hour) stats_hour,
 		SUM(used_duration) used_duration,
 		SUM(stand_duration) stand_duration,
 		SUM(person_time) person_time,
@@ -16,8 +16,8 @@
   	</select>
 
 	<select id="queryDataDeviceDay" parameterType="java.util.Map" resultType="com.bl.nop.entity.data.DataDeviceDay">
-		SELECT device_id,
-		stats_date,
+		SELECT MIN(device_id) device_id,
+		MIN(stats_date) stats_date,
 		SUM(used_duration) used_duration,
 		SUM(stand_duration) stand_duration,
 		SUM(person_time) person_time,
@@ -28,8 +28,8 @@
   	</select>
 
 	<select id="queryDataDeviceMonth" parameterType="java.util.Map" resultType="com.bl.nop.entity.data.DataDeviceMonth">
-		SELECT device_id,
-		stats_date,
+		SELECT MIN(device_id) device_id,
+		MIN(stats_date) stats_date,
 		SUM(used_duration) used_duration,
 		SUM(stand_duration) stand_duration,
 		SUM(person_time) person_time,
