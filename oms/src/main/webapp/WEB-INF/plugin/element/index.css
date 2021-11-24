@@ -2906,6 +2906,11 @@
     background-color: #FFF
 }
 
+.tableheader {
+    background-color: #409eff !important;
+    color: #fff;
+}
+
 .el-table td,
 .el-table th {
     padding: 12px 0;

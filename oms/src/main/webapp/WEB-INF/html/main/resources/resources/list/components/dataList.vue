@@ -7,12 +7,12 @@
         <el-form-item label="名称" size="mini">
           <el-input v-model.trim="formInline.name" placeholder="名称"></el-input>
         </el-form-item>
-
-        <el-form-item label="屏幕版本" size="mini">
-          <el-select v-model="formInline.screen" placeholder="屏幕版本">
+        <el-form-item label="类型" size="mini">
+          <el-select v-model="formInline.type">
             <el-option label="全部" value=""></el-option>
-            <el-option label="竖屏" value="1"></el-option>
-            <el-option label="横屏" value="2"></el-option>
+            <el-option label="图片" value="img"></el-option>
+            <el-option label="视频" value="video"></el-option>
+            <el-option label="其他" value="other"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item size="mini">
@@ -26,16 +26,23 @@
 
       <!-- 表格栏 -->
       <el-table :data="tableData.list" size="mini" style="margin-top:20px" max-height="300" stripe header-cell-class-name="tableheader">
-        <el-table-column prop="name" label="模板名称"></el-table-column>
-        <el-table-column prop="screen" label="屏幕版本" :formatter="checkScreen"></el-table-column>
+        <el-table-column label="缩略图">
+          <template slot-scope="scope">
+            <el-image :src="scope.row.thumbnail" style="width: 50px; height: 50px;display: block;margin: 0 auto;" fit="contain"></el-image>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="md5" label="md5值"></el-table-column>
         <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
+        <el-table-column prop="type" label="文件大小" :formatter="getFileSize"></el-table-column>
         <el-table-column prop="createdName" label="创建用户"></el-table-column>
         <el-table-column prop="createdAt" label="创建时间"></el-table-column>
         <el-table-column prop="updatedName" label="更新用户"></el-table-column>
         <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button @click="openEdit(scope.row)" type="text" size="mini">编辑</el-button>
+            <el-button @click="showRow(scope.row)" type="text" size="mini">查看</el-button>
+            <el-button @click="deleteRow(scope.row)" type="text" size="mini">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,7 +59,7 @@ module.exports = {
       formInline: {
         name: '',
         screen: '',
-        pageSize: 10,
+        pageSize: 8,
         pageNo: 1
       },
       tableData: { list: [], totalCount: 0 },
@@ -75,7 +82,7 @@ module.exports = {
     // 读取列表数据
     loadDataList() {
       let _this = this;
-      var url = "/oms/advert/typelist";
+      var url = "/oms/resources/list";
       sendRequest(url, _this.formInline, function (jsonData) {
         var list = jsonData.data.list;
         var count = jsonData.data.totalCount;
@@ -100,28 +107,52 @@ module.exports = {
       console.log(row);
       this.$parent.$refs.dataEdit.loadEditData(row);
     },
-    checkScreen(row, column) {
-      switch (row.screen) {
-        case 1:
-          return "竖屏"
-        case 2:
-          return "横屏"
+
+    showRow(row) {
+      this.$parent.$refs.dataShow.loadEditData(row);
+    },
+    deleteRow(row) {
+      let _this = this;
+      _this.$confirm('此操作将永久删除该资源,可能影响所有配置该资源的设备,是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        var url = "/oms/resources/delete";
+        sendRequest(url, { id: row.id }, function (jsonData) {
+          _this.$message.success("删除成功");
+          _this.loadDataList();
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    checkType(row, column) {
+      switch (row.type) {
+        case "img":
+          return "图片"
+        case "video":
+          return "视频"
+        case "other":
+          return "其他"
 
         default:
           return "未知"
       }
     },
-    checkType(row, column) {
-      switch (row.type) {
-        case 0:
-          return "无额外资源"
-        case 1:
-          return "图片轮播"
-        case 2:
-          return "视频"
-        default:
-          return "未知"
-      }
+    getFileSize(row) {
+      var fileSizeByte = row.size;
+      var fileSizeMsg = "";
+      if (fileSizeByte < 1048576) fileSizeMsg = (fileSizeByte / 1024).toFixed(2) + "KB";
+      else if (fileSizeByte == 1048576) fileSizeMsg = "1MB";
+      else if (fileSizeByte > 1048576 && fileSizeByte < 1073741824) fileSizeMsg = (fileSizeByte / (1024 * 1024)).toFixed(2) + "MB";
+      else if (fileSizeByte > 1048576 && fileSizeByte == 1073741824) fileSizeMsg = "1GB";
+      else if (fileSizeByte > 1073741824 && fileSizeByte < 1099511627776) fileSizeMsg = (fileSizeByte / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+      else fileSizeMsg = "文件超过1TB";
+      return fileSizeMsg;
     },
 
   },
