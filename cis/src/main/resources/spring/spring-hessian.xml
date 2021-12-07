@@ -49,5 +49,10 @@
                 <property name="service" ref="advertService"></property>
         </bean>
 
+        <bean name="/dataService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.cis.api.DataService" />
+                <property name="service" ref="dataService"></property>
+        </bean>
+
 
 </beans>

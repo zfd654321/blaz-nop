@@ -11,7 +11,7 @@
     <!-- 游戏弹出框 -->
     <game-edit ref="gameEdit"></game-edit>
     <!-- 平移弹出框 -->
-    <device-copy ref="deviceCopy"></device-copy>
+    <switch-edit ref="switchEdit"></switch-edit>
 </div>
 <script>
     var mainVue = new Vue({
@@ -21,7 +21,8 @@
             'data-edit': httpVueLoader('main/operate/device/online/components/dataEdit.vue'),
             'config-edit': httpVueLoader('main/operate/device/online/components/configEdit.vue'),
             'advert-edit': httpVueLoader('main/operate/device/online/components/advertEdit.vue'),
-            'game-edit': httpVueLoader('main/operate/device/online/components/gameEdit.vue')
+            'game-edit': httpVueLoader('main/operate/device/online/components/gameEdit.vue'),
+            'switch-edit': httpVueLoader('main/operate/device/online/components/switchEdit.vue')
         }
     })
 </script>

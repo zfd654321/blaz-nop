@@ -1,0 +1,625 @@
+<!-- 头部模块 -->
+
+<link rel="stylesheet" href="../plugin/echarts/css/style.css">
+
+<div class="echartsmain" id="echartsmain">
+    <header>
+        <h1>
+            <span>博乐信息 数据分析系统</span></h1>
+        <p>
+            <span>X-mirror Data Analytic System</span></p>
+    </header>
+    <!-- top5 -->
+    <transition name="el-fade-in">
+        <div v-show="ready">
+            <div class="top5">
+                <div class="top5-title">
+                    <span>在线时长TOP5</span>
+                </div>
+                <div class="top5-content">
+                    <ul>
+                        <li v-for="(item,index) in topList" :class="topChecked==index?'checked':''" @click="loadTopDeviceData(index)">
+                            <div class="cicle"></div>
+                            <div class="li-content">
+                                <span>{{item.deviceId}}</span>
+                                <span>{{item.name}}</span><br>
+                                <span>{{item.pcId}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="top5-title">
+                    <span>设备数据分析</span>
+                </div>
+            </div>
+            <!-- 销售总额 -->
+            <div class="total">
+                <div class="data1">
+                    <span>在线设备数</span>
+                    <p>{{allData[0].onlineDevice}}</p>
+                </div>
+                <div class="data2">
+                    <span>总在线时长</span>
+                    <p>{{formatSeconds(allData[0].onlineDuration)}}</p>
+                </div>
+                <div class="data3">
+                    <span>总体验时长</span>
+                    <p>{{formatSeconds(allData[0].usedDuration)}}</p>
+                </div>
+                <div class="data4">
+                    <span>总体验人次</span>
+                    <p>{{allData[0].personTime}}</p>
+                </div>
+                <div class="data5">
+                    <span>总深度人次</span>
+                    <p>{{allData[0].depthTime}}</p>
+                </div>
+                <canvas class="rain"></canvas>
+                <canvas class="dashed"></canvas>
+                <div class="sphere">
+                    <div class="sphere-bg"></div>
+                    <div class="sum">
+                        <span>总设备数</span>
+                        <p>{{allData[0].sumDevice}}</p>
+                    </div>
+                </div>
+                <div class="cicle3"></div>
+                <div class="cicle4"></div>
+                <div class="cicle5"></div>
+                <div class="cicle6"></div>
+                <div class="cicle7"></div>
+                <div class="cicle8">
+                    <span>{{parseInt(allData[0].onlineDevice*100/allData[0].sumDevice)+'%'}}</span>
+                    <p>设备在线率</p>
+                </div>
+                <div class="cicle9">
+                    <span>{{parseInt(allData[0].usedDuration*100/allData[0].onlineDuration)+'%'}}</span>
+                    <p>体验率</p>
+                </div>
+                <div class="cicle10">
+                    <span>{{parseInt(allData[0].depthTime*100/allData[0].personTime)+'%'}}</span>
+                    <p>深度体验率</p>
+                </div>
+                <div class="cicle11">
+                    <span>{{formatSeconds(parseInt(allData[0].onlineDuration/allData[0].onlineDevice))}}</span>
+                    <p>平均在线时长</p>
+                </div>
+            </div>
+            <!-- 会销分析 -->
+            <div class="analyse">
+                <div class="analyse-title">
+                    <span>同期数据对比</span>
+                </div>
+                <div class="analyse-date">{{allData[1].statsDate}}</div>
+                <ul>
+
+                    <li>
+                        <img class="lineimg" src="../plugin/echarts/images/s1.png" alt="">
+                        <h5>在线设备数</h5>
+                        <p><span>Oline Devices</span></p>
+                        <p><em>
+                            {{allData[1].onlineDevice}}
+                            <img v-if="allData[1].onlineDevice<allData[0].onlineDevice" src="../plugin/echarts/images/up.png">
+                            <img v-if="allData[1].onlineDevice>allData[0].onlineDevice" src="../plugin/echarts/images/down.png">
+                        </em></p>
+                    </li>
+                    <li>
+                        <img class="lineimg" src="../plugin/echarts/images/s2.png" alt="">
+                        <h5>总在线时长</h5>
+                        <p><span>Total Online Hours</span></p>
+                        <p><em>
+                            {{formatSeconds(allData[1].onlineDuration)}}
+                            <img v-if="allData[1].onlineDuration<allData[0].onlineDuration" src="../plugin/echarts/images/up.png">
+                            <img v-if="allData[1].onlineDuration>allData[0].onlineDuration" src="../plugin/echarts/images/down.png">
+                        </em></p>
+                    </li>
+                    <li>
+                        <img class="lineimg" src="../plugin/echarts/images/s3.png" alt="">
+                        <h5>总体验时长</h5>
+                        <p><span>Total Experience Hours</span></p>
+                        <p><em>
+                            {{formatSeconds(allData[1].usedDuration)}}
+                            <img v-if="allData[1].usedDuration<allData[0].usedDuration" src="../plugin/echarts/images/up.png">
+                            <img v-if="allData[1].usedDuration>allData[0].usedDuration" src="../plugin/echarts/images/down.png">
+                        </em></p>
+                    </li>
+                    <li>
+                        <img class="lineimg" src="../plugin/echarts/images/s4.png" alt="">
+                        <h5>总体验人次</h5>
+                        <p><span>Experience Times</span></p>
+                        <p><em>
+                            {{allData[1].personTime}}
+                            <img v-if="allData[1].personTime<allData[0].personTime" src="../plugin/echarts/images/up.png">
+                            <img v-if="allData[1].personTime>allData[0].personTime" src="../plugin/echarts/images/down.png">
+                        </em></p>
+                    </li>
+                    <li>
+                        <img class="lineimg" src="../plugin/echarts/images/s5.png" alt="">
+                        <h5>总深度人次</h5>
+                        <p><span>Depth Times</span></p>
+                        <p><em>
+                            {{allData[1].depthTime}}
+                            <img v-if="allData[1].depthTime<allData[0].depthTime" src="../plugin/echarts/images/up.png">
+                            <img v-if="allData[1].depthTime>allData[0].depthTime" src="../plugin/echarts/images/down.png">
+                        </em></p>
+                    </li>
+                </ul>
+            </div>
+            <!-- 鞋服配销售分析 -->
+            <div class="sale">
+                <ul>
+                    <li>
+                        <div class="showImg">
+                            <img src="../plugin/echarts/images/shoe.png" alt="">
+                        </div>
+                        <div class="data">
+                            <p><span>在线时长</span></p>
+                            <p><span>{{formatSeconds(topList[topChecked].usedDuration+topList[topChecked].standDuration)}}</span></p>
+                        </div>
+                        <div class="onlineChart"></div>
+                    </li>
+                    <li>
+                        <div class="showImg">
+                            <img src="../plugin/echarts/images/clothes.png" alt="">
+                        </div>
+                        <div class="data">
+                            <p><span>体验时长</span></p>
+                            <p><span>{{formatSeconds(topList[topChecked].usedDuration)}}</span></p>
+                        </div>
+                        <div class="usedChart"></div>
+                    </li>
+                    <li>
+                        <div class="showImg">
+                            <img src="../plugin/echarts/images/mz.png" alt="">
+                        </div>
+                        <div class="data">
+                            <p><span>体验次数</span></p>
+                            <p><span>{{topList[topChecked].personTime}}次</span></p>
+                        </div>
+                        <div class="personChart"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </transition>
+    <!-- 底部模块 -->
+    <div class="bottom">
+        <h5>
+            <span>{{allData[0].statsDate}} 数据状况</span></h5>
+        <p>{{allData[0].statsDate}} Data Status</p>
+    </div>
+</div>
+
+</body>
+<script src="../plugin/echarts/js/echarts.min.js"></script>
+<script>
+    var mainVue = new Vue({
+        el: '#echartsmain',
+        data: {
+            w: 0,
+            ready: false,
+            topInterval: null,
+            onlineChart: null,
+            onlineChartData: {},
+            usedChart: null,
+            usedChartData: {},
+            personChart: null,
+            personChartData: {},
+            topChecked: 0,
+            allData: [{}, {}],
+            topList: [{}, {}]
+        },
+        mounted: function() {
+            let _this = this;
+            _this.w = 24;
+
+            var url = "/oms/static/showData";
+            sendRequest(url, _this.formInline, function(jsonData) {
+                _this.topList = jsonData.data.topList;
+                jsonData.data.allData.forEach(element => {
+                    element.statsDate = element.statsDate.substring(0, 10)
+                });
+
+                _this.allData = jsonData.data.allData;
+                _this.ready = true;
+                setTimeout(function() {
+                    _this.chartinit();
+                    _this.loadTopDeviceData(0)
+                    _this.runTopInterval()
+                    _this.rainBg()
+                    _this.dashed()
+                }, 200)
+            })
+        },
+        beforeDestroy() {
+            let _this = this
+            if (_this.onlineChart) {
+                _this
+                    .onlineChart
+                    .dispose();
+                _this.onlineChart = null;
+            }
+            if (_this.usedChart) {
+                _this
+                    .usedChart
+                    .dispose();
+                _this.usedChart = null;
+            }
+            if (_this.personChart) {
+                _this
+                    .personChart
+                    .dispose();
+                _this.personChart = null;
+            }
+            clearInterval(_this.topInterval);
+        },
+
+        methods: {
+            loadTopDeviceData: function(index) {
+                let _this = this;
+                _this.topChecked = index
+                _this.onlineChartData = _this.draw(_this.topList[index].usedDuration + _this.topList[index].standDuration, '在线率', 86400, '#09c4ca')
+                _this.usedChartData = _this.draw(_this.topList[index].usedDuration, '体验率', _this.topList[index].usedDuration + _this.topList[index].standDuration, '#09c4ca')
+                _this.personChartData = _this.draw(_this.topList[index].depthTime, '深度率', _this.topList[index].personTime, '#09c4ca')
+
+                _this
+                    .onlineChart
+                    .dispose();
+                _this
+                    .usedChart
+                    .dispose();
+                _this
+                    .personChart
+                    .dispose();
+                _this.chartinit();
+                _this
+                    .onlineChart
+                    .setOption(_this.onlineChartData)
+                _this
+                    .usedChart
+                    .setOption(_this.usedChartData)
+                _this
+                    .personChart
+                    .setOption(_this.personChartData)
+            },
+
+            chartinit: function() {
+                var onlineChart = echarts.init(document.querySelector('.onlineChart'))
+                var usedChart = echarts.init(document.querySelector('.usedChart'))
+                var personChart = echarts.init(document.querySelector('.personChart'))
+
+                this.onlineChart = onlineChart
+                this.usedChart = usedChart
+                this.personChart = personChart
+            },
+
+            runTopInterval: function() {
+                let _this = this
+                _this.topInterval = setInterval(function() {
+                    if (_this.topInterval != mainVue.topInterval) {
+                        clearInterval(_this.topInterval)
+                    } else {
+                        let length = _this.topList.length;
+                        let topChecked = _this.topChecked;
+                        topChecked++
+                        if (topChecked == length) {
+                            topChecked = 0
+                        }
+                        _this.topChecked = topChecked
+                        _this.loadTopDeviceData(topChecked);
+                    }
+                }, 3000)
+            },
+
+            draw: function(val, con, max, color) {
+                let _this = this
+                var value = val
+                option = {
+                    grid: {
+                        left: '20%',
+                        top: '0',
+                        right: '20%',
+                        bottom: '0'
+                    },
+                    "xAxis": {
+                        type: 'value',
+                        "splitLine": {
+                            "show": false
+                        },
+                        "axisLine": {
+                            "show": false
+                        },
+                        "axisLabel": {
+                            "show": false
+                        },
+                        "axisTick": {
+                            "show": false
+                        }
+                    },
+                    "yAxis": [{
+                        "type": "category",
+                        "inverse": false,
+                        "data": [],
+                        "axisLine": {
+                            "show": false
+                        },
+                        "axisTick": {
+                            "show": false
+                        },
+                        "axisLabel": {
+                            show: false
+                        }
+                    }],
+                    "series": [{
+                        type: 'pictorialBar',
+                        data: [value],
+                        itemStyle: {
+                            normal: {
+                                color: color
+                            }
+                        },
+                        symbolRepeat: 'fixed',
+                        symbolClip: true,
+                        symbolSize: [
+                            0.5 * _this.w,
+                            _this.w
+                        ],
+                        symbol: 'roundRect',
+                        label: {
+                            show: true,
+                            position: 'left',
+                            formatter: function() {
+                                return con
+                            },
+                            color: '#fff',
+                            fontSize: 0.7 * _this.w
+                        },
+                        z: 1000
+                    }, {
+                        type: 'pictorialBar',
+                        itemStyle: {
+                            normal: {
+                                color: '#193040'
+                            }
+                        },
+                        data: [max],
+                        animationDuration: 0,
+                        symbolRepeat: 'fixed',
+                        // symbolMargin: '20%',
+                        symbol: 'roundRect',
+                        symbolSize: [
+                            0.5 * _this.w,
+                            _this.w
+                        ],
+                        label: {
+                            show: true,
+                            position: 'right',
+                            formatter: function() {
+                                return Math.floor(val * 100 / max) + '%'
+                            },
+                            color: '#fff',
+                            fontSize: 0.7 * _this.w
+                        }
+                    }]
+                };
+                return option;
+
+            },
+            formatSeconds: function(value) {
+                var theTime = parseInt(value); // 秒
+                var middle = 0; // 分
+                var hour = 0; // 小时
+
+                if (theTime > 60) {
+                    undefined
+                    middle = parseInt(theTime / 60);
+                    theTime = parseInt(theTime % 60);
+                    if (middle > 60) {
+                        undefined
+                        hour = parseInt(middle / 60);
+                        middle = parseInt(middle % 60);
+                    }
+                }
+                var result = "0"
+                    //result += parseInt(theTime) + "s";
+                if (middle > 0) {
+                    undefined
+                    result = "" + parseInt(middle) + "m";
+                }
+                if (hour > 0) {
+                    undefined
+                    result = "" + parseInt(hour) + "h " + result;
+                }
+                return result;
+            },
+            rainBg: function() {
+                var c = document.querySelector(".rain");
+                var ctx = c.getContext("2d"); //获取canvas上下文
+                var w = c.width = document
+                    .querySelector('.total')
+                    .clientWidth;
+                var h = c.height = document
+                    .querySelector('.total')
+                    .clientHeight;
+                //设置canvas宽、高
+
+                function random(min, max) {
+                    return Math.random() * (max - min) + min;
+                }
+
+                function RainDrop() {}
+                //雨滴对象 这是绘制雨滴动画的关键
+                RainDrop.prototype = {
+                    init: function() {
+                        this.x = random(0, w); //雨滴的位置x
+                        this.y = h; //雨滴的位置y
+                        this.color = 'hsl(180, 100%, 50%)'; //雨滴颜色 长方形的填充色
+                        this.vy = random(4, 5); //雨滴下落速度
+                        this.hit = 0; //下落的最大值
+                        this.size = 2; //长方形宽度
+                    },
+                    draw: function() {
+                        if (this.y > this.hit) {
+                            var linearGradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y + this.size * 30)
+                                // 设置起始颜色
+                            linearGradient.addColorStop(0, '#14789c')
+                                // 设置终止颜色
+                            linearGradient.addColorStop(1, '#090723')
+                                // 设置填充样式
+                            ctx.fillStyle = linearGradient
+                            ctx.fillRect(this.x, this.y, this.size, this.size * 50); //绘制长方形，通过多次叠加长方形，形成雨滴下落效果
+                        }
+                        this.update(); //更新位置
+                    },
+                    update: function() {
+                        if (this.y > this.hit) {
+                            this.y -= this.vy; //未达到底部，增加雨滴y坐标
+                        } else {
+                            this.init();
+                        }
+                    }
+                };
+
+                function resize() {
+                    w = c.width = window.innerWidth;
+                    h = c.height = window.innerHeight;
+                }
+
+                //初始化一个雨滴
+
+                var rs = []
+                for (var i = 0; i < 10; i++) {
+                    setTimeout(function() {
+                        var r = new RainDrop();
+                        r.init();
+                        rs.push(r);
+                    }, i * 300)
+                }
+
+                function anim() {
+                    ctx.clearRect(0, 0, w, h); //填充背景色，注意不要用clearRect，否则会清空前面的雨滴，导致不能产生叠加的效果
+                    for (var i = 0; i < rs.length; i++) {
+                        rs[i].draw(); //绘制雨滴
+                    }
+                    requestAnimationFrame(anim); //控制动画帧
+                }
+
+                window.addEventListener("resize", resize);
+                //启动动画
+                anim()
+
+            },
+            dashed: function() {
+                var canvas = document.querySelector('.dashed')
+                var ctx = canvas.getContext('2d')
+                var w = canvas.width = document.querySelector('.total').clientWidth
+                var h = canvas.height = document.querySelector('.total').clientHeight / 3 * 2
+                ctx.lineWidth = 3
+                ctx.setLineDash([3, 3]);
+                ctx.fillStyle = '#93f8fb'
+                ctx.shadowOffsetX = 0;
+                // 阴影的y偏移
+                ctx.shadowOffsetY = 0;
+                // 阴影颜色
+                ctx.shadowColor = '#93f8fb';
+                // 阴影的模糊半径
+                ctx.shadowBlur = 15;
+                ctx.save() //缓存初始状态
+                    // 绘制第一条曲线
+                ctx.beginPath()
+                var grd = ctx.createLinearGradient(w / 11 * 2, h / 3, w / 5 * 2, h);
+                grd.addColorStop(0, "#54e2e6");
+                grd.addColorStop(1, "#065261");
+                ctx.strokeStyle = grd;
+                ctx.moveTo(w / 5 * 2, h)
+                ctx.quadraticCurveTo(w / 5, h / 6 * 5, w / 11 * 2, h / 3);
+                ctx.stroke();
+                // 绘制第一条曲线上的圆光效果
+                ctx.beginPath()
+                ctx.moveTo(w / 11 * 2, h / 3)
+                ctx.arc(w / 11 * 2, h / 3, 5, 0, Math.PI * 2)
+                ctx.fill()
+                ctx.restore()
+                ctx.save()
+                    // 绘制第二条线
+                ctx.beginPath()
+                var grd = ctx.createLinearGradient(w / 11 * 3.3, h / 2, w / 3 * 1.1, h / 6 * 5);
+                grd.addColorStop(0, "#e08d03");
+                grd.addColorStop(1, "#2e6a5c");
+                ctx.strokeStyle = grd;
+                ctx.moveTo(w / 3 * 1.1, h / 6 * 5)
+                ctx.quadraticCurveTo(w / 5 * 1.5, h / 6 * 4.2, w / 11 * 3.3, h / 2);
+                ctx.stroke();
+                // 绘制第二条曲线上的圆光效果
+                ctx.beginPath()
+                ctx.moveTo(w / 11 * 3.3, h / 2)
+                ctx.arc(w / 11 * 3.3, h / 2, 5, 0, Math.PI * 2)
+                ctx.fill()
+                ctx.restore()
+                ctx.save()
+                    // 绘制第三条线
+                ctx.beginPath()
+                var grd = ctx.createLinearGradient(w / 3 * 1.4, h / 5, w / 5 * 2, h / 2);
+                grd.addColorStop(0, "#e08d03");
+                grd.addColorStop(1, "#2e6a5c");
+                ctx.strokeStyle = grd;
+                ctx.moveTo(w / 5 * 2, h / 2)
+                ctx.quadraticCurveTo(w / 3 * 1.2, h / 4 * 1.4, w / 3 * 1.4, h / 5);
+                ctx.stroke();
+                // 绘制第三条曲线上的圆光效果
+                ctx.beginPath()
+                ctx.moveTo(w / 3 * 1.4, h / 5)
+                ctx.arc(w / 3 * 1.4, h / 5, 5, 0, Math.PI * 2)
+                ctx.fill()
+                ctx.restore()
+                ctx.save()
+                    // 绘制第四条线
+                ctx.beginPath()
+                var grd = ctx.createLinearGradient(w / 5 * 3.1, h / 3 * 1.2, w / 5 * 3.2, h / 2 * 1.5);
+                grd.addColorStop(0, "#e08d03");
+                grd.addColorStop(1, "#2e6a5c");
+                ctx.strokeStyle = grd;
+                ctx.moveTo(w / 5 * 3.2, h / 2 * 1.5)
+                ctx.quadraticCurveTo(w / 5 * 3.35, h / 2 * 1.2, w / 5 * 3.1, h / 3 * 1.2);
+                ctx.stroke();
+                // 绘制第四条曲线上的圆光效果
+                ctx.beginPath()
+                ctx.moveTo(w / 5 * 3.1, h / 3 * 1.2)
+                ctx.arc(w / 5 * 3.1, h / 3 * 1.2, 5, 0, Math.PI * 2)
+                ctx.fill()
+                ctx.restore()
+                ctx.save()
+                    // 绘制第五条线
+                ctx.beginPath()
+                var grd = ctx.createLinearGradient(w / 5 * 3.3, h / 4, w / 5 * 3.2, h / 2 * 1.9);
+                grd.addColorStop(0, "#e08d03");
+                grd.addColorStop(1, "#2e6a5c");
+                ctx.strokeStyle = grd;
+                ctx.moveTo(w / 5 * 3.03, h / 2 * 1.9)
+                ctx.quadraticCurveTo(w / 5 * 3.8, h / 2 * 1.2, w / 5 * 3.3, h / 4);
+                ctx.stroke();
+                // 绘制第五条曲线上的圆光效果
+                ctx.beginPath()
+                ctx.moveTo(w / 5 * 3.3, h / 4)
+                ctx.arc(w / 5 * 3.3, h / 4, 5, 0, Math.PI * 2)
+                ctx.fill()
+                ctx.restore()
+                ctx.save()
+                    // 绘制第六条线
+                ctx.beginPath()
+                var grd = ctx.createLinearGradient(w / 5 * 3.8, h / 2 * 1.2, w / 5 * 2.9, h);
+                grd.addColorStop(0, "#e08d03");
+                grd.addColorStop(1, "#2e6a5c");
+                ctx.strokeStyle = grd;
+                ctx.moveTo(w / 5 * 2.9, h)
+                ctx.quadraticCurveTo(w / 5 * 3.7, h / 2 * 1.6, w / 5 * 3.8, h / 2 * 1.2);
+                ctx.stroke();
+                // 绘制第六条曲线上的圆光效果
+                ctx.beginPath()
+                ctx.moveTo(w / 5 * 3.8, h / 2 * 1.2)
+                ctx.arc(w / 5 * 3.8, h / 2 * 1.2, 5, 0, Math.PI * 2)
+                ctx.fill()
+            }
+        }
+    })
+</script>

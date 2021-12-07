@@ -3,6 +3,7 @@
 <mapper namespace="com.bl.nop.dao.device.DeviceLogDao">
   <resultMap id="BaseResultMap" type="com.bl.nop.entity.device.DeviceLog">
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="INTEGER" property="type" />
     <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
     <result column="operate" jdbcType="VARCHAR" property="operate" />
     <result column="info" jdbcType="VARCHAR" property="info" />
@@ -10,7 +11,7 @@
     <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, device_id, operate, info, created_at, created_by
+    id, type, device_id, operate, info, created_at, created_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -23,18 +24,21 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.device.DeviceLog">
-    insert into bl_device_log (id, device_id, operate, 
-      info, created_at, created_by
-      )
-    values (#{id,jdbcType=INTEGER}, #{deviceId,jdbcType=VARCHAR}, #{operate,jdbcType=VARCHAR}, 
-      #{info,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}
-      )
+    insert into bl_device_log (id, type, device_id, 
+      operate, info, created_at, 
+      created_by)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{deviceId,jdbcType=VARCHAR}, 
+      #{operate,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, 
+      #{createdBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.device.DeviceLog">
     insert into bl_device_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="type != null">
+        type,
       </if>
       <if test="deviceId != null">
         device_id,
@@ -56,6 +60,9 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
       <if test="deviceId != null">
         #{deviceId,jdbcType=VARCHAR},
       </if>
@@ -76,6 +83,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.device.DeviceLog">
     update bl_device_log
     <set>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
       <if test="deviceId != null">
         device_id = #{deviceId,jdbcType=VARCHAR},
       </if>
@@ -96,7 +106,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.device.DeviceLog">
     update bl_device_log
-    set device_id = #{deviceId,jdbcType=VARCHAR},
+    set type = #{type,jdbcType=INTEGER},
+      device_id = #{deviceId,jdbcType=VARCHAR},
       operate = #{operate,jdbcType=VARCHAR},
       info = #{info,jdbcType=VARCHAR},
       created_at = #{createdAt,jdbcType=TIMESTAMP},

@@ -14,4 +14,8 @@
                 <property name="serviceInterface" value="com.bl.nop.nis.api.PhotoService" />
                 <property name="service" ref="photoService"></property>
         </bean>
+        <bean name="/easyArService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.nis.api.EasyArService" />
+                <property name="service" ref="easyArService"></property>
+        </bean>
 </beans>

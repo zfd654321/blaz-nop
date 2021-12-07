@@ -41,6 +41,7 @@
         <table tableName="bl_data_device_hour" domainObjectName="DataDeviceHour" mapperName="DataDeviceHourDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_data_device_day" domainObjectName="DataDeviceDay" mapperName="DataDeviceDayDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         <table tableName="bl_data_device_month" domainObjectName="DataDeviceMonth" mapperName="DataDeviceMonthDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+        <table tableName="bl_data_sum_day" domainObjectName="DataSumDay" mapperName="DataSumDayDao" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
         
     </context>
 </generatorConfiguration>

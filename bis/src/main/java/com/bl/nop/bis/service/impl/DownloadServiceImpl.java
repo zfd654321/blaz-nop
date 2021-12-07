@@ -90,6 +90,7 @@ public class DownloadServiceImpl implements DownloadService {
 		List<Game> games = this.configDao.queryDeviceGameList(deviceId);
 		JSONArray list = new JSONArray();
 		for (Game game : games) {
+			log.info(JSONObject.toJSONString(game));
 			String pathDir = PropertyUtil.getProperty("filePath") + "forever/game/";
 			String gameJsonPath = pathDir + game.getId() + "/" + game.getVersion() + "/file.json";
 			JSONObject gameJson = FileUtil.getFileJson(gameJsonPath);

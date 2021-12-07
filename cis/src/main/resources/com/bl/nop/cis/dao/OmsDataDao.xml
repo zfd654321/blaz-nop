@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.OmsDataDao">
+
+	<!-- 获取角色列表 -->
+	<select id="findItemByPage" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.SwitchDto">
+		SELECT d.device_id,
+		d.pc_id,
+		d.name,
+		SUM(used_duration) used_duration,
+		SUM(stand_duration) stand_duration,
+		SUM(person_time) person_time,
+		SUM(depth_time) depth_time,
+		o.`last_heart`
+
+		FROM `bl_data_device_day` s
+		LEFT JOIN `bl_device` d
+		ON d.`device_id`=s.`device_id`
+		LEFT JOIN `bl_data_online` o
+		ON d.`device_id`=o.`device_id`
+		WHERE #{begin_time}
+		<if test="deviceId!=null and deviceId!=''">
+			AND s.`device_id` like
+			concat('%',#{deviceId},'%')
+		</if>
+		<if test="pcId!=null and pcId!=''">
+			AND d.`pc_id` like
+			concat('%',#{pcId},'%')
+		</if>
+		<if test="name!=null and name!=''">
+			AND d.`name` like
+			concat('%',#{name},'%')
+		</if>
+		GROUP BY s.device_id
+	</select>
+
+	<select id="findItemCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)
+		FROM `bl_device_switch` s
+		LEFT JOIN bl_device d
+		ON s.`device_id`=d.`device_id`
+		WHERE d.`status`=3
+		<if test="deviceId!=null and deviceId!=''">
+			AND s.`device_id` like
+			concat('%',#{deviceId},'%')
+		</if>
+		<if test="pcId!=null and pcId!=''">
+			AND d.`pc_id` like
+			concat('%',#{pcId},'%')
+		</if>
+		<if test="name!=null and name!=''">
+			AND d.`name` like
+			concat('%',#{name},'%')
+		</if>
+	</select>
+
+
+	<select id="queryShowTopList" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.DeviceDataDto">
+		SELECT d.`name`,d.`pc_id`,s.* 
+		FROM `bl_data_device_day` s 
+		LEFT JOIN `bl_device` d 
+		ON s.`device_id`=d.`device_id`
+		WHERE s.`stats_date`=#{statsDate}
+		ORDER BY (s.`used_duration`+s.`stand_duration`) DESC
+		LIMIT 0,5
+
+	</select>
+
+	<select id="queryShowAllData" parameterType="java.util.Map" resultType="com.bl.nop.entity.data.DataSumDay">
+		SELECT * FROM `bl_data_sum_day` d ORDER BY d.`stats_date` DESC LIMIT 0,2
+
+	</select>
+
+</mapper>

@@ -24,4 +24,6 @@ public interface DeviceJobDao {
 
     int cleanDataDeviceMonth(Map<String, Object> params);
 
+    Integer selectSumDevice(Map<String, Object> params);
+
 }

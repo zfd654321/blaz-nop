@@ -31,6 +31,14 @@ public class SwitchController extends JsonBaseController {
 		return resResultBean;
 	}
 
+	@RequestMapping(value = "/getById", method = RequestMethod.POST)
+	@ResponseBody
+	public ResResultBean getById(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params = this.getParameterMap(request);
+		ResResultBean resResultBean = this.switchService.getById(params);
+		return resResultBean;
+	}
+
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
 	public ResResultBean save(HttpServletRequest request, HttpServletResponse response) {

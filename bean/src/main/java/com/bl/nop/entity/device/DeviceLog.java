@@ -6,6 +6,8 @@ import java.util.Date;
 public class DeviceLog implements Serializable {
     private Integer id;
 
+    private Integer type;
+
     private String deviceId;
 
     private String operate;
@@ -24,6 +26,14 @@ public class DeviceLog implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public String getDeviceId() {

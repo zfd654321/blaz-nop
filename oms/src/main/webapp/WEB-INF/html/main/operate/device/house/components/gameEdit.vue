@@ -20,7 +20,9 @@
           <el-collapse-item :title="item.gameId+'['+item.gameName+']'" :name="index" v-for="(item,index) in netresSet()" :key="index">
             <el-form-item :label="netreItem.name" :key="index" v-for="(netreItem,index) in item.netres">
               <el-input placeholder="默认资源" readonly clearable v-model.trim="netreItem.resUrl" :id="'netre'+netreItem.id">
-                <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(netreItem.resUrl,'netre'+netreItem.id,netreItem.type)"></el-button>
+
+                <el-button v-if="netreItem.resUrl != netreItem.defaulturl" slot="append" icon="el-icon-refresh-left" @click="resetResource(netreItem)"></el-button>
+                <el-button slot="append" icon="el-icon-picture-outline" @click="checkResource(netreItem)"></el-button>
               </el-input>
             </el-form-item>
           </el-collapse-item>
@@ -167,18 +169,27 @@ module.exports = {
     },
 
 
-    checkResource(url, element, type) {
+    checkResource(netreItem) {
+      let url = netreItem.resUrl
+      let type = netreItem.type
+
       if (type == "filejson") {
         this.$refs.fileJson.loadEditData(url, function (newurl) {
-          $("#" + element).val(newurl);
-          $("#" + element)[0].dispatchEvent(new Event('input'))
+          netreItem.resUrl = newurl
         })
       } else {
         resourceVue.loadResources(url, type, function (item) {
-          $("#" + element).val(item.url);
-          $("#" + element)[0].dispatchEvent(new Event('input'))
+          netreItem.resUrl = item.url
         })
       }
+    },
+
+    resetResource(netreItem) {
+      this.$confirm("重置该资源为默认状态？")
+        .then((_) => {
+          netreItem.resUrl = netreItem.defaulturl
+        })
+        .catch((_) => { });
     },
 
     netresSet() {

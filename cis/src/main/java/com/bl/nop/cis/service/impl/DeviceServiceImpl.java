@@ -110,6 +110,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String camera = StringUtil.toStr(params.get("camera"));
 		String outDate = StringUtil.toStr(params.get("outDate"));
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
+		Integer neverout = NumberUtil.toInt(params.get("neverout"));
 		Date now = new Date();
 		Device reitem = this.deviceDao.selectByPrimaryKey(deviceId);
 		if (edit) {// 修改
@@ -136,10 +137,12 @@ public class DeviceServiceImpl implements DeviceService {
 			item.setScreen(screen);
 			item.setCamera(camera);
 			item.setOutDate(DateUtil.strToDateShort(outDate));
+			item.setNeverout(neverout);
 			item.setUpdatedAt(now);
 			item.setUpdatedBy(createdBy);
 			this.deviceDao.updateByPrimaryKey(item);
-			DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备信息修改", JSONObject.toJSONString(item), now, createdBy);
+			DeviceLog devicelog = LogUtil.buildLog(deviceId, 2, "设备信息修改", JSONObject.toJSONString(item), now,
+					createdBy);
 			this.deviceLogDao.insert(devicelog);
 
 		} else {// 新增
@@ -165,12 +168,13 @@ public class DeviceServiceImpl implements DeviceService {
 			item.setOutDate(DateUtil.strToDateShort(outDate));
 			item.setCreatedAt(now);
 			item.setCreatedBy(createdBy);
+			item.setNeverout(neverout);
 			item.setUpdatedAt(now);
 			item.setUpdatedBy(createdBy);
 			this.deviceDao.insert(item);
 			pc.setStatus(2);
 			this.devicePcDao.updateByPrimaryKey(pc);
-			DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备新增", JSONObject.toJSONString(item), now, createdBy);
+			DeviceLog devicelog = LogUtil.buildLog(deviceId, 1, "设备新增", JSONObject.toJSONString(item), now, createdBy);
 			this.deviceLogDao.insert(devicelog);
 		}
 		return ResResultBean.success();
@@ -224,7 +228,7 @@ public class DeviceServiceImpl implements DeviceService {
 			this.deviceSwitchDao.insert(deviceSwitch);
 		}
 
-		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备入库", "", now, createdBy);
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, 1, "设备入库", "", now, createdBy);
 		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}
@@ -243,6 +247,23 @@ public class DeviceServiceImpl implements DeviceService {
 		device.setUpdatedAt(now);
 		device.setUpdatedBy(createdBy);
 		this.deviceDao.updateByPrimaryKey(device);
+		DeviceLog devicelog = null;
+		switch (status) {
+			case -1:
+				devicelog = LogUtil.buildLog(deviceId, 1, "设备删除", "", now, createdBy);
+				break;
+			case 2:
+				devicelog = LogUtil.buildLog(deviceId, 1, "设备下线", "", now, createdBy);
+				break;
+			case 3:
+				devicelog = LogUtil.buildLog(deviceId, 1, "设备上线", "", now, createdBy);
+				break;
+			default:
+				break;
+		}
+		if (devicelog != null) {
+			this.deviceLogDao.insert(devicelog);
+		}
 		return ResResultBean.success();
 	}
 
@@ -263,7 +284,7 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 			this.deviceDao.deleteByPrimaryKey(deviceId);
 		}
-		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备删除", "", now, createdBy);
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, 1, "设备删除", "", now, createdBy);
 		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}
@@ -287,7 +308,7 @@ public class DeviceServiceImpl implements DeviceService {
 		Date now = new Date();
 		DeviceConfig deviceConfig = JSON.parseObject(JSON.toJSONString(params), DeviceConfig.class);
 		this.deviceConfigDao.updateByPrimaryKey(deviceConfig);
-		DeviceLog devicelog = LogUtil.buildLog(deviceConfig.getDeviceId(), "设备配置修改",
+		DeviceLog devicelog = LogUtil.buildLog(deviceConfig.getDeviceId(), 3, "设备配置修改",
 				JSONObject.toJSONString(deviceConfig), now, createdBy);
 		this.deviceLogDao.insert(devicelog);
 
@@ -318,7 +339,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 		JSONObject jsonoj = new JSONObject();
 		jsonoj.put("adverts", adverts);
-		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备广告修改", JSONObject.toJSONString(jsonoj), now, createdBy);
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, 5, "设备广告修改", JSONObject.toJSONString(jsonoj), now, createdBy);
 		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}
@@ -370,8 +391,8 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 		JSONObject logoj = new JSONObject();
 		logoj.put("gameIds", gameIds);
-		logoj.put("netres", jsonArray);
-		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备游戏修改", JSONObject.toJSONString(logoj), now, createdBy);
+		// logoj.put("netres", jsonArray);
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, 4, "设备游戏修改", JSONObject.toJSONString(logoj), now, createdBy);
 		this.deviceLogDao.insert(devicelog);
 
 		return ResResultBean.success();
@@ -391,57 +412,58 @@ public class DeviceServiceImpl implements DeviceService {
 		for (String toDeviceId : checkDevices) {
 			for (String type : checkType) {
 				switch (type) {
-				case "1":
-					// 配置平移
-					DeviceConfig config = this.deviceConfigDao.selectByPrimaryKey(deviceId);
-					config.setDeviceId(toDeviceId);
-					this.deviceConfigDao.updateByPrimaryKey(config);
+					case "1":
+						// 配置平移
+						DeviceConfig config = this.deviceConfigDao.selectByPrimaryKey(deviceId);
+						config.setDeviceId(toDeviceId);
+						this.deviceConfigDao.updateByPrimaryKey(config);
 
-					break;
-				case "2":
-					// 开关平移
-					DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
-					deviceSwitch.setDeviceId(toDeviceId);
-					this.deviceSwitchDao.updateByPrimaryKey(deviceSwitch);
+						break;
+					case "2":
+						// 开关平移
+						DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
+						deviceSwitch.setDeviceId(toDeviceId);
+						this.deviceSwitchDao.updateByPrimaryKey(deviceSwitch);
 
-					break;
-				case "3":
-					// 广告平移
-					List<DeviceAdvert> list = this.omsDeviceDao.queryDeviceAdvert(params);
-					this.omsDeviceDao.cleanDeviceAdvert(toDeviceId);
-					for (DeviceAdvert advert : list) {
-						advert.setDeviceId(toDeviceId);
-						this.deviceAdvertDao.insert(advert);
-					}
+						break;
+					case "3":
+						// 广告平移
+						List<DeviceAdvert> list = this.omsDeviceDao.queryDeviceAdvert(params);
+						this.omsDeviceDao.cleanDeviceAdvert(toDeviceId);
+						for (DeviceAdvert advert : list) {
+							advert.setDeviceId(toDeviceId);
+							this.deviceAdvertDao.insert(advert);
+						}
 
-					break;
-				case "4":
-					// 游戏平移
-					List<DeviceGame> games = this.omsDeviceDao.queryDeviceGame(params);
-					List<DeviceGameNetres> netres = this.omsDeviceDao.queryDeviceGameNetres(params);
-					this.omsDeviceDao.cleanDeviceGame(toDeviceId);
-					this.omsDeviceDao.cleanDeviceGameNetres(toDeviceId);
-					for (DeviceGame game : games) {
-						game.setDeviceId(toDeviceId);
-						this.deviceGameDao.insert(game);
-					}
-					for (DeviceGameNetres netre : netres) {
-						netre.setDeviceId(toDeviceId);
-						this.deviceGameNetresDao.insert(netre);
-					}
+						break;
+					case "4":
+						// 游戏平移
+						List<DeviceGame> games = this.omsDeviceDao.queryDeviceGame(params);
+						List<DeviceGameNetres> netres = this.omsDeviceDao.queryDeviceGameNetres(params);
+						this.omsDeviceDao.cleanDeviceGame(toDeviceId);
+						this.omsDeviceDao.cleanDeviceGameNetres(toDeviceId);
+						for (DeviceGame game : games) {
+							game.setDeviceId(toDeviceId);
+							this.deviceGameDao.insert(game);
+						}
+						for (DeviceGameNetres netre : netres) {
+							netre.setDeviceId(toDeviceId);
+							this.deviceGameNetresDao.insert(netre);
+						}
 
-					break;
-				default:
-					break;
+						break;
+					default:
+						break;
 				}
 			}
-			DeviceLog devicelog = LogUtil.buildLog(toDeviceId, "设备配置平移-被移入，从[" + deviceId + "]",
+			DeviceLog devicelog = LogUtil.buildLog(toDeviceId, 7, "设备配置平移-被移入，从[" + deviceId + "]",
 					JSONObject.toJSONString(logoj), now, createdBy);
 			this.deviceLogDao.insert(devicelog);
 
 		}
 
-		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备配置平移-被移出", JSONObject.toJSONString(logoj), now, createdBy);
+		DeviceLog devicelog = LogUtil.buildLog(deviceId, 7, "设备配置平移-被移出", JSONObject.toJSONString(logoj), now,
+				createdBy);
 		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
 	}

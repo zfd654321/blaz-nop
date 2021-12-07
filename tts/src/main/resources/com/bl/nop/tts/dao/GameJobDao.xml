@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bl.nop.tts.dao.GameJobDao">
-	<select id="queryGameDayData" parameterType="java.util.Map" resultType="com.bl.nop.entity.data.DataGame">
-		SELECT device_id,
-		stats_date,
-		stats_hour,
-		SUM(used_duration) used_duration,
-		SUM(stand_duration) stand_duration,
-		SUM(person_time) person_time,
-		SUM(depth_time) depth_time 
-		FROM `bl_data_info` 
+	<select id="queryGameDayData" parameterType="java.util.Map" resultType="com.bl.nop.tts.dto.DataGameDto">
+		SELECT 
+		`device_id`,
+		`game_id`,
+		SUM(duration) `duration`,
+		COUNT(1) `times`,
+		`type`
+		FROM 
+		bl_data_game
 		WHERE stats_date=#{statsDate}  
-		AND stats_hour =#{statsHour}  
-		GROUP BY device_id
+		GROUP BY `device_id`,`game_id`,`type`
   	</select>
 
 

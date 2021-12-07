@@ -28,12 +28,13 @@
         <el-table-column prop="createdAt" label="创建时间"></el-table-column>
         <el-table-column prop="updatedName" width="100" label="更新用户"></el-table-column>
         <el-table-column prop="updatedAt" label="更新时间"></el-table-column>
-        <el-table-column label="操作" width="220">
+        <el-table-column label="操作" width="250">
           <template slot-scope="scope">
             <el-button @click="openEdit(scope.row)" type="text" size="mini">信息</el-button>
             <el-button @click="openConfig(scope.row)" type="text" size="mini">配置</el-button>
             <el-button @click="openAdvert(scope.row)" type="text" size="mini">广告</el-button>
             <el-button @click="openGame(scope.row)" type="text" size="mini">游戏</el-button>
+            <el-button @click="openSwitch(scope.row)" type="text" size="mini">开关</el-button>
             <el-button @click="offline(scope.row)" type="text" size="mini">下线</el-button>
           </template>
         </el-table-column>
@@ -112,6 +113,10 @@ module.exports = {
     //游戏按钮
     openGame(row) {
       this.$parent.$refs.gameEdit.loadEditData(row);
+    },    
+    //开关按钮
+    openSwitch(row) {
+      this.$parent.$refs.switchEdit.loadEditData(row.deviceId);
     },
     //下线按钮
     offline(row) {

@@ -24,6 +24,8 @@ public class Device implements Serializable {
 
     private Date outDate;
 
+    private Integer neverout;
+
     private Date createdAt;
 
     private String createdBy;
@@ -112,6 +114,14 @@ public class Device implements Serializable {
 
     public void setOutDate(Date outDate) {
         this.outDate = outDate;
+    }
+
+    public Integer getNeverout() {
+        return neverout;
+    }
+
+    public void setNeverout(Integer neverout) {
+        this.neverout = neverout;
     }
 
     public Date getCreatedAt() {

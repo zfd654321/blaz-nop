@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.data.DataSumDayDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.data.DataSumDay">
+    <id column="stats_date" jdbcType="DATE" property="statsDate" />
+    <result column="sum_device" jdbcType="INTEGER" property="sumDevice" />
+    <result column="online_device" jdbcType="INTEGER" property="onlineDevice" />
+    <result column="online_duration" jdbcType="INTEGER" property="onlineDuration" />
+    <result column="used_duration" jdbcType="INTEGER" property="usedDuration" />
+    <result column="person_time" jdbcType="INTEGER" property="personTime" />
+    <result column="depth_time" jdbcType="INTEGER" property="depthTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    stats_date, sum_device, online_device, online_duration, used_duration, person_time, 
+    depth_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.util.Date" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bl_data_sum_day
+    where stats_date = #{statsDate,jdbcType=DATE}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.util.Date">
+    delete from bl_data_sum_day
+    where stats_date = #{statsDate,jdbcType=DATE}
+  </delete>
+  <insert id="insert" parameterType="com.bl.nop.entity.data.DataSumDay">
+    insert into bl_data_sum_day (stats_date, sum_device, online_device, 
+      online_duration, used_duration, person_time, 
+      depth_time)
+    values (#{statsDate,jdbcType=DATE}, #{sumDevice,jdbcType=INTEGER}, #{onlineDevice,jdbcType=INTEGER}, 
+      #{onlineDuration,jdbcType=INTEGER}, #{usedDuration,jdbcType=INTEGER}, #{personTime,jdbcType=INTEGER}, 
+      #{depthTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.data.DataSumDay">
+    insert into bl_data_sum_day
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="statsDate != null">
+        stats_date,
+      </if>
+      <if test="sumDevice != null">
+        sum_device,
+      </if>
+      <if test="onlineDevice != null">
+        online_device,
+      </if>
+      <if test="onlineDuration != null">
+        online_duration,
+      </if>
+      <if test="usedDuration != null">
+        used_duration,
+      </if>
+      <if test="personTime != null">
+        person_time,
+      </if>
+      <if test="depthTime != null">
+        depth_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="statsDate != null">
+        #{statsDate,jdbcType=DATE},
+      </if>
+      <if test="sumDevice != null">
+        #{sumDevice,jdbcType=INTEGER},
+      </if>
+      <if test="onlineDevice != null">
+        #{onlineDevice,jdbcType=INTEGER},
+      </if>
+      <if test="onlineDuration != null">
+        #{onlineDuration,jdbcType=INTEGER},
+      </if>
+      <if test="usedDuration != null">
+        #{usedDuration,jdbcType=INTEGER},
+      </if>
+      <if test="personTime != null">
+        #{personTime,jdbcType=INTEGER},
+      </if>
+      <if test="depthTime != null">
+        #{depthTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.data.DataSumDay">
+    update bl_data_sum_day
+    <set>
+      <if test="sumDevice != null">
+        sum_device = #{sumDevice,jdbcType=INTEGER},
+      </if>
+      <if test="onlineDevice != null">
+        online_device = #{onlineDevice,jdbcType=INTEGER},
+      </if>
+      <if test="onlineDuration != null">
+        online_duration = #{onlineDuration,jdbcType=INTEGER},
+      </if>
+      <if test="usedDuration != null">
+        used_duration = #{usedDuration,jdbcType=INTEGER},
+      </if>
+      <if test="personTime != null">
+        person_time = #{personTime,jdbcType=INTEGER},
+      </if>
+      <if test="depthTime != null">
+        depth_time = #{depthTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where stats_date = #{statsDate,jdbcType=DATE}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.data.DataSumDay">
+    update bl_data_sum_day
+    set sum_device = #{sumDevice,jdbcType=INTEGER},
+      online_device = #{onlineDevice,jdbcType=INTEGER},
+      online_duration = #{onlineDuration,jdbcType=INTEGER},
+      used_duration = #{usedDuration,jdbcType=INTEGER},
+      person_time = #{personTime,jdbcType=INTEGER},
+      depth_time = #{depthTime,jdbcType=INTEGER}
+    where stats_date = #{statsDate,jdbcType=DATE}
+  </update>
+</mapper>

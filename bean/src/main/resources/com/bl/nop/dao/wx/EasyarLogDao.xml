@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.wx.EasyarLogDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.wx.EasyarLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="target_id" jdbcType="VARCHAR" property="targetId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="client_ip" jdbcType="VARCHAR" property="clientIp" />
+    <result column="stats_time" jdbcType="TIMESTAMP" property="statsTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type, status, target_id, name, client_ip, stats_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bl_easyar_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bl_easyar_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bl.nop.entity.wx.EasyarLog">
+    insert into bl_easyar_log (id, type, status, 
+      target_id, name, client_ip, 
+      stats_time)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{targetId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{clientIp,jdbcType=VARCHAR}, 
+      #{statsTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.wx.EasyarLog">
+    insert into bl_easyar_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="targetId != null">
+        target_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="clientIp != null">
+        client_ip,
+      </if>
+      <if test="statsTime != null">
+        stats_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="targetId != null">
+        #{targetId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="clientIp != null">
+        #{clientIp,jdbcType=VARCHAR},
+      </if>
+      <if test="statsTime != null">
+        #{statsTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.wx.EasyarLog">
+    update bl_easyar_log
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="targetId != null">
+        target_id = #{targetId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="clientIp != null">
+        client_ip = #{clientIp,jdbcType=VARCHAR},
+      </if>
+      <if test="statsTime != null">
+        stats_time = #{statsTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.wx.EasyarLog">
+    update bl_easyar_log
+    set type = #{type,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      target_id = #{targetId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      client_ip = #{clientIp,jdbcType=VARCHAR},
+      stats_time = #{statsTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

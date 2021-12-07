@@ -9,11 +9,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="平移项目" prop="checkType">
-        <el-checkbox-group v-model="copyData.row.checkType">
-          <el-checkbox-button label="1" key="1">配置</el-checkbox-button>
-          <el-checkbox-button label="2" key="2">开关</el-checkbox-button>
-          <el-checkbox-button label="3" key="3">广告</el-checkbox-button>
-          <el-checkbox-button label="4" key="4">游戏</el-checkbox-button>
+        <el-checkbox-group v-model="copyData.row.checkType"  size="mini">
+          <el-checkbox label="1" key="1">配置</el-checkbox>
+          <el-checkbox label="2" key="2">开关</el-checkbox>
+          <el-checkbox label="3" key="3">广告</el-checkbox>
+          <el-checkbox label="4" key="4">游戏</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item>

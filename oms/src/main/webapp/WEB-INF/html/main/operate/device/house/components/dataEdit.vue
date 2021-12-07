@@ -38,7 +38,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="授权日期" prop="outDate">
-        <el-date-picker v-model="infoData.row.outDate" type="date" placeholder="选择授权日期" value-format="yyyy-MM-dd" :picker-options="infoData.pickerOptions"></el-date-picker>
+        <el-date-picker :disabled="infoData.row.neverout==1" v-model="infoData.row.outDate" type="date" placeholder="选择授权日期" value-format="yyyy-MM-dd" :picker-options="infoData.pickerOptions"></el-date-picker>
+        <el-switch v-model="infoData.row.neverout" :active-value="1" :inactive-value="0" active-text="永久授权" @change="forevercheck"></el-switch>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -65,6 +66,7 @@ module.exports = {
           screen: 1,
           camera: "Kinect2.0",
           outDate: "",
+          neverout: 0
         },
         rules: {
           deviceId: [
@@ -151,6 +153,7 @@ module.exports = {
         this.infoData.row.screen = row.screen
         this.infoData.row.camera = row.camera
         this.infoData.row.outDate = row.outDate
+        this.infoData.row.neverout = row.neverout
         this.infoData.row.edit = true
       } else {
         _this.$message.error("系统错误，请刷新重试");
@@ -159,6 +162,12 @@ module.exports = {
 
     handleChange(value) {
       this.infoData.row.address = this.mainData.cityform.selectedOptions.toString()
+    },
+    forevercheck(val) {
+      console.log(val)
+      if (val == 1 && this.infoData.row.outDate == "") {
+        this.infoData.row.outDate = "2099-01-01"
+      }
     },
     // 保存提交
     onSubmit() {

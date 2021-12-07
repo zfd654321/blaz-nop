@@ -1,0 +1,204 @@
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/wxs/js/element.css">
+    <script src="/wxs/js/httpService.js"></script>
+    <script src="/wxs/js/jquery-3.1.0.min.js"></script>
+    <!-- import vue -->
+    <script src="/wxs/js/vue.min.js"></script>
+    <!-- import httpVueLoader -->
+    <script src="/wxs/js/httpVueLoader.js"></script>
+    <!-- import element-ui -->
+    <script src="//unpkg.zhimg.com/element-ui@2.15.5/lib/index.js"></script>
+    <title>x-miror</title>
+  </head>
+  <body>
+    <div id="app">
+      <template>
+        <el-form ref="formInline" :model="formInline" label-width="80px" :inline="true" style="margin:50">
+          <el-form-item label="ip地址">
+            <el-input v-model="formInline.clientIp"></el-input>
+          </el-form-item>
+          <el-form-item label="筛选">
+            <el-select v-model="formInline.status" >
+              <el-option label="全部" value=""></el-option>
+              <el-option label="仅显示识别成功" value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="识别时间">
+            <el-date-picker v-model="formInline.statsTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :clearable="false" value-format="yyyy-MM-dd"></el-date-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="doQuery" plain>查询</el-button>
+          </el-form-item>
+        </el-form>
+
+        <el-table :data="tableData.list" style="margin:50;width:1200"  :row-class-name="tableRowClassName">
+          <el-table-column prop="clientIp" label="客户端IP"></el-table-column>
+          <el-table-column prop="status" label="状态">
+            <template slot-scope="scope">
+              <el-tag v-if="scope.row.status==1" type="success" size="medium">识别成功</el-tag>
+              <el-tag v-if="scope.row.status==0" type="info" size="medium">未识别到标记图像</el-tag>
+            </template>
+          </el-table-column>
+          <!--<el-table-column prop="targetId" label="识别标签编号"></el-table-column>-->
+          <el-table-column prop="name" label="识别标签名称"></el-table-column>
+          <el-table-column prop="statsTime" label="扫描时间">
+            <template slot-scope="scope">{{getExactTime(scope.row.statsTime)}}</template>
+          </el-table-column>
+        </el-table>
+
+        <el-pagination small background hide-on-single-page style="margin:10 50;width:1200" @current-change="handleCurrentChange" layout="prev, pager, next, jumper, ->, total" :page-size="formInline.pageSize" :total="tableData.totalCount"></el-pagination>
+
+      </template>
+    </div>
+  </body>
+  <style>
+    .el-table .success-row {
+      background: #f0f9eb;
+    }
+  </style>
+  <script>
+    var mainvue = new Vue({
+      el: '#app',
+      data() {
+        return {
+          formInline: {
+            type: '',
+            clientIp: '',
+            status: '',
+            statsTime: [
+              '', ''
+            ],
+            startTime: '',
+            endTime: '',
+            pageSize: 10,
+            pageNo: 1
+          },
+          tableData: {
+            list: [
+              {}, {}, {}
+            ],
+            totalCount: 0
+          },
+          pickerOptions: {
+            shortcuts: [
+              {
+                text: '最近一周',
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                  picker.$emit('pick', [start, end]);
+                }
+              }, {
+                text: '最近一个月',
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                  picker.$emit('pick', [start, end]);
+                }
+              }, {
+                text: '最近三个月',
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                  picker.$emit('pick', [start, end]);
+                }
+              }
+            ]
+          }
+        }
+      },
+      mounted: function () {
+        const type = this.getQueryString("type")
+        this.formInline.type = type
+        this.loadDataList();
+      },
+      methods: {
+        doQuery() {
+          this.formInline.pageNo = 1;
+          this.loadDataList();
+        },
+        loadDataList() {
+          let _this = this;
+          _this.formInline.startTime = _this
+            .formInline
+            .statsTime[0]
+          _this.formInline.endTime = _this
+            .formInline
+            .statsTime[1]
+
+          var url = "/wxs/easyar/list";
+          sendRequest(url, _this.formInline, function (jsonData) {
+            var list = jsonData.data.list;
+            var count = jsonData.data.totalCount;
+            console.log(list);
+            _this.tableData.list = list;
+            _this.tableData.totalCount = count;
+          })
+        },
+
+        handleCurrentChange(pageNo) {
+          let _this = this;
+          _this.formInline.pageNo = pageNo;
+          _this.loadDataList();
+        },
+        getQueryString(name) {
+          let reg = `(^|&)${name}=([^&]*)(&|$)`
+          let r = window
+            .location
+            .search
+            .substr(1)
+            .match(reg);
+          if (r != null) 
+            return unescape(r[2]);
+          return null;
+        },
+        getExactTime(time) {
+          var date = new Date(time);
+          // var date = new Date(time* 1000);
+          var year = date.getFullYear() + '-';
+          var month = (
+            date.getMonth() + 1 < 10
+            ? '0' + (
+            date.getMonth() + 1)
+            : date.getMonth() + 1) + '-';
+          var dates = (
+            date.getDate() < 10
+            ? '0' + (
+            date.getDate())
+            : date.getDate()) + ' ';
+          var hour = (
+            date.getHours() < 10
+            ? '0' + (
+            date.getHours())
+            : date.getHours()) + ':';
+          var min = (
+            date.getMinutes() < 10
+            ? '0' + (
+            date.getMinutes())
+            : date.getMinutes()) + ':';
+          var second = (
+            date.getSeconds() < 10
+            ? '0' + (
+            date.getSeconds())
+            : date.getSeconds());
+          return year + month + dates + hour + min + second;
+        },
+        tableRowClassName({row, rowIndex}) {
+          if (row.status === 1) {
+            return 'success-row';
+          }
+          return '';
+        }
+
+      }
+    })
+  </script>
+
+</html>

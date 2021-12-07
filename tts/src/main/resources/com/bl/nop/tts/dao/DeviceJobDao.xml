@@ -60,4 +60,14 @@
 	</delete>
 
 
+	<select id="selectSumDevice" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1) 
+		FROM bl_device d 
+		LEFT JOIN bl_device_switch s
+		ON d.`device_id`=s.`device_id`
+		WHERE d.`status`=3
+		AND s.`statistics`=1
+  	</select>
+
+
 </mapper>

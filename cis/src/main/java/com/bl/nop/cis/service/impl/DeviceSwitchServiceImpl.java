@@ -78,38 +78,48 @@ public class DeviceSwitchServiceImpl implements DeviceSwitchService {
 		DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
 
 		switch (type) {
-		case "software":
-			deviceSwitch.setSoftware(value);
-			break;
-		case "pay":
-			deviceSwitch.setPay(value);
-			break;
-		case "statistics":
-			deviceSwitch.setStatistics(value);
-			break;
-		case "onlinecheck":
-			deviceSwitch.setOnlinecheck(value);
-			break;
-		case "filecheck":
-			deviceSwitch.setFilecheck(value);
-			break;
-		case "video":
-			deviceSwitch.setVideo(value);
-			break;
-		case "clip":
-			deviceSwitch.setClip(value);
-			break;
-		default:
-			break;
+			case "software":
+				deviceSwitch.setSoftware(value);
+				break;
+			case "pay":
+				deviceSwitch.setPay(value);
+				break;
+			case "statistics":
+				deviceSwitch.setStatistics(value);
+				break;
+			case "onlinecheck":
+				deviceSwitch.setOnlinecheck(value);
+				break;
+			case "filecheck":
+				deviceSwitch.setFilecheck(value);
+				break;
+			case "video":
+				deviceSwitch.setVideo(value);
+				break;
+			case "clip":
+				deviceSwitch.setClip(value);
+				break;
+			default:
+				break;
 		}
 		this.deviceSwitchDao.updateByPrimaryKey(deviceSwitch);
 		JSONObject logoj = new JSONObject();
 		logoj.put("type", type);
 		logoj.put("value", value);
 
-		DeviceLog devicelog = LogUtil.buildLog(deviceId, "设备开关操作", JSONObject.toJSONString(logoj), now, createdBy);
+		DeviceLog devicelog = LogUtil.buildLog(deviceId,6, "设备开关操作", JSONObject.toJSONString(logoj), now, createdBy);
 		this.deviceLogDao.insert(devicelog);
 		return ResResultBean.success();
+	}
+
+	@Override
+	public ResResultBean getById(Map<String, Object> params) {
+		if (null == params || params.isEmpty()) {
+			return ResResultBean.error(ERROR_CODE + "001", "参数为空");
+		}
+		String deviceId = StringUtil.toStr(params.get("deviceId"));
+		DeviceSwitch deviceSwitch = this.deviceSwitchDao.selectByPrimaryKey(deviceId);
+		return ResResultBean.success(deviceSwitch);
 	}
 
 }

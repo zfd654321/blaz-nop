@@ -1,6 +1,6 @@
 <template>
   <!-- 新增/编辑模块 -->
-  <el-drawer :title="infoData.row.edit?'资源修改':'资源新增'" :visible.sync="drawer" ref="drawer" :before-close="handleClose" v-loading="loading" element-loading-text="正在上传，请稍候">
+  <el-drawer :title="infoData.row.edit?'资源修改':'资源新增'" :visible.sync="drawer" ref="drawer" :append-to-body="true" :before-close="handleClose" v-loading="loading" element-loading-text="正在上传，请稍候">
     <el-form :model="infoData.row" :rules="infoData.rules" ref="pcForm" label-width="80px" style="margin:20">
       <el-form-item label="名称" prop="name">
         <el-input placeholder="请输入文件名称" v-model.trim="infoData.row.name"></el-input>
@@ -146,7 +146,7 @@ module.exports = {
         case "video":
           return ".mp4,.webm"
         default:
-          return "*"
+          return ""
       }
     },
     getFileSize(row) {

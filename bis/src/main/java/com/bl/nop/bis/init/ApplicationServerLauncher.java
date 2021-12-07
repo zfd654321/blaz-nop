@@ -52,6 +52,7 @@ public class ApplicationServerLauncher {
 		//handler.addEventListener(new ContextLoaderListener(context));
 		//springmvc拦截规则 相当于web.xml中配置的DispatcherServlet
 		handler.addServlet(new ServletHolder(new DispatcherServlet(context)), "/*");
+		
 		server.setHandler(handler);
 		logger.info("开始启动项目["+PROJECT_NAME+"]，端口："+port+">>>>>>>>>");
 		long l1 = System.currentTimeMillis();

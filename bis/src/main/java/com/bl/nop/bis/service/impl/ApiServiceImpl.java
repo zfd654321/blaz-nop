@@ -76,6 +76,7 @@ public class ApiServiceImpl implements ApiService {
 		String deviceId = checkoj.getString("deviceId");
 		Device device = this.deviceDao.selectByPrimaryKey(deviceId);
 		dataContent.put("outDate", DateUtil.dateToStrShort(device.getOutDate()));
+		dataContent.put("neverout", device.getNeverout());
 		return JSONUtils.success(dataContent);
 	}
 

@@ -1,0 +1,16 @@
+<div id="main">
+    <div class="titleline">设备统计</div>
+    <!-- 数据列表 -->
+    <data-list ref="dataList"></data-list>
+    <!-- 游戏详情弹出框 -->
+    <game-info ref="gameInfo"></game-info>
+</div>
+<script>
+    var mainVue = new Vue({
+        el: '#main',
+        components: {
+            'data-list': httpVueLoader('main/operate/statics/device/components/dataList.vue'),
+            'game-info': httpVueLoader('main/operate/statics/device/components/gameInfo.vue'),
+        }
+    })
+</script>

@@ -32,7 +32,7 @@ public class DataController extends BaseController {
         JSONObject dataContent = new JSONObject();
         String pcId = request.getParameter("pcId");
         log.info("[" + pcId + "]获取服务器时间");
-        String serverTime=DateUtil.getStringNowDate();
+        String serverTime=DateUtil.getStringYMDHMS();
         dataContent.put("serverTime", serverTime);
         JSONObject oj = JSONUtils.success(dataContent);
         log.info("[" + pcId + "]获取设备接口列表，返回数据：" + oj.toJSONString());

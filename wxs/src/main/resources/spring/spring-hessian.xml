@@ -22,4 +22,12 @@
     </bean>
 
 
+    <bean id="easyArService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${hessian.nis.serviceUrl}/easyArService" />
+        <property name="serviceInterface" value="com.bl.nop.nis.api.EasyArService" />
+        <property name="chunkedPost" value="false" />
+        <property name="overloadEnabled" value="true" />
+    </bean>
+
+
 </beans>

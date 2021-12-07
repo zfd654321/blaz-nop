@@ -10,6 +10,8 @@ public class DataGameDay implements Serializable {
 
     private Date statsDate;
 
+    private Integer duration;
+
     private Integer finishTime;
 
     private Integer lostTime;
@@ -40,6 +42,14 @@ public class DataGameDay implements Serializable {
 
     public void setStatsDate(Date statsDate) {
         this.statsDate = statsDate;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     public Integer getFinishTime() {

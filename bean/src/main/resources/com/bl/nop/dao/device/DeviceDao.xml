@@ -12,6 +12,7 @@
     <result column="screen" jdbcType="INTEGER" property="screen" />
     <result column="camera" jdbcType="VARCHAR" property="camera" />
     <result column="out_date" jdbcType="DATE" property="outDate" />
+    <result column="neverout" jdbcType="INTEGER" property="neverout" />
     <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
     <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
     <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
@@ -19,7 +20,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     device_id, pc_id, name, remarks, address, type, status, screen, camera, out_date, 
-    created_at, created_by, updated_at, updated_by
+    neverout, created_at, created_by, updated_at, updated_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -35,13 +36,15 @@
     insert into bl_device (device_id, pc_id, name, 
       remarks, address, type, 
       status, screen, camera, 
-      out_date, created_at, created_by, 
-      updated_at, updated_by)
+      out_date, neverout, created_at, 
+      created_by, updated_at, updated_by
+      )
     values (#{deviceId,jdbcType=VARCHAR}, #{pcId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{remarks,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{screen,jdbcType=INTEGER}, #{camera,jdbcType=VARCHAR}, 
-      #{outDate,jdbcType=DATE}, #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, 
-      #{updatedAt,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR})
+      #{outDate,jdbcType=DATE}, #{neverout,jdbcType=INTEGER}, #{createdAt,jdbcType=TIMESTAMP}, 
+      #{createdBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.device.Device">
     insert into bl_device
@@ -75,6 +78,9 @@
       </if>
       <if test="outDate != null">
         out_date,
+      </if>
+      <if test="neverout != null">
+        neverout,
       </if>
       <if test="createdAt != null">
         created_at,
@@ -120,6 +126,9 @@
       <if test="outDate != null">
         #{outDate,jdbcType=DATE},
       </if>
+      <if test="neverout != null">
+        #{neverout,jdbcType=INTEGER},
+      </if>
       <if test="createdAt != null">
         #{createdAt,jdbcType=TIMESTAMP},
       </if>
@@ -164,6 +173,9 @@
       <if test="outDate != null">
         out_date = #{outDate,jdbcType=DATE},
       </if>
+      <if test="neverout != null">
+        neverout = #{neverout,jdbcType=INTEGER},
+      </if>
       <if test="createdAt != null">
         created_at = #{createdAt,jdbcType=TIMESTAMP},
       </if>
@@ -190,6 +202,7 @@
       screen = #{screen,jdbcType=INTEGER},
       camera = #{camera,jdbcType=VARCHAR},
       out_date = #{outDate,jdbcType=DATE},
+      neverout = #{neverout,jdbcType=INTEGER},
       created_at = #{createdAt,jdbcType=TIMESTAMP},
       created_by = #{createdBy,jdbcType=VARCHAR},
       updated_at = #{updatedAt,jdbcType=TIMESTAMP},

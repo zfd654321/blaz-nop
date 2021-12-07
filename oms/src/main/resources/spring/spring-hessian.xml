@@ -13,7 +13,7 @@
 		<property name="chunkedPost" value="false" />
 		<property name="overloadEnabled" value="true" />
 	</bean>
-	
+
 	<!-- 系统模块接口 -->
 	<bean id="sysUserService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
 		<property name="serviceUrl" value="${hessian.serviceUrl}/sysUserService" />
@@ -75,6 +75,14 @@
 	<bean id="advertService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
 		<property name="serviceUrl" value="${hessian.serviceUrl}/advertService" />
 		<property name="serviceInterface" value="com.bl.nop.cis.api.AdvertService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
+	<!-- 数据模块接口 -->
+	<bean id="DataService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/dataService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.DataService" />
 		<property name="chunkedPost" value="false" />
 		<property name="overloadEnabled" value="true" />
 	</bean>

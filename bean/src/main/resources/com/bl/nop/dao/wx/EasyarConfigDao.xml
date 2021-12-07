@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.wx.EasyarConfigDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.wx.EasyarConfig">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="post_url" jdbcType="VARCHAR" property="postUrl" />
+    <result column="server_url" jdbcType="VARCHAR" property="serverUrl" />
+    <result column="cloud_key" jdbcType="VARCHAR" property="cloudKey" />
+    <result column="cloud_secret" jdbcType="VARCHAR" property="cloudSecret" />
+    <result column="api_key" jdbcType="VARCHAR" property="apiKey" />
+    <result column="api_secret" jdbcType="VARCHAR" property="apiSecret" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="overtime" jdbcType="TIMESTAMP" property="overtime" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, post_url, server_url, cloud_key, cloud_secret, api_key, api_secret, token, overtime, 
+    updated_at
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bl_easyar_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bl_easyar_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bl.nop.entity.wx.EasyarConfig">
+    insert into bl_easyar_config (id, post_url, server_url, 
+      cloud_key, cloud_secret, api_key, 
+      api_secret, token, overtime, 
+      updated_at)
+    values (#{id,jdbcType=INTEGER}, #{postUrl,jdbcType=VARCHAR}, #{serverUrl,jdbcType=VARCHAR}, 
+      #{cloudKey,jdbcType=VARCHAR}, #{cloudSecret,jdbcType=VARCHAR}, #{apiKey,jdbcType=VARCHAR}, 
+      #{apiSecret,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, #{overtime,jdbcType=TIMESTAMP}, 
+      #{updatedAt,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.wx.EasyarConfig">
+    insert into bl_easyar_config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="postUrl != null">
+        post_url,
+      </if>
+      <if test="serverUrl != null">
+        server_url,
+      </if>
+      <if test="cloudKey != null">
+        cloud_key,
+      </if>
+      <if test="cloudSecret != null">
+        cloud_secret,
+      </if>
+      <if test="apiKey != null">
+        api_key,
+      </if>
+      <if test="apiSecret != null">
+        api_secret,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="overtime != null">
+        overtime,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="postUrl != null">
+        #{postUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="serverUrl != null">
+        #{serverUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="cloudKey != null">
+        #{cloudKey,jdbcType=VARCHAR},
+      </if>
+      <if test="cloudSecret != null">
+        #{cloudSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="apiKey != null">
+        #{apiKey,jdbcType=VARCHAR},
+      </if>
+      <if test="apiSecret != null">
+        #{apiSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="overtime != null">
+        #{overtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.wx.EasyarConfig">
+    update bl_easyar_config
+    <set>
+      <if test="postUrl != null">
+        post_url = #{postUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="serverUrl != null">
+        server_url = #{serverUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="cloudKey != null">
+        cloud_key = #{cloudKey,jdbcType=VARCHAR},
+      </if>
+      <if test="cloudSecret != null">
+        cloud_secret = #{cloudSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="apiKey != null">
+        api_key = #{apiKey,jdbcType=VARCHAR},
+      </if>
+      <if test="apiSecret != null">
+        api_secret = #{apiSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="overtime != null">
+        overtime = #{overtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.wx.EasyarConfig">
+    update bl_easyar_config
+    set post_url = #{postUrl,jdbcType=VARCHAR},
+      server_url = #{serverUrl,jdbcType=VARCHAR},
+      cloud_key = #{cloudKey,jdbcType=VARCHAR},
+      cloud_secret = #{cloudSecret,jdbcType=VARCHAR},
+      api_key = #{apiKey,jdbcType=VARCHAR},
+      api_secret = #{apiSecret,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      overtime = #{overtime,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

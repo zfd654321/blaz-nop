@@ -22,4 +22,6 @@ public interface DeviceSwitchService {
 	 */
 	public ResResultBean save(Map<String, Object> params);
 
+    public ResResultBean getById(Map<String, Object> params);
+
 }

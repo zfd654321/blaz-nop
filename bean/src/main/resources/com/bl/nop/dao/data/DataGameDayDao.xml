@@ -5,17 +5,18 @@
     <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
     <result column="game_id" jdbcType="VARCHAR" property="gameId" />
     <result column="stats_date" jdbcType="DATE" property="statsDate" />
+    <result column="duration" jdbcType="INTEGER" property="duration" />
     <result column="finish_time" jdbcType="INTEGER" property="finishTime" />
     <result column="lost_time" jdbcType="INTEGER" property="lostTime" />
     <result column="break_time" jdbcType="INTEGER" property="breakTime" />
   </resultMap>
   <insert id="insert" parameterType="com.bl.nop.entity.data.DataGameDay">
     insert into bl_data_game_day (device_id, game_id, stats_date, 
-      finish_time, lost_time, break_time
-      )
+      duration, finish_time, lost_time, 
+      break_time)
     values (#{deviceId,jdbcType=VARCHAR}, #{gameId,jdbcType=VARCHAR}, #{statsDate,jdbcType=DATE}, 
-      #{finishTime,jdbcType=INTEGER}, #{lostTime,jdbcType=INTEGER}, #{breakTime,jdbcType=INTEGER}
-      )
+      #{duration,jdbcType=INTEGER}, #{finishTime,jdbcType=INTEGER}, #{lostTime,jdbcType=INTEGER}, 
+      #{breakTime,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.data.DataGameDay">
     insert into bl_data_game_day
@@ -28,6 +29,9 @@
       </if>
       <if test="statsDate != null">
         stats_date,
+      </if>
+      <if test="duration != null">
+        duration,
       </if>
       <if test="finishTime != null">
         finish_time,
@@ -48,6 +52,9 @@
       </if>
       <if test="statsDate != null">
         #{statsDate,jdbcType=DATE},
+      </if>
+      <if test="duration != null">
+        #{duration,jdbcType=INTEGER},
       </if>
       <if test="finishTime != null">
         #{finishTime,jdbcType=INTEGER},
