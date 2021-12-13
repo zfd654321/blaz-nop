@@ -6,6 +6,8 @@ import java.util.Date;
 public class Advert implements Serializable {
     private String id;
 
+    private String merchantId;
+
     private String name;
 
     private String remarks;
@@ -32,6 +34,14 @@ public class Advert implements Serializable {
 
     public void setId(String id) {
         this.id = id == null ? null : id.trim();
+    }
+
+    public String getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(String merchantId) {
+        this.merchantId = merchantId == null ? null : merchantId.trim();
     }
 
     public String getName() {

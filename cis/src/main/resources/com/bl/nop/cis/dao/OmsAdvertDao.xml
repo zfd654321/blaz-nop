@@ -13,6 +13,9 @@
 			AND a.name like
 			concat('%',#{name},'%')
 		</if>
+		<if test="merchantId!=null and merchantId!=''">
+			AND a.merchant_id =#{merchantId}
+		</if>
 		<if test="screen!=null and screen!=''">
 			AND t.screen =#{screen}
 		</if>

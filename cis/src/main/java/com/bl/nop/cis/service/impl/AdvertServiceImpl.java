@@ -72,12 +72,14 @@ public class AdvertServiceImpl implements AdvertService {
 		String resource = StringUtil.toStr(params.get("resource"));
 		Integer scount = NumberUtil.toInt(params.get("scount"));
 		String createdBy = StringUtil.toStr(params.get("createdBy"));
+		String merchantId = StringUtil.toStr(params.get("merchantId"));
 		Date now = new Date();
 		Advert reitem = this.advertDao.selectByPrimaryKey(id);
 
 		if (edit) {// 修改
 			Advert item = reitem;
 			item.setName(name);
+			item.setMerchantId(merchantId);
 			item.setRemarks(remarks);
 			item.setType(type);
 			item.setResource(resource);
@@ -94,6 +96,7 @@ public class AdvertServiceImpl implements AdvertService {
 			Advert item = new Advert();
 			item.setId(id);
 			item.setName(name);
+			item.setMerchantId(merchantId);
 			item.setRemarks(remarks);
 			item.setType(type);
 			item.setResource(resource);
@@ -147,7 +150,7 @@ public class AdvertServiceImpl implements AdvertService {
 		Integer id = NumberUtil.toInt(params.get("id"));
 		boolean edit = StringUtil.toStr(params.get("edit")).equals("true");
 		String name = StringUtil.toStr(params.get("name"));
-		String remarks= StringUtil.toStr(params.get("remarks"));
+		String remarks = StringUtil.toStr(params.get("remarks"));
 		Integer screen = NumberUtil.toInt(params.get("screen"));
 		String bundleName = StringUtil.toStr(params.get("bundleName"));
 		String assetName = StringUtil.toStr(params.get("assetName"));

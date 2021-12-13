@@ -3,6 +3,7 @@
 <mapper namespace="com.bl.nop.dao.advert.AdvertDao">
   <resultMap id="BaseResultMap" type="com.bl.nop.entity.advert.Advert">
     <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     <result column="type" jdbcType="INTEGER" property="type" />
@@ -14,7 +15,8 @@
     <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, remarks, type, resource, scount, created_at, created_by, updated_at, updated_by
+    id, merchant_id, name, remarks, type, resource, scount, created_at, created_by, updated_at, 
+    updated_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -27,20 +29,23 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.bl.nop.entity.advert.Advert">
-    insert into bl_advert (id, name, remarks, 
-      type, resource, scount, 
-      created_at, created_by, updated_at, 
-      updated_by)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
-      #{type,jdbcType=INTEGER}, #{resource,jdbcType=VARCHAR}, #{scount,jdbcType=INTEGER}, 
-      #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, 
-      #{updatedBy,jdbcType=VARCHAR})
+    insert into bl_advert (id, merchant_id, name, 
+      remarks, type, resource, 
+      scount, created_at, created_by, 
+      updated_at, updated_by)
+    values (#{id,jdbcType=VARCHAR}, #{merchantId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{remarks,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{resource,jdbcType=VARCHAR}, 
+      #{scount,jdbcType=INTEGER}, #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, 
+      #{updatedAt,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.advert.Advert">
     insert into bl_advert
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="merchantId != null">
+        merchant_id,
       </if>
       <if test="name != null">
         name,
@@ -74,6 +79,9 @@
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
@@ -106,6 +114,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.bl.nop.entity.advert.Advert">
     update bl_advert
     <set>
+      <if test="merchantId != null">
+        merchant_id = #{merchantId,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
@@ -138,7 +149,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bl.nop.entity.advert.Advert">
     update bl_advert
-    set name = #{name,jdbcType=VARCHAR},
+    set merchant_id = #{merchantId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
       remarks = #{remarks,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       resource = #{resource,jdbcType=VARCHAR},

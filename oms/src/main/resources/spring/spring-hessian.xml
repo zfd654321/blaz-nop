@@ -87,5 +87,13 @@
 		<property name="overloadEnabled" value="true" />
 	</bean>
 
+	<!-- 商家模块接口 -->
+	<bean id="MerchantService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hessian.serviceUrl}/merchantService" />
+		<property name="serviceInterface" value="com.bl.nop.cis.api.MerchantService" />
+		<property name="chunkedPost" value="false" />
+		<property name="overloadEnabled" value="true" />
+	</bean>
+
 </beans>
         

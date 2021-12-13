@@ -157,16 +157,6 @@ table {
     background-color: #fffc;
 }
 
-.el-transfer-panel {
-    display: block;
-    width: 400px;
-}
-
-.el-transfer__buttons {
-    display: block;
-    margin: 30px;
-}
-
 .el-input-number .el-icon-minus,
 .el-input-number .el-icon-plus {
     line-height: unset;

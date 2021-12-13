@@ -67,6 +67,7 @@ module.exports = {
           type: '',
           resource: '',
           scount: '',
+          merchantId:'-1',
           resourceList: [],
           edit: false
         },

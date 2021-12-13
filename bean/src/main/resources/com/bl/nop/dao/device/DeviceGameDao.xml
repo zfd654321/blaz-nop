@@ -4,13 +4,14 @@
   <resultMap id="BaseResultMap" type="com.bl.nop.entity.device.DeviceGame">
     <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
     <result column="game_id" jdbcType="VARCHAR" property="gameId" />
+    <result column="group_id" jdbcType="VARCHAR" property="groupId" />
     <result column="weight" jdbcType="INTEGER" property="weight" />
   </resultMap>
   <insert id="insert" parameterType="com.bl.nop.entity.device.DeviceGame">
-    insert into bl_device_game (device_id, game_id, weight
-      )
-    values (#{deviceId,jdbcType=VARCHAR}, #{gameId,jdbcType=VARCHAR}, #{weight,jdbcType=INTEGER}
-      )
+    insert into bl_device_game (device_id, game_id, group_id, 
+      weight)
+    values (#{deviceId,jdbcType=VARCHAR}, #{gameId,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}, 
+      #{weight,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.bl.nop.entity.device.DeviceGame">
     insert into bl_device_game
@@ -20,6 +21,9 @@
       </if>
       <if test="gameId != null">
         game_id,
+      </if>
+      <if test="groupId != null">
+        group_id,
       </if>
       <if test="weight != null">
         weight,
@@ -31,6 +35,9 @@
       </if>
       <if test="gameId != null">
         #{gameId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=VARCHAR},
       </if>
       <if test="weight != null">
         #{weight,jdbcType=INTEGER},

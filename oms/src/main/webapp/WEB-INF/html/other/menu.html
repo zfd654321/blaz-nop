@@ -9,10 +9,10 @@
         </template>
         <el-submenu v-for="(smenu,sindex) in menu.children" :index="smenu.odindex">
           <template slot="title">
-            <i class="el-icon-folder"></i>
+            <i :class="smenu.icon"></i>
             <span>{{smenu.text}}</span></template>
           <el-menu-item v-for="(cmenu,cindex) in smenu.children" :index="cmenu.url">
-            <i class="el-icon-document"></i>
+            <i :class="cmenu.icon"></i>
             <span>{{cmenu.text}}</span></el-menu-item>
         </el-submenu>
       </el-submenu>

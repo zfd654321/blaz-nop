@@ -52,7 +52,8 @@
 		SELECT g.* FROM bl_device_advert d 
 		LEFT JOIN bl_advert g 
 		ON d.`advert_id`=g.id 
-		WHERE d.`device_id`=#{deviceId}  
+		WHERE d.`device_id`=#{deviceId} 
+		AND g.id IS NOT NULL 
 		ORDER BY d.`weight`
 	</select>
 

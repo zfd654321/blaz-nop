@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.dao.merchant.MerchantAdvertTypeDao">
+  <resultMap id="BaseResultMap" type="com.bl.nop.entity.merchant.MerchantAdvertType">
+    <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+  </resultMap>
+  <insert id="insert" parameterType="com.bl.nop.entity.merchant.MerchantAdvertType">
+    insert into bl_merchant_advert_type (merchant_id, type)
+    values (#{merchantId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bl.nop.entity.merchant.MerchantAdvertType">
+    insert into bl_merchant_advert_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        merchant_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

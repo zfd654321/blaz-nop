@@ -1,0 +1,19 @@
+<div id="main">
+    <div class="titleline">商家列表</div>
+    <!-- 数据列表 -->
+    <data-list ref="dataList"></data-list>
+    <!-- 添加/更新弹出框 -->
+    <data-edit ref="dataEdit"></data-edit>
+    <!-- 日志弹出框 -->
+    <power-edit ref="powerEdit"></power-edit>
+</div>
+<script>
+    var mainVue = new Vue({
+        el: '#main',
+        components: {
+            'data-list': httpVueLoader('main/merchant/merchant/list/components/dataList.vue'),
+            'data-edit': httpVueLoader('main/merchant/merchant/list/components/dataEdit.vue'),
+            'power-edit': httpVueLoader('main/merchant/merchant/list/components/powerEdit.vue'),
+        }
+    })
+</script>

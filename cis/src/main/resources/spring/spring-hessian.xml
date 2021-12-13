@@ -54,5 +54,10 @@
                 <property name="service" ref="dataService"></property>
         </bean>
 
+        <bean name="/merchantService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="serviceInterface" value="com.bl.nop.cis.api.MerchantService" />
+                <property name="service" ref="merchantService"></property>
+        </bean>
+
 
 </beans>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bl.nop.cis.dao.OmsMerchantDao">
+
+	<!-- 获取角色列表 -->
+	<select id="findItemByPage" parameterType="java.util.Map" resultType="com.bl.nop.entity.merchant.Merchant">
+		SELECT * FROM bl_merchant
+		WHERE 1=1
+		<if test="name!=null and name!=''">
+			AND `name` like
+			concat('%',#{name},'%')
+		</if>
+		<if test="type!=null and type!=''">
+			AND `type` = #{pcId}
+		</if>
+		ORDER BY updated_at DESC
+	</select>
+
+	<select id="findItemCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)
+		FROM bl_merchant
+		WHERE 1=1
+		<if test="name!=null and name!=''">
+			AND `name` like
+			concat('%',#{name},'%')
+		</if>
+		<if test="type!=null and type!=''">
+			AND `type` = #{pcId}
+		</if>
+	</select>
+
+
+	<select id="loadMerchantDevice" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.MerchantDeviceDto">
+		SELECT d.*,m.`merchant_id` FROM bl_device d 
+		LEFT JOIN bl_merchant_device m
+		ON d.`device_id`=m.`device_id`
+
+		WHERE d.`type`=2 
+		AND d.`status`=3
+		AND (m.`merchant_id`=#{merchantId} OR m.`merchant_id` IS NULL)
+	</select>
+
+	<select id="loadMerchantGame" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.MerchantGameDto">
+		SELECT g.*,m.`merchant_id` FROM bl_game g 
+		LEFT JOIN bl_merchant_game m
+		ON g.id=m.`game_id`
+		AND m.`merchant_id`=#{merchantId}
+
+	</select>
+
+	<select id="loadMerchantAdvert" parameterType="java.util.Map" resultType="com.bl.nop.cis.dto.MerchantAdvertTypeDto">
+		SELECT a.*,m.`merchant_id` FROM bl_advert_type a 
+		LEFT JOIN bl_merchant_advert_type m
+		ON a.id=m.`type`
+		AND m.`merchant_id`=#{merchantId}
+
+	</select>
+
+	<delete id="cleanMerchantDevice">
+		DELETE FROM bl_merchant_device WHERE merchant_id = #{merchantId}
+	</delete>
+
+	<delete id="cleanMerchantGame">
+		DELETE FROM bl_merchant_game WHERE merchant_id = #{merchantId}
+	</delete>
+
+	<delete id="cleanMerchantAdvert">
+		DELETE FROM bl_merchant_advert_type WHERE merchant_id = #{merchantId}
+	</delete>
+
+</mapper>

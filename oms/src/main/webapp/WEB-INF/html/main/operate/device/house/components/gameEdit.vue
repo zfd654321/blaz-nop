@@ -38,6 +38,18 @@
     <file-json ref="fileJson"></file-json>
   </el-drawer>
 </template>
+
+<style scoped>
+.el-transfer-panel {
+  display: block;
+  width: 400px;
+}
+
+.el-transfer__buttons {
+  display: block;
+  margin: 30px;
+}
+</style>
  
 <script>
 module.exports = {

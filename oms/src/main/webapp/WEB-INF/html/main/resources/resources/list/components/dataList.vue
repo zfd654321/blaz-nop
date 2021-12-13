@@ -33,7 +33,12 @@
         </el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="md5" label="md5值"></el-table-column>
-        <el-table-column prop="type" label="类型" :formatter="checkType"></el-table-column>
+        <el-table-column prop="type" label="类型">
+          <template slot-scope="scope" v-html="checkType(scope.row.type)">
+            <el-tag size="mini" :type="typeShow(scope.row.type)">{{checkType(scope.row.type)}}</el-tag>
+          </template>
+
+        </el-table-column>
         <el-table-column prop="type" label="文件大小" :formatter="getFileSize"></el-table-column>
         <el-table-column prop="createdName" label="创建用户"></el-table-column>
         <el-table-column prop="createdAt" label="创建时间"></el-table-column>
@@ -130,17 +135,28 @@ module.exports = {
         });
       });
     },
-    checkType(row, column) {
-      switch (row.type) {
+    checkType(type) {
+      switch (type) {
         case "img":
           return "图片"
         case "video":
           return "视频"
         case "other":
           return "其他"
-
         default:
           return "未知"
+      }
+    },
+    typeShow(type) {
+      switch (type) {
+        case "img":
+          return ""
+        case "video":
+          return "success"
+        case "other":
+          return "warning"
+        default:
+          return "danger"
       }
     },
     getFileSize(row) {

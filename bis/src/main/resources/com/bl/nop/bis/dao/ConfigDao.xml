@@ -19,6 +19,7 @@
 		LEFT JOIN bl_advert_type t
 		ON a.`type`=t.`id`
 		WHERE d.`device_id`=#{deviceId}  
+		AND a.id IS NOT NULL
   	</select>
 
 	<select id="queryDeviceGameList" parameterType="java.lang.String" resultType="com.bl.nop.entity.game.Game">

@@ -7,6 +7,8 @@ public class DeviceGame implements Serializable {
 
     private String gameId;
 
+    private String groupId;
+
     private Integer weight;
 
     private static final long serialVersionUID = 1L;
@@ -25,6 +27,14 @@ public class DeviceGame implements Serializable {
 
     public void setGameId(String gameId) {
         this.gameId = gameId == null ? null : gameId.trim();
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId == null ? null : groupId.trim();
     }
 
     public Integer getWeight() {

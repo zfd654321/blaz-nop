@@ -52,6 +52,7 @@ module.exports = {
   data: function () {
     return {
       formInline: {
+        merchantId:'-1',
         name: '',
         screen: '',
         pageSize: 10,
